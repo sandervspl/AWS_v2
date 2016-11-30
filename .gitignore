@@ -1,0 +1,9 @@
+.gitignore
+.idea/
+/node_modules
+/dist
+src/public/img/water_pipe_og.png
+
+src/public/img/water_drop_og.png
+
+src/public/img/humid-icon.png.tmp$$

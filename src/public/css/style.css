@@ -1,0 +1,272 @@
+@import url(https://fonts.googleapis.com/css?family=Raleway:100,300,400,600);
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    color: #eee;
+    font-weight: 300;
+}
+
+body {
+    font-family: Roboto, Helvetica, sans-serif;
+    background-color: #303436;
+}
+
+a {
+    text-decoration: none;
+}
+
+ul li {
+    list-style: none;
+}
+
+header {
+    position: relative;
+    z-index: 1000;
+    background-color: transparent;
+}
+
+header#storage {
+    background-color: transparent;
+}
+
+header .inner .left .menu-icon {
+    cursor: pointer;
+    font-size: 1.5em;
+    margin-top: -3px;
+    background: transparent;
+    border: none;
+}
+
+header .inner .left .menu-icon:hover {
+    color: #fff;
+}
+
+header .inner .row {
+    margin: 0;
+    padding: 0;
+}
+
+header .inner .right {
+    text-align: right;
+}
+
+header .logo-container {
+    font-weight: 600;
+    text-align: center;
+}
+
+header .logo-container a {
+    color: #eee;
+}
+
+header .logo-container a:hover, header .logo-container a:focus, header .logo-container a:active {
+    text-decoration: none;
+}
+
+.storage .info-container-fill {
+    height: 35%;
+    background-color: #00b3db;
+}
+
+.storage-text {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 100;
+    text-align: center;
+    margin: -2em auto 0;
+}
+
+.storage-text .prct {
+    font-size: 4em;
+    font-weight: 900;
+}
+
+.title-water-storage {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    z-index: 100;
+    font-size: 1em;
+    font-weight: 100;
+}
+
+
+@-webkit-keyframes doWave {
+    0%, 100% {
+        height: 30px;
+    }
+    50% {
+        height: 10px;
+    }
+}
+
+#text-display {
+    text-align: center;
+}
+
+.loading {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, .5) url('../img/spinner.svg') center/50px no-repeat;
+    z-index: 4;
+    transition: all .3s linear;
+}
+
+@keyframes uil-spin-css {
+    0% {
+        opacity: 1;
+        -ms-transform: scale(1.5);
+        -moz-transform: scale(1.5);
+        -webkit-transform: scale(1.5);
+        -o-transform: scale(1.5);
+        transform: scale(1.5);
+    }
+    100% {
+        opacity: 0.1;
+        -ms-transform: scale(1);
+        -moz-transform: scale(1);
+        -webkit-transform: scale(1);
+        -o-transform: scale(1);
+        transform: scale(1);
+    }
+}
+.uil-spin-css > div {
+    width: 24px;
+    height: 24px;
+    margin-left: 4px;
+    margin-top: 4px;
+    position: absolute;
+}
+.uil-spin-css > div > div {
+    width: 100%;
+    height: 100%;
+    border-radius: 15px;
+    background: #000;
+}
+.uil-spin-css > div:nth-of-type(1) > div {
+    -webkit-animation: uil-spin-css 1s linear infinite;
+    animation: uil-spin-css 1s linear infinite;
+    -webkit-animation-delay: 0s;
+    animation-delay: 0s;
+}
+.uil-spin-css > div:nth-of-type(1) {
+    -webkit-transform: translate(84px, 84px) rotate(45deg) translate(70px, 0);
+    transform: translate(84px, 84px) rotate(45deg) translate(70px, 0);
+}
+.uil-spin-css > div:nth-of-type(2) > div {
+    -webkit-animation: uil-spin-css 1s linear infinite;
+    animation: uil-spin-css 1s linear infinite;
+    -webkit-animation-delay: 0.12s;
+    animation-delay: 0.12s;
+}
+.uil-spin-css > div:nth-of-type(2) {
+    -webkit-transform: translate(84px, 84px) rotate(90deg) translate(70px, 0);
+    transform: translate(84px, 84px) rotate(90deg) translate(70px, 0);
+}
+.uil-spin-css > div:nth-of-type(3) > div {
+    -webkit-animation: uil-spin-css 1s linear infinite;
+    animation: uil-spin-css 1s linear infinite;
+    -webkit-animation-delay: 0.25s;
+    animation-delay: 0.25s;
+}
+.uil-spin-css > div:nth-of-type(3) {
+    -webkit-transform: translate(84px, 84px) rotate(135deg) translate(70px, 0);
+    transform: translate(84px, 84px) rotate(135deg) translate(70px, 0);
+}
+.uil-spin-css > div:nth-of-type(4) > div {
+    -webkit-animation: uil-spin-css 1s linear infinite;
+    animation: uil-spin-css 1s linear infinite;
+    -webkit-animation-delay: 0.37s;
+    animation-delay: 0.37s;
+}
+.uil-spin-css > div:nth-of-type(4) {
+    -webkit-transform: translate(84px, 84px) rotate(180deg) translate(70px, 0);
+    transform: translate(84px, 84px) rotate(180deg) translate(70px, 0);
+}
+.uil-spin-css > div:nth-of-type(5) > div {
+    -webkit-animation: uil-spin-css 1s linear infinite;
+    animation: uil-spin-css 1s linear infinite;
+    -webkit-animation-delay: 0.5s;
+    animation-delay: 0.5s;
+}
+.uil-spin-css > div:nth-of-type(5) {
+    -webkit-transform: translate(84px, 84px) rotate(225deg) translate(70px, 0);
+    transform: translate(84px, 84px) rotate(225deg) translate(70px, 0);
+}
+.uil-spin-css > div:nth-of-type(6) > div {
+    -webkit-animation: uil-spin-css 1s linear infinite;
+    animation: uil-spin-css 1s linear infinite;
+    -webkit-animation-delay: 0.62s;
+    animation-delay: 0.62s;
+}
+.uil-spin-css > div:nth-of-type(6) {
+    -webkit-transform: translate(84px, 84px) rotate(270deg) translate(70px, 0);
+    transform: translate(84px, 84px) rotate(270deg) translate(70px, 0);
+}
+.uil-spin-css > div:nth-of-type(7) > div {
+    -webkit-animation: uil-spin-css 1s linear infinite;
+    animation: uil-spin-css 1s linear infinite;
+    -webkit-animation-delay: 0.75s;
+    animation-delay: 0.75s;
+}
+.uil-spin-css > div:nth-of-type(7) {
+    -webkit-transform: translate(84px, 84px) rotate(315deg) translate(70px, 0);
+    transform: translate(84px, 84px) rotate(315deg) translate(70px, 0);
+}
+.uil-spin-css > div:nth-of-type(8) > div {
+    -webkit-animation: uil-spin-css 1s linear infinite;
+    animation: uil-spin-css 1s linear infinite;
+    -webkit-animation-delay: 0.87s;
+    animation-delay: 0.87s;
+}
+.uil-spin-css > div:nth-of-type(8) {
+    -webkit-transform: translate(84px, 84px) rotate(360deg) translate(70px, 0);
+    transform: translate(84px, 84px) rotate(360deg) translate(70px, 0);
+}
+
+
+
+
+@media only screen and (min-width: 320px) {
+    header {
+        height: 50px;
+    }
+
+    header .inner, .container .inner {
+        width: 100%;
+        margin: auto;
+    }
+
+    header .inner .right {
+        padding-top: .85em;
+        padding-bottom: .85em;
+    }
+
+    header .inner .left {
+        padding-top: .49em;
+        padding-bottom: .55em;
+    }
+
+    header .logo-container {
+        padding-top: .33em;
+        padding-bottom: .33em;
+        font-size: 1.5em;
+    }
+
+    .container {
+        width: 100%;
+        padding: 0;
+    }
+}
