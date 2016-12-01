@@ -4,8 +4,10 @@ const Radium = require('radium')
 const axios = require('axios')
 
 // components
-import Fill from './components/Fill'
 import Data from './components/Data'
+import Subdata from './weather/Subdata'
+import Icon from './weather/Icon'
+import InfoDropdown from './weather/InfoDropdown'
 
 // misc
 const g_api_key = 'a16ebee24012358ee9007cc5e4f2ed93&id=2747890'
@@ -21,6 +23,7 @@ export default class Weather extends React.Component
             kind: 'weather',
             title: 'Weersverwachting',
             loaded: -1,
+            baseHeight: '125px',
 
             pos: {},
             posName: '',
@@ -28,10 +31,12 @@ export default class Weather extends React.Component
             weather: {
                 id: 0,
                 main: '',
-                description: '',
+                description: 'n/a',
                 pressure: 0,
                 humidity: 0,
                 clouds: 0,
+                rain: 0,
+                snow: 0,
 
                 temp: {
                     current: 0,
@@ -74,6 +79,8 @@ export default class Weather extends React.Component
                 pressure: data.main.pressure,
                 humidity: data.main.humidity,
                 clouds: data.clouds.all,
+                rain: data.rain,
+                snow: data.snow,
 
                 temp: {
                     current: data.main.temp,
@@ -149,24 +156,39 @@ export default class Weather extends React.Component
     }
 
 
+    setHeight()
+    {
+        let height = (this.state.baseHeight === '125px') ? '1000px' : '125px'
+        this.setState({ baseHeight: height })
+    }
+
+
     render()
     {
-        let loadStyle = (this.state.loaded === 1) ? styles.loaded : {}
-        let curTemp = Math.round(this.state.weather.temp.current)
+        let weatherInfo = this.state.weather
+        let curTemp = Math.round(weatherInfo.temp.current)
+        let temp = {
+            min: weatherInfo.temp.min,
+            max: weatherInfo.temp.max
+        }
+        let height = { maxHeight: this.state.baseHeight }
+        let loadStyle = (this.state.loaded === 1) ? 'loading loaded' : 'loading'
 
         return (
-            <div style={styles.wrapper}>
-                <div className="loading" style={loadStyle}></div>
+            <div style={ [styles.base, height] } onClick={this.setHeight.bind(this)}>
+                <div className={loadStyle}></div>
 
                 <div style={styles.inner}>
-                    <div style={[styles.info, styles.icon]}></div>
+                    <Icon weatherId={weatherInfo.id} />
                     <div style={styles.info}>
-                        <h3 style={styles.description}>{this.state.weather.description}</h3>
-                        <Data data={curTemp + '˚C'}/>
+                        <h3 style={styles.description}> { weatherInfo.description } </h3>
+
+                        <Data data={curTemp + '˚'} />
+                        <Subdata data={temp} />
                     </div>
                 </div>
 
-                <Fill kind={this.state.kind} val={this.state.value}/>
+                <InfoDropdown data={weatherInfo}/>
             </div>
         )
     }
@@ -174,21 +196,25 @@ export default class Weather extends React.Component
 
 
 const styles = {
-    wrapper: {
+    base: {
         position: 'relative',
+        boxSizing: 'border-box',
         zIndex: 1,
-        height: '100px',
         width: '100%',
         backgroundColor: '#43484a',
         margin: '0 auto 30px',
-        padding: '10px',
+        padding: '20px',
         textAlign: 'center',
-        overflow: 'hidden'
+        overflow: 'hidden',
+        cursor: 'pointer',
+        WebkitTransition: 'all .3s ease-in-out',
+        transition: 'all .3s ease-in-out'
     },
 
     inner: {
         position: 'relative',
-        zIndex: 3
+        zIndex: 3,
+        width: '100%'
     },
 
     info: {
@@ -199,22 +225,10 @@ const styles = {
         textAlign: 'right',
     },
 
-    icon: {
-        position: 'absolute',
-        left: '10px',
-        width: '70px',
-        height: '75px',
-        background: 'url(public/img/rain-icon.png) center/100% no-repeat'
-    },
-
     description: {
         margin: 0,
         padding: 0,
         fontSize: '1em',
         fontWeight: 300
-    },
-    
-    loaded: {
-        background: 'rgba(0, 0, 0, 0)'
     }
 }

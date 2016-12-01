@@ -18,8 +18,8 @@ export default class Banners extends React.Component
     render()
     {
         return (
-            <div style={styles.banners}>
-                <h3>Overzicht</h3>
+            <div style={styles.base}>
+                <h3 style={styles.header}>Overzicht</h3>
 
                 <Weather/>
                 <Humidity/>
@@ -29,8 +29,13 @@ export default class Banners extends React.Component
 }
 
 const styles = {
-    banners: {
+    base: {
         margin: '50px auto 0',
         width: '100%'
+    },
+
+    header: {
+        fontWeight: 400,
+        marginBottom: '5px'
     }
 }

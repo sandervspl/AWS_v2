@@ -44,7 +44,7 @@ export default class Frontpage extends React.Component
 const styles = {
     wrapper: {
         minWidth: '305px',
-        width: '67%',
+        width: '50%',
         margin: '50px auto'
     },
 

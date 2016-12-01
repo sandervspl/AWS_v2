@@ -18,7 +18,7 @@ export default class Humidity extends React.Component
         super(props)
         this.state = {
             kind: 'humidity',
-            title: 'Vochtigheid',
+            title: 'Grondvochtigheid',
             value: 0,
             loaded: 0
         }
@@ -50,17 +50,17 @@ export default class Humidity extends React.Component
                 })
             })
             .catch(err => {
-                console.log('could not fetch humidity data from server: ' + err)
+                console.warn('could not fetch humidity data from server: ' + err)
             })
     }
 
     render()
     {
-        let loadStyle = (this.state.loaded === 1) ? styles.loaded : {}
+        let loadStyle = (this.state.loaded === 1) ? 'loading loaded' : 'loading'
 
         return (
-            <div style={styles.wrapper}>
-                <div className="loading" style={loadStyle}></div>
+            <div style={styles.base}>
+                <div className={loadStyle}></div>
 
                 <div style={styles.inner}>
                     <div style={[styles.info, styles.icon]}></div>
@@ -78,14 +78,15 @@ export default class Humidity extends React.Component
 
 
 const styles = {
-    wrapper: {
+    base: {
         position: 'relative',
+        boxSizing: 'border-box',
         zIndex: 1,
-        height: '100px',
         width: '100%',
+        height: '125px',
         backgroundColor: '#43484a',
         margin: '0 auto 30px',
-        padding: '10px',
+        padding: '20px',
         textAlign: 'center',
         overflow: 'hidden'
     },
@@ -105,10 +106,9 @@ const styles = {
 
     icon: {
         position: 'absolute',
-        left: '10px',
         width: '50px',
         height: '70px',
-        background: 'url(public/img/humid-icon.png) center/100% no-repeat'
+        background: 'url(public/img/soil_humidity_2.png) center/100% no-repeat'
     },
 
     description: {
@@ -116,20 +116,5 @@ const styles = {
         padding: 0,
         fontSize: '1em',
         fontWeight: 300
-    },
-
-    loading: {
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: '100%',
-        background: 'rgba(0, 0, 0, .5) url(public/img/spinner.gif) center/50px no-repeat',
-        zIndex: 4,
-        transition: 'all .3s linear'
-    },
-
-    loaded: {
-        background: 'rgba(0, 0, 0, 0)'
     }
 }
