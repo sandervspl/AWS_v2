@@ -22,10 +22,10 @@ export default class Watertank extends React.Component
     notification = () =>
     {
         if (this.state.active) {
-            let msg = '(Watertank ' + this.props.tankId + ') wordt gedraineerd.'
+            let msg = '(Watertank ' + this.props.tankId + ') wordt geleegd.'
             this.props.showNotification('success', msg)
         } else {
-            let msg = '(Watertank ' + this.props.tankId + ') is gestopt.'
+            let msg = '(Watertank ' + this.props.tankId + ') is gestopt met legen.'
             this.props.showNotification('alert', msg)
         }
     }
