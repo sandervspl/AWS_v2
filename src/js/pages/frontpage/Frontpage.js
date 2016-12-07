@@ -3,9 +3,11 @@ const React = require('react')
 const Radium = require('radium')
 
 // components
-import Title from './components/Title'
-import Waterpipe from './components/Waterpipe'
-import Banners from './components/Banners'
+import Menu from './components/pages/Menu'
+import Grid from './components/pages/Grid'
+
+
+import Notification from '../layout/Notification'
 
 
 @Radium
@@ -15,48 +17,104 @@ export default class Frontpage extends React.Component
     {
         super(props)
         this.state = {
-            state: 'off'
+            widgetActive: false,
+            widgetKind: null,
+
+            notification: null,
+            notificationKind: null,
+            notificationMsg: null,
+            notificationShow: null,
+
+            view: 'menu'
         }
+
+        this.timeout = null
     }
 
-    changeState()
+    toggleView = () =>
     {
-        let state = (this.state.state === 'on') ? 'off' : 'on'
-        this.setState({ state })
+        let view = (this.state.view === 'menu') ? 'grid' : 'menu'
+        this.setState({ view })
+    }
+
+    showNotification = (kind, msg, time = 5000) =>
+    {
+        clearTimeout(this.timeout)
+        
+        this.setState({
+            notificationKind: kind,
+            notificationMsg: msg,
+            notificationShow: 'show'
+        })
+
+        if (time > 0) this.timeout = setTimeout(this.hideNotification, time)
+    }
+
+    hideNotification = () =>
+    {
+        this.setState({ notificationShow: null })
     }
 
     render()
     {
-        return (
-        <div style={styles.wrapper}>
-            <div style={styles.systemHeader}>
-                <Title style={styles.title} state={this.state.state} />
-                <Waterpipe state={this.state.state} changeState={this.changeState.bind(this)}/>
-            </div>
+        // let curView = (this.state.view === 'menu') ? '' : styles.gridView
 
-            <Banners/>
-        </div>
+        let menuX = null
+        let gridX = null
+
+        if (this.state.view === 'menu') {
+            menuX = { transform: 'translateX(0)' }
+            gridX = { transform: 'translateX(100%)' }
+        } else {
+            menuX = { transform: 'translateX(-100%)' }
+            gridX = { transform: 'translateX(-100%)' }
+        }
+
+        let notiKind = this.state.notificationKind
+        let notiMsg = this.state.notificationMsg
+        let notiShow = this.state.notificationShow
+
+        return (
+            <div id="view-wrapper" style={styles.base}>
+                <Notification
+                    kind={notiKind}
+                    msg={notiMsg}
+                    show={notiShow}
+                />
+
+                <div id="menu-wrapper" style={ [styles.view, menuX] }>
+                    <Menu
+                        toggleView={this.toggleView}
+                        showNotification={this.showNotification}
+                        hideNotification={this.hideNotification}
+                    />
+                </div>
+
+                <div id="grid-wrapper" style={ [styles.view, styles.grid, gridX] }>
+                    <Grid
+                        toggleView={this.toggleView}
+                        showNotification={this.showNotification}
+                    />
+                </div>
+            </div>
         )
     }
 }
 
 
 const styles = {
-    wrapper: {
-        minWidth: '305px',
-        width: '50%',
-        margin: '50px auto'
-    },
-
-    systemHeader: {
-        position: 'relative',
+    base: {
+        height: '100vh',
         width: '100%',
-        margin: '10px auto 0'
+        overflow: 'hidden',
+        whiteSpace: 'nowrap'
     },
 
-    title: {
-        margin: '30px 0 5px',
-        textTransform: 'uppercase',
-        textAlign: 'left'
-    }
+    view: {
+        display: 'inline-block',
+        height: '100%',
+        width: '100%',
+        transition: 'transform 0.5s ease-in-out',
+        verticalAlign: 'top'
+    },
 }

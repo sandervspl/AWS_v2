@@ -10,10 +10,11 @@ const app = new Express()
 class Server {
     constructor()
     {
+        this.humid = null
+        this.humidSensorConnected = false
+
         this.init()
         this.routes()
-
-        this.humid = null
     }
 
     // initialize express server
@@ -36,12 +37,25 @@ class Server {
 
         // serialport
         const serialport = new SerialPort('/dev/cu.usbmodem1411')
-        serialport.on('error', (err) => { console.log('Serial Port could not be opened:', err) })
-        serialport.on('open', () => { console.log('Serial Port Opened') })
+        serialport.on('error', (err) => {
+            console.log('Serial Port could not be opened:', err)
+            this.humidSensorConnected = false
+        })
+        serialport.on('open', () => {
+            console.log('Serial Port Opened')
+            this.humidSensorConnected = true
+        })
 
 
         // when serialport receives data
         serialport.on('data', (data) => {
+
+            // nothing connected to retrieve data from
+            if ( ! this.humidSensorConnected) {
+                this.humid = -1
+                return
+            }
+
             const val = parseInt(data.toString().trim(), 10)
 
             if(val === '' || val === ' ' || isNaN(val))
@@ -50,16 +64,15 @@ class Server {
             // console.log('received val:', val)
 
             /*
-             Most of the time, arduino will send out incomplete data to the serial
-             This means values will be broken up into multiple values
-             We have to add these values to get the real value
+                Most of the time, arduino will send out incomplete data to the serial
+                This means values will be broken up into multiple values
+                We have to add these values to get the real value
              */
             let actualVal = val
 
             /*
-             If our value is below 100, the soil would be bone dry.
-             We use values of >= 370 and <= 600 (3 digits)
-             so it's fair to say the incomplete numbers will contain 1 or 2 digits
+                We use values of >= 370 and <= 600 (3 digits)
+                so it's fair to say the incomplete numbers will contain 1 or 2 digits
              */
             if (val < 100) {
                 // add our data as a string to our total
