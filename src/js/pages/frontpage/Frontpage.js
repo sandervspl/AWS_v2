@@ -5,8 +5,6 @@ const Radium = require('radium')
 // components
 import Menu from './components/pages/Menu'
 import Grid from './components/pages/Grid'
-
-
 import Notification from '../layout/Notification'
 
 
