@@ -37,7 +37,7 @@ export default class WeatherItem extends React.Component
             <div>
                 <h3 style={styles.title}>Luchtvochtigheid</h3>
                 <img src="public/img/rain_medium.png" alt="Humidity" style={styles.icon}/>
-                <p style={styles.data}>70%</p>
+                <p style={styles.data}>99%</p>
             </div>
         )
     }
@@ -46,22 +46,22 @@ export default class WeatherItem extends React.Component
     {
         return (
             <div>
-                <h3 style={styles.title}>Licht bewolkt</h3>
-                <img src="public/img/cloudy_sunny_white.png" alt="Weather" style={styles.icon}/>
-                <p style={styles.data}>-1º</p>
+                <h3 style={styles.title}>Bewolkt</h3>
+                <img src="public/img/cloudy_white.png" alt="Weather" style={styles.icon}/>
+                <p style={styles.data}>7º</p>
             </div>
         )
     }
 
     windItem()
     {
-        let direction = { transform: 'rotateZ(-120deg)' }
+        let direction = { transform: 'rotateZ(40deg)' }
 
         return (
             <div>
                 <h3 style={styles.title}>Windsnelheid</h3>
                 <img src="public/img/arrow_icon.png" alt="Wind" style={ [styles.icon, direction] }/>
-                <p style={styles.data}>5.0 km/u</p>
+                <p style={styles.data}>16.0 km/u</p>
             </div>
         )
     }

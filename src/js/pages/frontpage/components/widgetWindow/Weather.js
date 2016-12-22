@@ -21,7 +21,7 @@ export default class Weather extends React.Component
     {
         return (
             <div style={styles.base}>
-                <h3 style={styles.location} className="location">Barendrecht</h3>
+                <h3 style={styles.location} className="location">Rotterdam</h3>
                 <div style={styles.row}>
                     <WeatherItem kind="humidity"/>
                     <WeatherItem kind="current"/>

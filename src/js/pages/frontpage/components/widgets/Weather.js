@@ -15,9 +15,9 @@ export default class Weather extends React.Component
         return (
             <div style={styles.base}>
                 <div style={styles.icon}>
-                    <img src="public/img/cloudy_sunny.png" alt="weather" style={styles.img}/>
+                    <img src="public/img/cloudy.png" alt="weather" style={styles.img}/>
                 </div>
-                <div style={styles.temp}>-1º</div>
+                <div style={styles.temp}>7º</div>
             </div>
         )
     }

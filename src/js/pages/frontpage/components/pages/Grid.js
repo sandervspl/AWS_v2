@@ -67,7 +67,7 @@ const styles = {
 
     inner: {
         position: 'relative',
-        top: 'calc(50% - 216px)',
+        top: 'calc(50% - 266px)',
         margin: '0 auto',
         width: '250px',
         whiteSpace: 'normal'
@@ -90,7 +90,7 @@ const styles = {
     },
 
     backBtn: {
-        padding: '40px 10px 0',
+        padding: '10px 10px 0',
         cursor: 'pointer'
     }
 }

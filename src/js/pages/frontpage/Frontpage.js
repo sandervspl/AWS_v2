@@ -3,8 +3,9 @@ const React = require('react')
 const Radium = require('radium')
 
 // components
-import Menu from './components/pages/Menu'
+import Login from './components/Login/Login'
 import Grid from './components/pages/Grid'
+import Menu from './components/pages/Menu'
 import Notification from '../layout/Notification'
 
 
@@ -79,6 +80,8 @@ export default class Frontpage extends React.Component
                     msg={notiMsg}
                     show={notiShow}
                 />
+
+                <Login />
 
                 <div id="menu-wrapper" style={ [styles.view, menuX] }>
                     <Menu
