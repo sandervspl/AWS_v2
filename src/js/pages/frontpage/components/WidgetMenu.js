@@ -22,7 +22,11 @@ export default class WidgetMenu extends React.Component
                 <ul>
                     <WidgetButton kind="watertank" activateWidgetWindow={this.props.activateWidgetWindow} />
                     <WidgetButton kind="grid" toggleView={this.props.toggleView} />
-                    <WidgetButton kind="weather" activateWidgetWindow={this.props.activateWidgetWindow} />
+                    <WidgetButton
+                        kind="weather"
+                        activateWidgetWindow={this.props.activateWidgetWindow}
+                        weatherData={this.props.weatherData}
+                    />
                 </ul>
             </div>
         )

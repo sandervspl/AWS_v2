@@ -15,7 +15,7 @@ export default class Login extends React.Component
         super(props)
 
         this.state = {
-            doShowModal: 1,
+            doShowModal: 0,
             username: null,
         }
     }

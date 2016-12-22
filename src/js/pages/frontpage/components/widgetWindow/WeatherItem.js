@@ -18,8 +18,8 @@ export default class WeatherItem extends React.Component
                 return this.humidityItem()
             break
 
-            case 'current':
-                return this.currentItem()
+            case 'temperature':
+                return this.temperatureItem()
             break
 
             case 'wind':
@@ -37,31 +37,31 @@ export default class WeatherItem extends React.Component
             <div>
                 <h3 style={styles.title}>Luchtvochtigheid</h3>
                 <img src="public/img/rain_medium.png" alt="Humidity" style={styles.icon}/>
-                <p style={styles.data}>99%</p>
+                <p style={styles.data}> {this.props.data}% </p>
             </div>
         )
     }
 
-    currentItem()
+    temperatureItem()
     {
         return (
             <div>
                 <h3 style={styles.title}>Bewolkt</h3>
                 <img src="public/img/cloudy_white.png" alt="Weather" style={styles.icon}/>
-                <p style={styles.data}>7º</p>
+                <p style={styles.data}> {(this.props.data.temp).toFixed(0)}º </p>
             </div>
         )
     }
 
     windItem()
     {
-        let direction = { transform: 'rotateZ(40deg)' }
+        let direction = { transform: `rotateZ(${this.props.data.angle}deg)` }
 
         return (
             <div>
                 <h3 style={styles.title}>Windsnelheid</h3>
                 <img src="public/img/arrow_icon.png" alt="Wind" style={ [styles.icon, direction] }/>
-                <p style={styles.data}>16.0 km/u</p>
+                <p style={styles.data}>{this.props.data.speed} km/u</p>
             </div>
         )
     }
