@@ -63,8 +63,11 @@ export default class WidgetButton extends React.Component
         }
 
         return (
-            <li style={ [styles.base, styles[this.props.kind]] } className="widget-btn"
-                onClick={this.handeClick}>
+            <li
+                style={ [styles.base, styles[this.props.kind]] }
+                className="widget-btn"
+                onClick={this.handeClick}
+            >
                 {button}
                 <span>{tag}</span>
             </li>
@@ -77,8 +80,9 @@ const styles = {
     base: {
         position: 'relative',
         display: 'inline-block',
-        width: '50px',
-        height: '50px',
+        width: '70px',
+        height: '70px',
+        lineHeight: '50px',
         overflow: 'hidden',
         textAlign: 'center',
 

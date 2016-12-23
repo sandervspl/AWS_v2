@@ -10,6 +10,7 @@ export default class Watertank extends React.Component
     {
         super(props)
         this.state = {
+            refreshing: 1,
             height: 0
         }
     }
@@ -19,43 +20,56 @@ export default class Watertank extends React.Component
         setInterval(this.getWaterLevel, 1000)
     }
 
+    // start refreshing state
+    startRefreshSpinner()
+    {
+        this.setState({ refreshing: 1 })
+    }
+
+    // stop refreshing state
+    stopRefreshSpinner()
+    {
+        this.setState({ refreshing: 0 })
+    }
+
     getWaterLevel = () =>
     {
         axios.get('http://localhost:3000/waterlevel')
             .then(data => {
+                this.stopRefreshSpinner()
+
                 let level = data.data
 
                 // no connection with serialport is found
-                if ( ! level || level === null) {
-                    // console.log('SerialPort is not connected')
-                    // this.setConnected(false)
+                if ( ! level || level === null)
                     return
-                }
 
                 // convert our value to a percentage
-                // let value = Math.floor(6000 / 23 - (10 * humidity) / 23)
-                // if (value > 100) value = 100
-                // if (value < 0) value = 0
+                let val = Math.ceil(100 - 10 * level)
+                if (val > 100) val = 100
+                if (val < 0) val = 0
 
                 // save humidity data
-                this.setState({ height: level })
+                this.setState({ height: val })
             })
             .catch(err => {
                 console.warn('could not fetch water level data from server: ' + err)
-                // this.stopSpinner()
+                this.stopRefreshSpinner()
             })
     }
 
     render()
     {
-        let h = this.state.height + '%'
+        let loadStyle = (this.state.refreshing === 0) ? 'loading loaded' : 'loading'
+        let prct = this.state.height + '%'
         let height = this.state.height + '%'
         let fill = { height: height }
 
         return (
             <div>
-                <div style={ styles.fill } height={this.state.height + '%'} id="fillPrct" />
-                <div style={styles.prct}>{height}</div>
+                <div className={loadStyle}></div>
+                <div style={ [styles.fill, fill] } id="fillPrct" />
+                <div style={styles.prct}> {prct} </div>
             </div>
         )
     }
@@ -65,15 +79,18 @@ export default class Watertank extends React.Component
 const styles = {
     fill: {
         position: 'absolute',
+        zIndex: 1,
         bottom: 0,
         background: '#2789BA',
         width: '100%',
     },
 
     prct: {
-        fontSize: '14px',
-        fontWeight: '200',
+        position: 'relative',
+        zIndex: 2,
+        fontSize: '1.25em',
+        fontWeight: '400',
         color: '#000000',
-        lineHeight: '50px'
+        lineHeight: '70px'
     }
 }

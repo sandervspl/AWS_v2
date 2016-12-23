@@ -20,8 +20,14 @@ export default class WidgetMenu extends React.Component
         return (
             <div style={styles.base}>
                 <ul>
-                    <WidgetButton kind="watertank" activateWidgetWindow={this.props.activateWidgetWindow} />
-                    <WidgetButton kind="grid" toggleView={this.props.toggleView} />
+                    <WidgetButton
+                        kind="watertank"
+                        activateWidgetWindow={this.props.activateWidgetWindow}
+                    />
+                    <WidgetButton
+                        kind="grid"
+                        toggleView={this.props.toggleView}
+                    />
                     <WidgetButton
                         kind="weather"
                         activateWidgetWindow={this.props.activateWidgetWindow}

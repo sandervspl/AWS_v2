@@ -54,7 +54,7 @@ export default class Menu extends React.Component
         })
     }
 
-    // set refreshing state
+    // start refreshing state
     startRefreshSpinner()
     {
         let { weatherData } = this.state
@@ -75,7 +75,7 @@ export default class Menu extends React.Component
         })
     }
 
-    // set refreshing state
+    // stop refreshing state
     stopRefreshSpinner()
     {
         let { weatherData } = this.state
@@ -137,12 +137,12 @@ export default class Menu extends React.Component
         endpoint += '&units=metric'
         endpoint += '&APPID=' + g_api_key
 
-        console.log('Fetching weather data...')
+        // console.log('Fetching weather data...')
 
         // grab weather data with the long and lat values
         axios.get(endpoint)
             .then((response) => {
-                console.log('Sucesfully fetched weather data.')
+                // console.log('Sucesfully fetched weather data.')
                 this.saveWeatherData(response)
                 this.stopRefreshSpinner()
             })
@@ -164,7 +164,7 @@ export default class Menu extends React.Component
             maximumAge: 0
         }
 
-        console.log('Fetching position data...')
+        // console.log('Fetching position data...')
 
         // fetch current position data
         navigator.geolocation.getCurrentPosition(

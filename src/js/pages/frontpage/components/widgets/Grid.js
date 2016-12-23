@@ -25,7 +25,7 @@ const styles = {
     base: {
         position: 'relative',
         textAlign: 'center',
-        top: 'calc(50% - 18px)'
+        top: 'calc(50% - 25px)'
     },
 
     img: {

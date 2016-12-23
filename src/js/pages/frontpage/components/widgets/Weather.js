@@ -11,6 +11,11 @@ export default class Weather extends React.Component
         super(props)
     }
 
+    componentWillMount()
+    {
+        this.setState({ weatherData: this.props.weatherData })
+    }
+
     render()
     {
         let { weatherData } = this.props
@@ -19,7 +24,6 @@ export default class Weather extends React.Component
         return (
             <div style={styles.base}>
                 <div className={loadStyle}></div>
-
                 <div style={styles.icon}>
                     <img src="public/img/cloudy.png" alt="weather" style={styles.img}/>
                 </div>
@@ -44,6 +48,7 @@ const styles = {
     },
 
     temp: {
-        color: '#000000'
+        color: '#000000',
+        fontSize: '1.15em'
     }
 }
