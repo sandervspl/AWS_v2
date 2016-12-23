@@ -51,6 +51,8 @@ class Server {
 
                     this.humidity = val
                 }
+
+                console.log(this.waterLevel)
             })
     }
 

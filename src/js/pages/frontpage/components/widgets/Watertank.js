@@ -45,7 +45,7 @@ export default class Watertank extends React.Component
                     return
 
                 // convert our value to a percentage
-                let val = Math.ceil(100 - 10 * level)
+                let val = 100 - level
                 if (val > 100) val = 100
                 if (val < 0) val = 0
 

@@ -2,6 +2,11 @@
 #define echoPin  12
 #define humidPin A0
 
+#define USONIC_DIV            58.0
+#define MEASURE_SAMPLE_DELAY  5
+#define MEASURE_SAMPLES       25
+#define MEASURE_DELAY         250
+
 void setup() {
   Serial.begin(9600);
   pinMode(trigPin, OUTPUT);
@@ -18,23 +23,36 @@ void loop() {
 
 void distance()
 {
-  long duration, distance;
-  String val;
+  delay(MEASURE_DELAY);
   
-  digitalWrite(trigPin, LOW);
-  delayMicroseconds(2);
-  digitalWrite(trigPin, HIGH);
-  delayMicroseconds(10);
-  digitalWrite(trigPin, LOW);
+  long distance = measure();
+  String val = "w" + String(distance);
   
-  duration = pulseIn(echoPin, HIGH);
-  distance = (duration/2) / 29.1;
-  
-  if (distance <= 0 || distance >= 200)
-    distance = -1;
-
-  val = "w" + String(distance);
   Serial.println(val);
+}
+
+long measure()
+{
+  long measureSum = 0;
+  
+  for (int i = 0; i < MEASURE_SAMPLES; i++) {
+    delay(MEASURE_SAMPLE_DELAY);
+    measureSum += singleMeasurement();
+  }
+  
+  return measureSum / MEASURE_SAMPLES;
+}
+
+long singleMeasurement()
+{
+  long duration = 0;
+  
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(11);
+  digitalWrite(trigPin, LOW);
+  duration = pulseIn(echoPin, HIGH);
+  
+  return (long) (((float) duration / USONIC_DIV) * 10.0);
 }
 
 
