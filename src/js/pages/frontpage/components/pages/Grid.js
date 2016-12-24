@@ -23,15 +23,12 @@ export default class Grid extends React.Component
             for (let j = 0; j < 3; j += 1) {
                 id += 1
                 let marginStyle = (j === 2) ? { marginRight: 0 } : { marginRight: '20px' }
-                let randCur = Math.floor(Math.random() * 30)
 
                 this.tankGrid.push(
                     <Watertank
                         key={id}
                         tankId={id}
                         marginStyle={marginStyle}
-                        capacity="30"
-                        current={randCur}
                         showNotification={this.props.showNotification}
                     />
                 )
@@ -69,14 +66,14 @@ const styles = {
         position: 'relative',
         top: 'calc(50% - 266px)',
         margin: '0 auto',
-        width: '250px',
+        width: '280px',
         whiteSpace: 'normal'
     },
 
     info: {
         position: 'relative',
         top: '-27px',
-        fontSize: '9px',
+        fontSize: '.7em',
         fontWeight: '300',
         textAlign: 'center',
     },

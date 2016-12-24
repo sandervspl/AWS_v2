@@ -1,6 +1,7 @@
 // dependencies
 const React = require('react')
 const Radium = require('radium')
+const axios = require('axios')
 
 @Radium
 export default class Watertank extends React.Component
@@ -9,8 +10,26 @@ export default class Watertank extends React.Component
     {
         super(props)
         this.state = {
-            active: false
+            id: -1,
+            active: false,
+            capacity: 30,
+            fillPrct: 0,
         }
+    }
+
+    componentDidMount()
+    {
+        this.setId(this.props.tankId)
+
+        setTimeout(() => {
+            this.getWaterLevel()
+            setInterval(this.getWaterLevel, 5000)
+        }, 100)
+    }
+
+    setId = (id) =>
+    {
+        this.setState({ id })
     }
 
     toggleActive = () =>
@@ -22,46 +41,75 @@ export default class Watertank extends React.Component
     notification = () =>
     {
         if (this.state.active) {
-            let msg = '(Watertank ' + this.props.tankId + ') wordt geleegd.'
+            let msg = '(Watertank ' + this.state.id + ') wordt geleegd.'
             this.props.showNotification('success', msg)
         } else {
-            let msg = '(Watertank ' + this.props.tankId + ') is gestopt met legen.'
+            let msg = '(Watertank ' + this.state.id + ') is gestopt met legen.'
             this.props.showNotification('alert', msg)
         }
     }
 
+    getWaterLevel = () =>
+    {
+        // console.log('retrieving water level data')
+
+        axios.get('http://localhost:3000/waterlevel/' + this.state.id)
+            .then(data => {
+                let level = data.data
+                let val = null
+
+                // no connection with serialport is found
+                if (level === null) {
+                    val = 'N/A'
+                } else {
+                    // convert our value to a percentage
+                    val = 100 - level
+                    if (val > 100) val = 100
+                    if (val < 0) val = 0
+                }
+
+                // save watertank data
+                this.setState({ fillPrct: val })
+
+                // console.log(`Retrieved data for tank(${this.state.id})`)
+            })
+            .catch(err => {
+                console.warn('could not fetch water level data from server: ' + err)
+            })
+    }
+
     render()
     {
-        let current = this.props.current
-        let capacity = this.props.capacity
-        let prct = (current / capacity * 100).toFixed(0)
-
-        let fillWidth = { width: prct + '%' }
+        let fillPrct  = this.state.fillPrct
+        let capacity  = this.state.capacity
+        let current   = 0
+        let fillWidth = 0
 
         let warningStyle = null
         let warningMsg = ''
-        if (prct >= 80) {
-            warningStyle = styles.warning
-            warningMsg = 'Bijna vol!'
+
+        if (Number.isFinite(fillPrct)) {
+            current = Math.ceil((fillPrct / 100) * capacity)
+            fillWidth = {width: fillPrct + '%'}
+
+            if (fillPrct >= 80) {
+                warningStyle = styles.warning
+                warningMsg = 'Bijna vol!'
+            }
         }
 
         let activeStyle = (this.state.active) ? styles.on : ''
-        
-        let title = 'Tank ' + this.props.tankId
+        let title = 'Tank ' + this.state.id
 
         return (
             <div style={ [styles.base, this.props.marginStyle, activeStyle] } onClick={this.toggleActive}>
-                <div style={styles.title}>
-                    {title}
-                </div>
+                <div style={styles.title}> {title} </div>
 
-                <div style={warningStyle}>
-                    {warningMsg}
-                </div>
+                <div style={warningStyle}> {warningMsg} </div>
 
                 <div style={styles.data}>
-                    <div style={styles.prct}>{prct}%</div>
-                    <div style={styles.curCap}>{current}L / {capacity}L</div>
+                    <div style={styles.prct}> {fillPrct}% </div>
+                    <div style={styles.curCap}> {current}L / {capacity}L </div>
                 </div>
 
                 <div style={styles.fillBg}>
@@ -78,8 +126,8 @@ const styles = {
         position: 'relative',
         display: 'inline-block',
         marginBottom: '60px',
-        width: '70px',
-        height: '80px',
+        width: '80px',
+        height: '90px',
         verticalAlign: 'top',
         background: '#E49B51',
         textAlign: 'center',
@@ -111,16 +159,16 @@ const styles = {
 
     data: {
         position: 'relative',
-        top: 'calc(50% - 20.5px)'
+        top: 'calc(50% - 27.5px)'
     },
 
     prct: {
-        fontSize: '21px',
+        fontSize: '1.5em',
         fontWeight: '500'
     },
 
     curCap: {
-        fontSize: '10px',
+        fontSize: '.7em',
         fontWeight: '300'
     },
 
@@ -140,5 +188,6 @@ const styles = {
         height: '100%',
         maxWidth: '100%',
         minWidth: '1%',
+        transition: 'width .3s ease'
     }
 }

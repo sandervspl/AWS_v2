@@ -126,9 +126,9 @@ export default class Menu extends React.Component
     // with Langitude and Longitude
     getWeatherDataFromPosition(pos)
     {
-        this.startRefreshSpinner()
-
         const crd = pos.coords
+
+        this.startRefreshSpinner()
 
         // create endpoint for OpenWeather API
         let endpoint = 'http://api.openweathermap.org/data/2.5/weather'

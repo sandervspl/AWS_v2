@@ -20,12 +20,6 @@ export default class Watertank extends React.Component
         setInterval(this.getWaterLevel, 1000)
     }
 
-    // start refreshing state
-    startRefreshSpinner()
-    {
-        this.setState({ refreshing: 1 })
-    }
-
     // stop refreshing state
     stopRefreshSpinner()
     {
@@ -34,7 +28,7 @@ export default class Watertank extends React.Component
 
     getWaterLevel = () =>
     {
-        axios.get('http://localhost:3000/waterlevel')
+        axios.get('http://localhost:3000/waterlevel/1')
             .then(data => {
                 this.stopRefreshSpinner()
 
@@ -49,7 +43,7 @@ export default class Watertank extends React.Component
                 if (val > 100) val = 100
                 if (val < 0) val = 0
 
-                // save humidity data
+                // save fill data
                 this.setState({ height: val })
             })
             .catch(err => {

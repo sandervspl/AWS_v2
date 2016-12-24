@@ -1,6 +1,7 @@
 // dependencies
 const Express = require('express')
 const SerialPort = require('serialport')
+const bodyParser = require('body-parser')
 
 // server
 const app = new Express()
@@ -21,6 +22,10 @@ class Server {
     {
         // block the header from containing information about the server
         app.disable('x-powered-by')
+
+        // body parser —to be able to read body content
+        app.use(bodyParser.urlencoded({ extended: true }))
+        app.use(bodyParser.json())
         
         // open serialport
         this.openSerialport()
@@ -33,7 +38,7 @@ class Server {
     openSerialport()
     {
         // serialport
-        const serialport = new SerialPort('/dev/cu.usbmodem1411', { parser: SerialPort.parsers.readline('\n') })
+        let serialport = new SerialPort('/dev/cu.usbmodem1421', { parser: SerialPort.parsers.readline('\n') })
 
         serialport
             .on('error', (err) => { console.log('Serial Port could not be opened:', err) })
@@ -43,16 +48,17 @@ class Server {
                 // cut away first character from string
                 let val = data.slice(1, data.length)
 
-                if (data[0] === 'w')
+                if (data[0] === 'w') {
                     this.waterLevel = val
+                    console.log(val)
+                }
 
                 if (data[0] === 'h') {
                     // We use values of >= 370 and <= 600
+                    // TODO
 
                     this.humidity = val
                 }
-
-                console.log(this.waterLevel)
             })
     }
 
@@ -72,7 +78,8 @@ class Server {
         })
 
         app.get('/humidity', [this.setOptions, this.getHumidity.bind(this)])
-        app.get('/waterlevel', [this.setOptions, this.getWaterLevel.bind(this)])
+        // app.get('/waterlevel', [this.setOptions, this.getWaterLevel.bind(this)])
+        app.get('/waterlevel/:id', [this.setOptions, this.getWaterLevel.bind(this)])
 
         // 404 page
         app.use((req, res) => { res.sendStatus(404) })
@@ -92,9 +99,21 @@ class Server {
         res.json(this.humidity)
     }
 
+    // getWaterLevel(req, res, next)
+    // {
+    //     res.json(this.waterLevel)
+    // }
+
     getWaterLevel(req, res, next)
     {
-        res.json(this.waterLevel)
+        let id = req.params.id
+
+        if (id === '1') {
+            res.json(this.waterLevel)
+            console.log(this.waterLevel)
+        } else {
+            res.json(100)
+        }
     }
 }
 

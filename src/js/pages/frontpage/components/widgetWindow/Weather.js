@@ -54,7 +54,7 @@ const styles = {
     row: {
         display: 'flex',
         flexFlow: 'row',
-        marginTop: '30px',
+        marginTop: '20px',
         height: '100px',
         boxSizing: 'border-box'
     }
