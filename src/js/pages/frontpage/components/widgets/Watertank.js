@@ -15,9 +15,9 @@ export default class Watertank extends React.Component
         }
     }
 
-    componentDidMount()
+    componentWillMount()
     {
-        setInterval(this.getWaterLevel, 1000)
+        // setInterval(this.getWaterLevel, 1000)
     }
 
     // stop refreshing state

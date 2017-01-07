@@ -6,7 +6,6 @@ const Radium = require('radium')
 import WidgetButton from './WidgetButton'
 
 
-
 @Radium
 export default class WidgetMenu extends React.Component
 {

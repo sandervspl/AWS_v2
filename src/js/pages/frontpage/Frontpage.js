@@ -8,6 +8,12 @@ import Grid from './components/pages/Grid'
 import Menu from './components/pages/Menu'
 import Notification from '../layout/Notification'
 
+// stores
+import notificationStore from '../../stores/NotificationStore'
+
+// actions
+import * as notificationActions from '../../actions/NotificationActions'
+
 
 @Radium
 export default class Frontpage extends React.Component
@@ -24,10 +30,26 @@ export default class Frontpage extends React.Component
             notificationMsg: null,
             notificationShow: null,
 
+            // todo: finish this
+            notifications: notificationStore.getAll(),
+
             view: 'menu'
         }
 
         this.timeout = null
+    }
+
+    componentWillMount()
+    {
+        notificationStore.on('change', () => {
+            console.log('Notifactions store changed...')
+
+            this.setState({
+                notifications: notificationStore.getAll()
+            })
+
+            console.log(this.state.notifications)
+        })
     }
 
     toggleView = () =>

@@ -17,14 +17,14 @@ export default class Watertank extends React.Component
         }
     }
 
-    componentDidMount()
+    componentWillMount()
     {
         this.setId(this.props.tankId)
 
-        setTimeout(() => {
-            this.getWaterLevel()
-            setInterval(this.getWaterLevel, 5000)
-        }, 100)
+        // setTimeout(() => {
+        //     this.getWaterLevel()
+        //     setInterval(this.getWaterLevel, 5000)
+        // }, 100)
     }
 
     setId = (id) =>
