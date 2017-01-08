@@ -9,24 +9,19 @@ class NotificationStore extends EventEmitter
     {
         super()
         this.counter = 0
-        this.notifications = [
-            {
-                kind: 'TYPE_WARNING',
-                text: 'Watertank wordt geleegd!',
-                created_at: Date.now(),
-                expires_at: Date.now() + 10 * 1000
-            }
-        ]
+        this.notifications = []
     }
 
     getAll = () => this.notifications
 
     createNotification = (kind, text, expiresTime) =>
     {
+        let offset = this.notifications.length * 35   // notification bar is 35px high
         this.notifications.push({
             id: this.counter,
             kind,
             text,
+            offset,
             created_at: Date.now(),
             expires_at: expiresTime
         })
@@ -35,17 +30,44 @@ class NotificationStore extends EventEmitter
         this.emit('change')
     }
 
+    deleteNotification = (id) =>
+    {
+        for (let [i, notification] of this.notifications.entries()) {
+            if (notification.id === id) {
+                this.notifications.splice(i, 1)
+                break
+            }
+        }
+
+        this.emit('change')
+        this.emit('delete_notification')
+    }
+
+    shiftNotifications = () =>
+    {
+        for (let [i, notification] of this.notifications.entries()) {
+            notification.offset -= 35
+        }
+
+        this.emit('change')
+    }
+
     handleActions = (action) =>
     {
         switch(action.type)
         {
             case 'CREATE_NOTIFICATION': {
-                console.log('Creating notification...')
                 this.createNotification(action.kind, action.text, action.expiresTime)
                 break
             }
 
             case 'DELETE_NOTIFICATION': {
+                this.deleteNotification(action.id)
+                break
+            }
+
+            case 'SHIFT_NOTIFICATIONS': {
+                this.shiftNotifications()
                 break
             }
         }
@@ -56,9 +78,5 @@ const notificationStore = new NotificationStore
 
 // dispatcher
 Dispatcher.register(notificationStore.handleActions)
-
-// DEBUG: FOR CONSOLE
-window.notificationStore = notificationStore
-window.dispatcher = Dispatcher
 
 export default notificationStore

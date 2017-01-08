@@ -13,7 +13,11 @@ export function createNotification(kind, text, expiresTime) {
 
 export function deleteNotification(id) {
     Dispatcher.dispatch({
-        type: 'delete_NOTIFICATION',
+        type: 'DELETE_NOTIFICATION',
         id
     })
+}
+
+export function shiftNotifactions() {
+    Dispatcher.dispatch({ type: 'SHIFT_NOTIFICATIONS' })
 }

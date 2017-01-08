@@ -2,6 +2,10 @@
 const React = require('react')
 const Radium = require('radium')
 
+// actions
+import * as notificationActions from '../../../actions/NotificationActions'
+
+
 @Radium
 export default class BigButton extends React.Component
 {
@@ -9,19 +13,18 @@ export default class BigButton extends React.Component
     {
         super(props)
         this.state = {
-            state: 'off'
+            activated: false
         }
     }
 
     handleClick = () =>
     {
-        if (this.state.state === 'off') {
+        if ( ! this.state.activated) {
             let kind = 'alert'
             let msg = 'Alle watertanks worden geleegd.'
+            let expiresTime = Date.now() + 5000
 
-            this.props.showNotification(kind, msg, 0)
-        } else {
-            this.props.hideNotification()
+            notificationActions.createNotification(kind, msg, expiresTime)
         }
 
         this.toggleState()
@@ -29,25 +32,31 @@ export default class BigButton extends React.Component
 
     toggleState = () =>
     {
-        let state = (this.state.state === 'on') ? 'off' : 'on'
-        this.setState({ state })
+        this.setState({ activated: !this.state.activated })
     }
 
     render()
     {
-        let state = (this.state.state === 'on') ? 'AAN' : 'UIT'
-        let bucketStyle = (this.state.state === 'on') ? [styles.img, styles.rotate] : styles.img
+        let stateMsg = 'UIT',
+            bucketStyle = styles.img,
+            buttonStyle = styles.off
+
+        if (this.state.activated) {
+            stateMsg = 'AAN'
+            bucketStyle = [styles.img, styles.rotate]
+            buttonStyle = styles.on
+        }
 
         return (
             <div style={styles.base}>
                 <div style={styles.btn} onClick={this.handleClick}>
-                    <div style={ [styles.midCircle, styles[this.state.state]] }>
+                    <div style={ [styles.midCircle, buttonStyle] }>
                         <img src="public/img/bucket_icon_white.png" alt="Bucket" style={bucketStyle}/>
                     </div>
                 </div>
                 <div style={styles.description}>
                     <p>Drainage Systeem:</p>
-                    <p>{state}</p>
+                    <p>{stateMsg}</p>
                 </div>
             </div>
         )

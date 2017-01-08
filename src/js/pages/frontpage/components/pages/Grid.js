@@ -29,7 +29,6 @@ export default class Grid extends React.Component
                         key={id}
                         tankId={id}
                         marginStyle={marginStyle}
-                        showNotification={this.props.showNotification}
                     />
                 )
             }

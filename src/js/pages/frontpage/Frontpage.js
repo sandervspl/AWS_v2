@@ -24,31 +24,17 @@ export default class Frontpage extends React.Component
         this.state = {
             widgetActive: false,
             widgetKind: null,
-
-            notification: null,
-            notificationKind: null,
-            notificationMsg: null,
-            notificationShow: null,
-
-            // todo: finish this
             notifications: notificationStore.getAll(),
-
             view: 'menu'
         }
-
-        this.timeout = null
     }
 
     componentWillMount()
     {
         notificationStore.on('change', () => {
-            console.log('Notifactions store changed...')
-
             this.setState({
                 notifications: notificationStore.getAll()
             })
-
-            console.log(this.state.notifications)
         })
     }
 
@@ -58,28 +44,8 @@ export default class Frontpage extends React.Component
         this.setState({ view })
     }
 
-    showNotification = (kind, msg, time = 5000) =>
-    {
-        clearTimeout(this.timeout)
-        
-        this.setState({
-            notificationKind: kind,
-            notificationMsg: msg,
-            notificationShow: 'show'
-        })
-
-        if (time > 0) this.timeout = setTimeout(this.hideNotification, time)
-    }
-
-    hideNotification = () =>
-    {
-        this.setState({ notificationShow: null })
-    }
-
     render()
     {
-        // let curView = (this.state.view === 'menu') ? '' : styles.gridView
-
         let menuX = null
         let gridX = null
 
@@ -91,33 +57,22 @@ export default class Frontpage extends React.Component
             gridX = { transform: 'translateX(-100%)' }
         }
 
-        let notiKind = this.state.notificationKind
-        let notiMsg = this.state.notificationMsg
-        let notiShow = this.state.notificationShow
+        const notifications = this.state.notifications.map((notification) => {
+            return <Notification key={notification.id} {...notification}/>
+        })
 
         return (
             <div id="view-wrapper" style={styles.base}>
-                <Notification
-                    kind={notiKind}
-                    msg={notiMsg}
-                    show={notiShow}
-                />
+                {notifications}
 
                 <Login />
 
                 <div id="menu-wrapper" style={ [styles.view, menuX] }>
-                    <Menu
-                        toggleView={this.toggleView}
-                        showNotification={this.showNotification}
-                        hideNotification={this.hideNotification}
-                    />
+                    <Menu toggleView={this.toggleView} />
                 </div>
 
                 <div id="grid-wrapper" style={ [styles.view, styles.grid, gridX] }>
-                    <Grid
-                        toggleView={this.toggleView}
-                        showNotification={this.showNotification}
-                    />
+                    <Grid toggleView={this.toggleView} />
                 </div>
             </div>
         )

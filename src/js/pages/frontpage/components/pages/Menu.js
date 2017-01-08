@@ -107,10 +107,7 @@ export default class Menu extends React.Component
                     weatherData={this.state.weatherData}
                     refreshing={this.state.refreshingWeather}
                 />
-                <BigButton
-                    showNotification={this.props.showNotification}
-                    hideNotification={this.props.hideNotification}
-                />
+                <BigButton />
                 <WidgetWindow
                     active={this.state.widgetActive}
                     kind={this.state.widgetKind}

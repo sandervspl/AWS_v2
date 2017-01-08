@@ -2,7 +2,8 @@
 const React = require('react')
 const Radium = require('radium')
 
-// components
+// actions
+import * as notificationActions from '../../actions/NotificationActions'
 
 
 @Radium
@@ -12,7 +13,37 @@ export default class Notification extends React.Component
     {
         super(props)
         this.state = {
-            msg: ''
+            show: false
+        }
+    }
+
+    componentWillMount()
+    {
+        setTimeout(this.toggleShow, 1)
+        this.checker = setInterval(this.remove, 100)
+    }
+
+    toggleShow = () => this.setState({ show: !this.state.show })
+
+    remove = () =>
+    {
+        const curTime = Date.now()
+        const expiresTime = this.props.expires_at
+
+        if (curTime > expiresTime) {
+            clearInterval(this.checker)
+
+            // move out of screen
+            this.toggleShow()
+
+            // shift all notifactions up
+            notificationActions.shiftNotifactions()
+
+            // remove notification from DOM after it's out of screen (.3s animation time)
+            setTimeout(
+                notificationActions.deleteNotification.bind(this, this.props.id),
+                300
+            )
         }
     }
 
@@ -20,12 +51,13 @@ export default class Notification extends React.Component
     {
         let kindStyle = styles[this.props.kind]
         let iconStyle = styles[this.props.kind + 'Icon']
-        let show = styles[this.props.show]
+        let show = (this.state.show) ? styles.show : {}
+        let offset = { top: this.props.offset + 'px' }
 
         return (
-            <div id="notification-bar" style={ [styles.base, kindStyle, show] }>
+            <div id="notification-bar" style={ [styles.base, kindStyle, show, offset] }>
                 <div style={ [styles.icon, iconStyle] }></div>
-                <span style={styles.msg}>{this.props.msg}</span>
+                <span style={styles.msg}>{this.props.text}</span>
             </div>
         )
     }
@@ -38,6 +70,7 @@ const styles = {
         position: 'fixed',
         top: 0,
         left: 0,
+        zIndex: 100,
         width: '100%',
         height: '35px',
         transform: 'translateY(-38px)',

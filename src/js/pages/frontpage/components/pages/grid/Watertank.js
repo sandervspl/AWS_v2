@@ -3,6 +3,10 @@ const React = require('react')
 const Radium = require('radium')
 const axios = require('axios')
 
+// actions
+import * as notificationActions from '../../../../../actions/NotificationActions'
+
+
 @Radium
 export default class Watertank extends React.Component
 {
@@ -40,19 +44,19 @@ export default class Watertank extends React.Component
 
     notification = () =>
     {
+        const expiresTime = Date.now() + 3000
+
         if (this.state.active) {
-            let msg = '(Watertank ' + this.state.id + ') wordt geleegd.'
-            this.props.showNotification('success', msg)
+            const msg = `(Watertank ${this.state.id}) wordt geleegd.`
+            notificationActions.createNotification('success', msg, expiresTime)
         } else {
-            let msg = '(Watertank ' + this.state.id + ') is gestopt met legen.'
-            this.props.showNotification('alert', msg)
+            const msg = `(Watertank ${this.state.id}) is gestopt met legen.`
+            notificationActions.createNotification('alert', msg, expiresTime)
         }
     }
 
     getWaterLevel = () =>
     {
-        // console.log('retrieving water level data')
-
         axios.get('http://localhost:3000/waterlevel/' + this.state.id)
             .then(data => {
                 let level = data.data
@@ -70,8 +74,6 @@ export default class Watertank extends React.Component
 
                 // save watertank data
                 this.setState({ fillPrct: val })
-
-                // console.log(`Retrieved data for tank(${this.state.id})`)
             })
             .catch(err => {
                 console.warn('could not fetch water level data from server: ' + err)
