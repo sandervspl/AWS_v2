@@ -57,7 +57,10 @@ export default class WidgetButton extends React.Component
                 break
 
             case 'weather':
-                button = <Weather weatherData={this.props.weatherData} />
+                button = <Weather
+                            weatherData={this.props.weatherData}
+                            refreshing={this.props.refreshing}
+                />
                 tag = ''
                 break
         }

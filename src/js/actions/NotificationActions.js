@@ -1,4 +1,6 @@
+// dependencies
 import Dispatcher from '../dispatcher'
+
 
 export function createNotification(kind, text, expiresTime) {
     Dispatcher.dispatch({

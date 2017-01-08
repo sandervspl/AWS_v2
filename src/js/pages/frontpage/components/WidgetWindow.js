@@ -18,13 +18,16 @@ export default class WidgetWindow extends React.Component
     {
         switch (this.props.kind)
         {
-            case 'weather':
-                return <Weather weatherData={this.props.weatherData} />
-                break
+            case 'weather': {
+                return <Weather
+                    weatherData={this.props.weatherData}
+                    refreshing={this.props.refreshing}
+                />
+            }
 
-            default:
+            default: {
                 return null
-                break
+            }
         }
     }
 

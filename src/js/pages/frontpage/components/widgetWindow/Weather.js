@@ -19,7 +19,7 @@ export default class Weather extends React.Component
     render()
     {
         let { weatherData } = this.props
-        let loadStyle = (weatherData.refreshing === 0) ? 'loading loaded' : 'loading'
+        let loadStyle = (this.props.refreshing === false) ? 'loading loaded' : 'loading'
 
         return (
             <div style={styles.base}>

@@ -37,9 +37,6 @@ class NotificationStore extends EventEmitter
 
     handleActions = (action) =>
     {
-        console.log(`NotificationStore action received: ${action.type}`)
-        console.log(action)
-
         switch(action.type)
         {
             case 'CREATE_NOTIFICATION': {

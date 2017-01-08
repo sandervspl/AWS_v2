@@ -31,6 +31,7 @@ export default class WidgetMenu extends React.Component
                         kind="weather"
                         activateWidgetWindow={this.props.activateWidgetWindow}
                         weatherData={this.props.weatherData}
+                        refreshing={this.props.refreshing}
                     />
                 </ul>
             </div>

@@ -87,7 +87,7 @@ const styles = {
     },
 
     title: {
-        fontSize: '11px',
+        fontSize: '14px',
         fontWeight: '100',
         transform: 'translateY(-5px)'
     },
