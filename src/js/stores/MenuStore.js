@@ -13,7 +13,6 @@ class MenuStore extends EventEmitter
     }
 
     getPosition = () => this.position
-
     getWeatherData = () => this.weatherData
 
     fetchWeatherData() { this.emit('fetching') }

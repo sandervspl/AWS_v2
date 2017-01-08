@@ -14,7 +14,7 @@ export default class Grid extends React.Component
         super(props)
     }
 
-    componentDidMount()
+    componentWillMount()
     {
         this.tankGrid = []
         let id = 0

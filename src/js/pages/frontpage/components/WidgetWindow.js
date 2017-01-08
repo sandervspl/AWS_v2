@@ -5,6 +5,9 @@ const Radium = require('radium')
 // components
 import Weather from './widgetWindow/Weather'
 
+// stores
+import widgetWindowStore from '../../../stores/WidgetWindowStore'
+
 
 @Radium
 export default class WidgetWindow extends React.Component
@@ -12,11 +15,27 @@ export default class WidgetWindow extends React.Component
     constructor(props)
     {
         super(props)
+        this.state = {
+            active: false,
+            kind: null
+        }
+    }
+
+    componentWillMount()
+    {
+        widgetWindowStore.on('toggle_widget_window', () => {
+            const ww = widgetWindowStore.getWindow()
+
+            this.setState({
+                active: ww.active,
+                kind: ww.kind
+            })
+        })
     }
 
     getWidgetComponent()
     {
-        switch (this.props.kind)
+        switch (this.state.kind)
         {
             case 'weather': {
                 return <Weather
@@ -34,7 +53,7 @@ export default class WidgetWindow extends React.Component
     render()
     {
         let widget = this.getWidgetComponent()
-        let active = (this.props.active) ? 'active' : ''
+        let active = (this.state.active) ? 'active' : ''
 
         return (
             <div style={ [styles.base, styles[active]] }>

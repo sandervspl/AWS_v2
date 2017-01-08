@@ -36,3 +36,11 @@ export function getPositionData() {
     Dispatcher.dispatch({ type: 'FETCH_WEATHER_DATA' })
     Dispatcher.dispatch({ type: 'FETCH_POSITION_DATA' })
 }
+
+export function toggleWidgetWindow(state, kind) {
+    Dispatcher.dispatch({
+        type: 'TOGGLE_WIDGET_WINDOW',
+        kind,
+        state
+    })
+}

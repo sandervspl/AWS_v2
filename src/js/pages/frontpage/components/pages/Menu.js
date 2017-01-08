@@ -22,8 +22,6 @@ export default class Menu extends React.Component
     {
         super(props)
         this.state = {
-            widgetActive: false,
-            widgetKind: null,
             pos: {},                // lat and longitude
             refreshingWeather: true,
             weatherData: {
@@ -43,6 +41,17 @@ export default class Menu extends React.Component
 
     componentWillMount()
     {
+        this.handleDispatches()
+
+        // start weather fetching process by fetching position data
+        menuActions.getPositionData()
+
+        // fetch new weather data every minute
+        setInterval(() => { this.getWeatherDataFromPosition(this.state.pos) }, 60000)
+    }
+
+    handleDispatches = () =>
+    {
         menuStore.on('fetching', () => {
             console.log('fetching menu data...')
             this.startRefreshSpinner()
@@ -60,20 +69,6 @@ export default class Menu extends React.Component
         menuStore.on('change_weather_data', () => {
             this.setState({ weatherData: menuStore.getWeatherData() })
             this.stopRefreshSpinner()
-        })
-
-        // start weather fetching process by fetching position data
-        menuActions.getPositionData()
-
-        // fetch new weather data every minute
-        setInterval(() => { this.getWeatherDataFromPosition(this.state.pos) }, 60000)
-    }
-
-    activateWidgetWindow = (active, kind) =>
-    {
-        this.setState({
-            widgetActive: active,
-            widgetKind: kind
         })
     }
 
@@ -101,15 +96,16 @@ export default class Menu extends React.Component
         return (
             <div style={styles.base}>
                 <Logo />
+
                 <WidgetMenu
-                    activateWidgetWindow={this.activateWidgetWindow}
                     toggleView={this.props.toggleView}
                     weatherData={this.state.weatherData}
                     refreshing={this.state.refreshingWeather}
                 />
+
                 <BigButton />
+
                 <WidgetWindow
-                    active={this.state.widgetActive}
                     kind={this.state.widgetKind}
                     weatherData={this.state.weatherData}
                     refreshing={this.state.refreshingWeather}

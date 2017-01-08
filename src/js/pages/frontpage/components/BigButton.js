@@ -19,11 +19,15 @@ export default class BigButton extends React.Component
 
     handleClick = () =>
     {
-        if ( ! this.state.activated) {
-            let kind = 'alert'
-            let msg = 'Alle watertanks worden geleegd.'
-            let expiresTime = Date.now() + 5000
+        const expiresTime = Date.now() + 5000
 
+        if ( ! this.state.activated) {
+            let kind = 'success'
+            let msg = 'Alle watertanks worden geleegd.'
+            notificationActions.createNotification(kind, msg, expiresTime)
+        } else {
+            let kind = 'alert'
+            let msg = 'Watertanks zijn gestopt met legen.'
             notificationActions.createNotification(kind, msg, expiresTime)
         }
 

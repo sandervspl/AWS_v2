@@ -7,6 +7,9 @@ import Watertank from './widgets/Watertank'
 import Grid from './widgets/Grid'
 import Weather from './widgets/Weather'
 
+// actions
+import * as widgetWindowActions from '../../../actions/WidgetWindowActions'
+
 
 @Radium
 export default class WidgetButton extends React.Component
@@ -14,9 +17,6 @@ export default class WidgetButton extends React.Component
     constructor(props)
     {
         super(props)
-        this.state = {
-            active: false
-        }
     }
 
     handeClick = () =>
@@ -28,16 +28,9 @@ export default class WidgetButton extends React.Component
         }
     }
 
-    toggleActive = () =>
-    {
-        this.state.active = !this.state.active
-        this.activateWindow()
-    }
+    toggleActive = () => this.activateWindow()
 
-    activateWindow = () =>
-    {
-        this.props.activateWidgetWindow(this.state.active, this.props.kind)
-    }
+    activateWindow = () => widgetWindowActions.toggleWidgetWindow(this.props.kind)
 
     render()
     {
