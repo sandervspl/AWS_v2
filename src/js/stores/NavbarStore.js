@@ -9,27 +9,27 @@ class NavbarStore extends EventEmitter
     {
         super(props)
         this.view = 'menu'
-        this.backBtnActive = false
+
+        this.backBtn = {
+            active: false,
+            title: ''
+        }
     }
     
     getView = () => this.view
-    isBackBtnActive = () => this.backBtnActive
+    getBackBtn = () => this.backBtn
 
-    navAwayFromMenu = () =>
+    navTo = (curView, nextView) =>
     {
-        this.backBtnActive = true
-        this.emit('activate_back_btn')
-    }
-
-    navTo = (view) =>
-    {
-        if (view === 'menu') {
-            this.backBtnActive = false
+        if (nextView === 'menu') {
+            this.backBtn.active = false
+            this.backBtn.title = ''
         } else {
-            this.navAwayFromMenu()
+            this.backBtn.active = true
+            this.backBtn.title = curView
         }
 
-        this.view = view
+        this.view = nextView
         this.emit('view_change')
     }
 
@@ -37,9 +37,8 @@ class NavbarStore extends EventEmitter
     {
         switch(action.type)
         {
-            case 'NAV_AWAY_FROM_MENU': {
-                this.navAwayFromMenu()
-                this.navTo(action.view)
+            case 'NAV_FROM_TO': {
+                this.navTo(action.curView, action.nextView)
                 break
             }
 

@@ -16,17 +16,26 @@ export default class Topbar extends React.Component
     {
         super(props)
         this.state = {
-            leftText: '< Terug',
-            rightText: 'Volgende >'
+            viewName: 'grid',
+            leftText: '<'
         }
     }
 
-    handleClick = () => NavbarActions.navBackTo('menu')
+    componentWillMount()
+    {
+        navbarStore.on('view_change', () => {
+            this.setState({
+                leftText: `< ${navbarStore.getBackBtn().title}`
+            })
+        })
+    }
+
+    handleBackBtnClick = () => NavbarActions.navFromTo(this.state.viewName, 'menu')
 
     render()
     {
-        let backBtn = navbarStore.isBackBtnActive()
-            ? <span style={styles.btnActive} onClick={this.handleClick}>{this.state.leftText}</span>
+        let backBtn = navbarStore.getBackBtn().active
+            ? <span style={styles.btnActive} onClick={this.handleBackBtnClick}>{this.state.leftText}</span>
             : <span style={styles.btnInactive}>{this.state.leftText}</span>
 
         return (
@@ -37,9 +46,7 @@ export default class Topbar extends React.Component
                 <div style={ [styles.item, styles.title] }>
                     <span>{this.props.title}</span>
                 </div>
-                <div style={ [styles.item, styles.right] }>
-                    <span style={styles.btnInactive}>{this.state.rightText}</span>
-                </div>
+                <div style={ [styles.item, styles.right] }/>
             </div>
         )
     }

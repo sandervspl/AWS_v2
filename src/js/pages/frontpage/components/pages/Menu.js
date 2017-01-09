@@ -22,6 +22,7 @@ export default class Menu extends React.Component
     {
         super(props)
         this.state = {
+            viewName: 'menu',
             pos: {},                // lat and longitude
             refreshingWeather: true,
             weatherData: {
@@ -93,7 +94,6 @@ export default class Menu extends React.Component
                 <Logo />
 
                 <WidgetMenu
-                    toggleView={this.props.toggleView}
                     weatherData={this.state.weatherData}
                     refreshing={this.state.refreshingWeather}
                 />

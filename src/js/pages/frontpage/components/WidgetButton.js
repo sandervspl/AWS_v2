@@ -34,7 +34,10 @@ export default class WidgetButton extends React.Component
                 time = 325
             }
 
-            setTimeout(() => navbarActions.navAwayFromMenu('grid'), time)
+            setTimeout(
+                () => navbarActions.navFromTo('menu', 'grid'),
+                time
+            )
         } else {
             this.toggleActive()
         }
