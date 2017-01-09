@@ -3,6 +3,13 @@ const React = require('react')
 const Radium = require('radium')
 const axios = require('axios')
 
+// actions
+import * as widgetActions from '../../../../actions/WidgetActions'
+
+// stores
+import widgetStore from '../../../../stores/WidgetStore'
+
+
 @Radium
 export default class Watertank extends React.Component
 {
@@ -10,51 +17,30 @@ export default class Watertank extends React.Component
     {
         super(props)
         this.state = {
-            refreshing: 1,
+            refreshing: false,
             height: 0
         }
     }
 
     componentWillMount()
     {
-        // setInterval(this.getWaterLevel, 1000)
+        widgetStore.on('water_change', () => {
+            this.setState({ height: widgetStore.getWaterHeight() })
+            this.stopRefreshSpinner()
+        })
+
+        
+        widgetStore.on('fail', this.stopRefreshSpinner)
+
+        setInterval(widgetActions.getWaterLevel.bind(this, 1), 1000)
     }
 
     // stop refreshing state
-    stopRefreshSpinner()
-    {
-        this.setState({ refreshing: 0 })
-    }
-
-    getWaterLevel = () =>
-    {
-        axios.get('http://localhost:3000/waterlevel/1')
-            .then(data => {
-                this.stopRefreshSpinner()
-
-                let level = data.data
-
-                // no connection with serialport is found
-                if ( ! level || level === null)
-                    return
-
-                // convert our value to a percentage
-                let val = 100 - level
-                if (val > 100) val = 100
-                if (val < 0) val = 0
-
-                // save fill data
-                this.setState({ height: val })
-            })
-            .catch(err => {
-                console.warn('could not fetch water level data from server: ' + err)
-                this.stopRefreshSpinner()
-            })
-    }
+    stopRefreshSpinner = () => this.setState({ refreshing: true })
 
     render()
     {
-        let loadStyle = (this.state.refreshing === 0) ? 'loading loaded' : 'loading'
+        let loadStyle = this.state.refreshing ? 'loading loaded' : 'loading'
         let prct = this.state.height + '%'
         let height = this.state.height + '%'
         let fill = { height: height }

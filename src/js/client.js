@@ -1,6 +1,6 @@
 // dependencies
-import React from 'react'
-import ReactDOM from 'react-dom'
+const React = require('react')
+const ReactDOM = require('react-dom')
 
 // components
 import AppRoutes from './AppRoutes'

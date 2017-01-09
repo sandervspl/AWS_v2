@@ -8,7 +8,6 @@ class WidgetWindowStore extends EventEmitter
     constructor(props)
     {
         super(props)
-        // this.active = false
         this.window = {
             active: false,
             kind: null
@@ -17,11 +16,23 @@ class WidgetWindowStore extends EventEmitter
 
     getWindow = () => this.window
 
-    toggleWidgetWindow(kind)
+    toggleWidgetWindow = (kind) =>
     {
+        let newActive = !this.window.active,
+            newKind   = kind
+
+        if (this.window.active && this.window.kind === kind) {
+            newActive = false
+            newKind = this.window.kind
+        }
+        else if (this.window.active && this.window.kind !== kind) {
+            newActive = true
+            newKind = kind
+        }
+
         this.window = {
-            active: !this.window.active,
-            kind
+            active: newActive,
+            kind: newKind
         }
 
         this.emit('toggle_widget_window')

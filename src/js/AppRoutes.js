@@ -1,4 +1,4 @@
-import React from 'react'
+const React = require('react')
 import { Router, hashHistory } from 'react-router'
 import routes from './routes'
 

@@ -1,4 +1,4 @@
-// components / vars
+// components
 import Dispatcher from '../dispatcher'
 
 export function toggleWidgetWindow(kind) {

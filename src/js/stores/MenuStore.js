@@ -1,6 +1,10 @@
 // dependencies
 import { EventEmitter } from 'events'
 import Dispatcher from '../dispatcher'
+const axios = require('axios')
+
+// vars
+import * as vars from '../secret/vars'
 
 
 class MenuStore extends EventEmitter
@@ -15,7 +19,29 @@ class MenuStore extends EventEmitter
     getPosition = () => this.position
     getWeatherData = () => this.weatherData
 
-    fetchWeatherData() { this.emit('fetching') }
+    fetch() { this.emit('fetching') }
+    fail() { this.emit('fail') }
+
+    fetchWeatherData = (lat, lon) =>
+    {
+        // create endpoint for OpenWeather API
+        let endpoint = 'http://api.openweathermap.org/data/2.5/weather'
+        endpoint += '?lat=' + lat
+        endpoint += '&lon=' + lon
+        endpoint += '&units=metric'
+        endpoint += '&APPID=' + vars.WeatherApiKey
+
+        // fetch weather data from openweather api with the long and lat values
+        axios.get(endpoint)
+            .then(
+                data => this.saveWeatherData(data.data)
+            )
+            .catch(
+                error => {
+                console.warn(error)
+                this.fail()
+            })
+    }
 
     saveWeatherData(data)
     {
@@ -46,12 +72,13 @@ class MenuStore extends EventEmitter
 
         // fetch current position data
         navigator.geolocation.getCurrentPosition(
-            (pos) => {
+            pos => {
                 this.position = pos
                 this.emit('change_position_data')
             },
-            (err) => {
+            err => {
                 console.warn('ERROR(' + err.code + '): ' + err.message)
+                this.fail()
             },
             options
         )
@@ -61,8 +88,13 @@ class MenuStore extends EventEmitter
     {
         switch(action.type)
         {
+            case 'FETCH': {
+                this.fetch()
+                break
+            }
+
             case 'FETCH_WEATHER_DATA': {
-                this.fetchWeatherData()
+                this.fetchWeatherData(action.lat, action.lon)
                 break
             }
 

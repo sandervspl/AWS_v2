@@ -1,4 +1,4 @@
-import React from 'react'
+const React = require('react')
 import { Link } from 'react-router'
 
 export default class NotFound extends React.Component {

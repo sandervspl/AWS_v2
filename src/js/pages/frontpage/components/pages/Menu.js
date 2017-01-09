@@ -52,14 +52,9 @@ export default class Menu extends React.Component
 
     handleDispatches = () =>
     {
-        menuStore.on('fetching', () => {
-            console.log('fetching menu data...')
-            this.startRefreshSpinner()
-        })
+        menuStore.on('fetching', () => this.startRefreshSpinner())
 
-        menuStore.on('fail', () => {
-            this.stopRefreshSpinner()
-        })
+        menuStore.on('fail', () => this.stopRefreshSpinner())
 
         menuStore.on('change_position_data', () => {
             this.setState({ pos: menuStore.getPosition() })
@@ -73,14 +68,14 @@ export default class Menu extends React.Component
     }
 
     // start refreshing state
-    startRefreshSpinner() { this.setState({ refreshingWeather: true }) }
+    startRefreshSpinner = () => this.setState({ refreshingWeather: true })
 
     // stop refreshing state
-    stopRefreshSpinner() { this.setState({ refreshingWeather: false }) }
+    stopRefreshSpinner = () => this.setState({ refreshingWeather: false })
 
     // fetch weather data from OpenWeather API
     // with Langitude and Longitude
-    getWeatherDataFromPosition(pos)
+    getWeatherDataFromPosition = (pos) =>
     {
         const crd = pos.coords
 

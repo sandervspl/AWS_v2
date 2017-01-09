@@ -25,6 +25,21 @@ export default class Notification extends React.Component
 
     toggleShow = () => this.setState({ show: !this.state.show })
 
+    removeNotification = () =>
+    {
+        // move out of screen
+        this.toggleShow()
+
+        // shift all notifactions up
+        notificationActions.shiftNotifactions()
+
+        // remove notification from DOM after it's out of screen (.3s animation time)
+        setTimeout(
+            notificationActions.deleteNotification.bind(this, this.props.id),
+            300
+        )
+    }
+
     remove = () =>
     {
         const curTime = Date.now()
@@ -32,18 +47,7 @@ export default class Notification extends React.Component
 
         if (curTime > expiresTime) {
             clearInterval(this.checker)
-
-            // move out of screen
-            this.toggleShow()
-
-            // shift all notifactions up
-            notificationActions.shiftNotifactions()
-
-            // remove notification from DOM after it's out of screen (.3s animation time)
-            setTimeout(
-                notificationActions.deleteNotification.bind(this, this.props.id),
-                300
-            )
+            this.removeNotification()
         }
     }
 
@@ -74,6 +78,7 @@ const styles = {
         width: '100%',
         height: '35px',
         transform: 'translateY(-38px)',
+        cursor: 'default',
         transition: 'all .3s cubic-bezier(.825, 0, .5, 1)'
     },
 

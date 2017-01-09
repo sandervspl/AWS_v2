@@ -41,16 +41,16 @@ class Server {
         let serialport = new SerialPort('/dev/cu.usbmodem1421', { parser: SerialPort.parsers.readline('\n') })
 
         serialport
-            .on('error', (err) => { console.log('Serial Port could not be opened:', err) })
+            .on('error', err => { console.log('Serial Port could not be opened:', err) })
             .on('open', () => { console.log('Serial Port Opened') })
-            .on('data', (data) =>
+            .on('data', data =>
             {
                 // cut away first character from string
                 let val = data.slice(1, data.length)
 
                 if (data[0] === 'w') {
                     this.waterLevel = val
-                    console.log(val)
+                    // console.log(val)
                 }
 
                 if (data[0] === 'h') {
@@ -110,7 +110,7 @@ class Server {
 
         if (id === '1') {
             res.json(this.waterLevel)
-            console.log(this.waterLevel)
+            // console.log(this.waterLevel)
         } else {
             res.json(100)
         }

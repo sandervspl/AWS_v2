@@ -34,10 +34,7 @@ export default class BigButton extends React.Component
         this.toggleState()
     }
 
-    toggleState = () =>
-    {
-        this.setState({ activated: !this.state.activated })
-    }
+    toggleState = () => this.setState({ activated: !this.state.activated })
 
     render()
     {
