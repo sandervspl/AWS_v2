@@ -7,3 +7,7 @@ export function toggleWidgetWindow(kind) {
         kind,
     })
 }
+
+export function closeWidgetWindow() {
+    Dispatcher.dispatch({ type: 'CLOSE_WIDGET_WINDOW' })
+}

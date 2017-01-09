@@ -8,7 +8,14 @@ const path = require('path')
 
 module.exports = {
     context: path.join(__dirname, 'src'),
+
     devtool: debug ? 'inline-sourcemap' : null,
+
+    devServer: {
+        host: '192.168.1.115',
+        port: 8080,
+    },
+
     entry: './js/client.js',
 
     module: {

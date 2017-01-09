@@ -19,7 +19,7 @@ export default class Notification extends React.Component
 
     componentWillMount()
     {
-        setTimeout(this.toggleShow, 1)
+        setTimeout(this.toggleShow, 100)
         this.checker = setInterval(this.remove, 100)
     }
 
@@ -35,7 +35,7 @@ export default class Notification extends React.Component
 
         // remove notification from DOM after it's out of screen (.3s animation time)
         setTimeout(
-            notificationActions.deleteNotification.bind(this, this.props.id),
+            () => notificationActions.deleteNotification(this.props.id),
             300
         )
     }
@@ -72,7 +72,7 @@ const styles = {
     base: {
         boxSizing: 'border-box',
         position: 'fixed',
-        top: 0,
+        top: '35px',
         left: 0,
         zIndex: 100,
         width: '100%',

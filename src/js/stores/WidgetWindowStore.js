@@ -38,12 +38,27 @@ class WidgetWindowStore extends EventEmitter
         this.emit('toggle_widget_window')
     }
     
+    closeWidgetWindow = () =>
+    {
+        this.window = {
+            active: false,
+            kind: this.window.kind
+        }
+
+        this.emit('toggle_widget_window')
+    }
+    
     handleActions = (action) =>
     {
         switch(action.type)
         {
             case 'TOGGLE_WIDGET_WINDOW': {
                 this.toggleWidgetWindow(action.kind)
+                break
+            }
+
+            case 'CLOSE_WIDGET_WINDOW': {
+                this.closeWidgetWindow()
                 break
             }
         }

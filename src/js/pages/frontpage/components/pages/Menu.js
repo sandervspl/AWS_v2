@@ -25,7 +25,7 @@ export default class Menu extends React.Component
             pos: {},                // lat and longitude
             refreshingWeather: true,
             weatherData: {
-                posName: '',        // name of current position
+                posName: 'Niet beschikbaar',        // name of current position
                 humidity: 0,        // humidity percentage
                 temperature: {
                     temp: 0,        // temperature (celcius)
@@ -113,7 +113,7 @@ export default class Menu extends React.Component
 
 const styles = {
     base: {
-        padding: '20px 0 0',
+        padding: '60px 0 0',
         height: '100%',
         width: '100%',
     }

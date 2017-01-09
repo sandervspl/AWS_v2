@@ -7,12 +7,11 @@ import Login from './components/Login/Login'
 import Grid from './components/pages/Grid'
 import Menu from './components/pages/Menu'
 import Notification from '../layout/Notification'
+import Navbar from './components/Navbar'
 
 // stores
 import notificationStore from '../../stores/NotificationStore'
-
-// actions
-import * as notificationActions from '../../actions/NotificationActions'
+import navbarStore from '../../stores/NavbarStore'
 
 
 @Radium
@@ -36,12 +35,10 @@ export default class Frontpage extends React.Component
                 notifications: notificationStore.getAll()
             })
         })
-    }
 
-    toggleView = () =>
-    {
-        let view = (this.state.view === 'menu') ? 'grid' : 'menu'
-        this.setState({ view })
+        navbarStore.on('view_change', () => {
+            this.setState({ view: navbarStore.getView() })
+        })
     }
 
     render()
@@ -63,16 +60,18 @@ export default class Frontpage extends React.Component
 
         return (
             <div id="view-wrapper" style={styles.base}>
+                <Navbar title={this.state.view}/>
+
                 {notifications}
 
-                <Login />
+                {/*<Login/>*/}
 
                 <div id="menu-wrapper" style={ [styles.view, menuX] }>
-                    <Menu toggleView={this.toggleView} />
+                    <Menu />
                 </div>
 
                 <div id="grid-wrapper" style={ [styles.view, styles.grid, gridX] }>
-                    <Grid toggleView={this.toggleView} />
+                    <Grid />
                 </div>
             </div>
         )
@@ -82,7 +81,7 @@ export default class Frontpage extends React.Component
 
 const styles = {
     base: {
-        height: '100vh',
+        height: '100%',
         width: '100%',
         overflow: 'hidden',
         whiteSpace: 'nowrap'

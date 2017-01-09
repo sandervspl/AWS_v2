@@ -66,8 +66,8 @@ export default class WidgetWindow extends React.Component
 
 const styles = {
     base: {
-        position: 'absolute',
-        bottom: '40px',
+        position: 'fixed',
+        bottom: 0,
         left: 0,
         width: '100%',
         height: '175px',

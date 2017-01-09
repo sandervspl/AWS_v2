@@ -9,6 +9,10 @@ import Weather from './widgets/Weather'
 
 // actions
 import * as widgetWindowActions from '../../../actions/WidgetWindowActions'
+import * as navbarActions from '../../../actions/NavbarActions'
+
+// store
+import widgetWindowStore from '../../../stores/WidgetWindowStore'
 
 
 @Radium
@@ -22,7 +26,15 @@ export default class WidgetButton extends React.Component
     handeClick = () =>
     {
         if (this.props.kind === 'grid') {
-            this.props.toggleView()
+            let time = 0
+
+            // close widget window, if active, before going to new view
+            if (widgetWindowStore.getWindow().active) {
+                widgetWindowActions.closeWidgetWindow()
+                time = 325
+            }
+
+            setTimeout(() => navbarActions.navAwayFromMenu('grid'), time)
         } else {
             this.toggleActive()
         }
@@ -78,6 +90,7 @@ const styles = {
         display: 'inline-block',
         width: '70px',
         height: '70px',
+        verticalAlign: 'top',
         lineHeight: '50px',
         overflow: 'hidden',
         textAlign: 'center',

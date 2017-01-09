@@ -32,7 +32,10 @@ export default class Watertank extends React.Component
         
         widgetStore.on('fail', this.stopRefreshSpinner)
 
-        setInterval(widgetActions.getWaterLevel.bind(this, 1), 1000)
+        setInterval(
+            () => widgetActions.getWaterLevel(1),
+            1000
+        )
     }
 
     // stop refreshing state

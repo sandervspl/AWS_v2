@@ -9,6 +9,8 @@ class NotificationStore extends EventEmitter
     {
         super()
         this.counter = 0
+        this.start = 35
+        this.height = 35
         this.notifications = []
     }
 
@@ -16,7 +18,7 @@ class NotificationStore extends EventEmitter
 
     createNotification = (kind, text, expiresTime) =>
     {
-        let offset = this.notifications.length * 35   // notification bar is 35px high
+        let offset = this.start + (this.notifications.length * this.height)
         this.notifications.push({
             id: this.counter,
             kind,
@@ -46,7 +48,7 @@ class NotificationStore extends EventEmitter
     shiftNotifications = () =>
     {
         for (let [i, notification] of this.notifications.entries()) {
-            notification.offset -= 35
+            notification.offset -= this.height
         }
 
         this.emit('change')

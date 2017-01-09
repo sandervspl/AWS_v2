@@ -17,6 +17,11 @@ export default class Grid extends React.Component
     componentWillMount()
     {
         this.tankGrid = []
+        this.createGrid()
+    }
+
+    createGrid = () =>
+    {
         let id = 0
 
         for (let i = 0; i < 3; i += 1) {
@@ -39,8 +44,6 @@ export default class Grid extends React.Component
     {
         return (
             <div style={styles.base}>
-                <div style={styles.backBtn} onClick={this.props.toggleView}>Terug</div>
-
                 <div style={styles.inner}>
                     {this.tankGrid}
 
@@ -57,13 +60,15 @@ export default class Grid extends React.Component
 
 const styles = {
     base: {
+        paddingTop: '40px',
         height: '100%',
         width: '100%',
     },
 
     inner: {
         position: 'relative',
-        top: 'calc(50% - 266px)',
+        top: '50%',
+        transform: 'translateY(-50%)',
         margin: '0 auto',
         width: '280px',
         whiteSpace: 'normal'
