@@ -5,6 +5,9 @@ const debug = process.env.NODE_ENV !== 'production'
 const webpack = require('webpack')
 const path = require('path')
 
+// vars
+const host = '145.24.213.240'
+const port = 8080
 
 module.exports = {
     context: path.join(__dirname, 'src'),
@@ -12,8 +15,8 @@ module.exports = {
     devtool: debug ? 'inline-sourcemap' : null,
 
     devServer: {
-        host: '192.168.1.115',
-        port: 8080,
+        host: host,
+        port: port,
     },
 
     entry: './js/client.js',

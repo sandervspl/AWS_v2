@@ -38,7 +38,7 @@ class Server {
     openSerialport()
     {
         // serialport
-        let serialport = new SerialPort('/dev/cu.usbmodem1421', { parser: SerialPort.parsers.readline('\n') })
+        let serialport = new SerialPort('/dev/cu.usbmodem1411', { parser: SerialPort.parsers.readline('\n') })
 
         serialport
             .on('error', err => { console.log('Serial Port could not be opened:', err) })
@@ -110,9 +110,9 @@ class Server {
 
         if (id === '1') {
             res.json(this.waterLevel)
-            // console.log(this.waterLevel)
+            console.log(this.waterLevel)
         } else {
-            res.json(100)
+            res.json(null)
         }
     }
 }

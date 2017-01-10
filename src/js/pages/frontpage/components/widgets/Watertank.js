@@ -25,10 +25,9 @@ export default class Watertank extends React.Component
     componentWillMount()
     {
         widgetStore.on('water_change', () => {
-            this.setState({ height: widgetStore.getWaterHeight() })
+            this.setState({ height: parseInt(widgetStore.getAverageHeight()) })
             this.stopRefreshSpinner()
         })
-
         
         widgetStore.on('fail', this.stopRefreshSpinner)
 

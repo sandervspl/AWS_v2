@@ -5,6 +5,10 @@ const axios = require('axios')
 
 // actions
 import * as notificationActions from '../../../../../actions/NotificationActions'
+import * as widgetActions from '../../../../../actions/WidgetActions'
+
+// stores
+import widgetStore from '../../../../../stores/WidgetStore'
 
 
 @Radium
@@ -25,16 +29,24 @@ export default class Watertank extends React.Component
     {
         this.setId(this.props.tankId)
 
-        // setTimeout(() => {
-        //     this.getWaterLevel()
-        //     setInterval(this.getWaterLevel, 5000)
-        // }, 100)
+        widgetStore.on('water_change', () => {
+            this.setState({ fillPrct: widgetStore.getWaterHeight(this.state.id)
+            })
+        })
+
+        setInterval(
+            () => widgetActions.getWaterLevel(this.state.id),
+            1000
+        )
+
+        setTimeout(
+            () => { this.setState({ fillPrct: widgetStore.getWaterHeight(this.state.id) })
+            },
+            1000
+        )
     }
 
-    setId = (id) =>
-    {
-        this.setState({ id })
-    }
+    setId = (id) => this.setState({ id })
 
     toggleActive = () =>
     {
@@ -55,31 +67,6 @@ export default class Watertank extends React.Component
         }
     }
 
-    getWaterLevel = () =>
-    {
-        axios.get('http://localhost:3000/waterlevel/' + this.state.id)
-            .then(data => {
-                let level = data.data
-                let val = null
-
-                // no connection with serialport is found
-                if (level === null) {
-                    val = 'N/A'
-                } else {
-                    // convert our value to a percentage
-                    val = 100 - level
-                    if (val > 100) val = 100
-                    if (val < 0) val = 0
-                }
-
-                // save watertank data
-                this.setState({ fillPrct: val })
-            })
-            .catch(err => {
-                console.warn('could not fetch water level data from server: ' + err)
-            })
-    }
-
     render()
     {
         let fillPrct  = this.state.fillPrct
@@ -92,11 +79,15 @@ export default class Watertank extends React.Component
 
         if (Number.isFinite(fillPrct)) {
             current = Math.ceil((fillPrct / 100) * capacity)
-            fillWidth = {width: fillPrct + '%'}
+            fillWidth = { width: `${fillPrct}%` }
 
             if (fillPrct >= 80) {
                 warningStyle = styles.warning
                 warningMsg = 'Bijna vol!'
+            }
+
+            if (fillPrct >= 95) {
+                warningMsg = 'Tank zit vol!'
             }
         }
 

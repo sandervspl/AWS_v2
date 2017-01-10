@@ -2,6 +2,7 @@
 import { EventEmitter } from 'events'
 import Dispatcher from '../dispatcher'
 const axios = require('axios')
+import * as connect from '../secret/connect'
 
 
 class WidgetStore extends EventEmitter
@@ -9,14 +10,25 @@ class WidgetStore extends EventEmitter
     constructor(props)
     {
         super(props)
-        this.waterHeight = 0
+        this.waterHeights = [null, 0, 0, 10, 50, 30, 16, 22, 15, 10]
     }
     
-    getWaterHeight = () => this.waterHeight
+    getWaterHeight = (id) => this.waterHeights[id]
+
+    setWaterHeight = (id, prct) => 
+    {
+        this.waterHeights[id] = prct
+        this.emit('water_change')
+    }
+
+    getAverageHeight = () =>
+    {
+        return this.waterHeights.reduce((a, b) => { return a + b }) / this.waterHeights.length
+    }
 
     getWaterLevel = (tankId) =>
     {
-        const endpoint = `http://localhost:3000/waterlevel/${tankId}`
+        const endpoint = `http://${connect.host}:${connect.port.server}/waterlevel/${tankId}`
 
         axios.get(endpoint)
             .then(data => {
@@ -29,14 +41,15 @@ class WidgetStore extends EventEmitter
                 }
 
                 // convert our value to a percentage
-                let val = 100 - level
+                // let val = 100 - level
+                let val = 130 - 13 * level / 10
                 if (val > 100) val = 100
                 if (val < 0) val = 0
 
-                // save water height data
-                this.waterHeight = val
+                val = parseInt(val)
 
-                this.emit('water_change')
+                // save water height data
+                this.setWaterHeight(tankId, val)
             })
             .catch(err => {
                 console.warn('could not fetch water level data from server: ' + err)
@@ -60,5 +73,6 @@ const widgetStore = new WidgetStore
 
 // dispatcher
 Dispatcher.register(widgetStore.handleActions)
+window.widgetStore = widgetStore
 
 export default widgetStore
