@@ -7,11 +7,12 @@ const bodyParser = require('body-parser')
 const app = new Express()
 
 
-class Server {
+class Server
+{
     constructor()
     {
-        this.humidity = null
-        this.waterLevel = null
+        this.data = []
+        this.openTime = 30000
 
         this.init()
         this.routes()
@@ -30,9 +31,27 @@ class Server {
         // open serialport
         this.openSerialport()
 
+        // start watergate check interval
+        setInterval(this.shouldWaterGateOpen.bind(this), 1000)
+
+        // fill data with default stuff
+        this.fillData()
+
         // routes
         this.routes()
         this.startServer()
+    }
+
+    fillData()
+    {
+        for (let i = 0; i < 10; i += 1) {
+            this.data.push({
+                humidityLevel: null,
+                waterLevel: null,
+                waterGateState: false,
+                waterGateOpenedAt: null
+            })
+        }
     }
 
     openSerialport()
@@ -45,20 +64,17 @@ class Server {
             .on('open', () => { console.log('Serial Port Opened') })
             .on('data', data =>
             {
+                // TODO: receive id data from arduino
+                const id = 1
+
                 // cut away first character from string
                 let val = data.slice(1, data.length)
 
-                if (data[0] === 'w') {
-                    this.waterLevel = val
-                    // console.log(val)
-                }
+                if (data[0] === 'w')
+                    this.data[id].waterLevel = val
 
-                if (data[0] === 'h') {
-                    // We use values of >= 370 and <= 600
-                    // TODO
-
-                    this.humidity = val
-                }
+                if (data[0] === 'h')
+                    this.data[id].humidityLevel = val
             })
     }
 
@@ -77,8 +93,6 @@ class Server {
             next()
         })
 
-        app.get('/humidity', [this.setOptions, this.getHumidity.bind(this)])
-        // app.get('/waterlevel', [this.setOptions, this.getWaterLevel.bind(this)])
         app.get('/waterlevel/:id', [this.setOptions, this.getWaterLevel.bind(this)])
 
         // 404 page
@@ -89,30 +103,69 @@ class Server {
     startServer()
     {
         app.set('port', (process.env.PORT || 3000))
-        app.listen(app.get('port'), () => {
-            console.log('Node Server is running on port', app.get('port'))
-        })
+        app.listen(app.get('port'), () => { console.log('Node Server is running on port', app.get('port')) })
     }
 
-    getHumidity(req, res, next)
+    convertWaterHeightToPrct(val)
     {
-        res.json(this.humidity)
+        let prct = 130 - 13 * val / 10
+
+        if (prct > 100) return 100
+        if (prct < 0) return 0
+        
+        return prct
     }
 
-    // getWaterLevel(req, res, next)
-    // {
-    //     res.json(this.waterLevel)
-    // }
+    convertHumidityValToPrct(val)
+    {
+        let prct = Math.floor(6000 / 23 - (10 * val) / 23)
+        if (prct > 100) return 100
+        if (prct < 0) return 0
+
+        return prct
+    }
 
     getWaterLevel(req, res, next)
     {
-        let id = req.params.id
+        let id = parseInt(req.params.id)
 
-        if (id === '1') {
-            res.json(this.waterLevel)
-            console.log(this.waterLevel)
-        } else {
-            res.json(null)
+        res.json(this.data[id].waterLevel)
+        // console.log(this.waterLevels[id])
+    }
+
+    shouldWaterGateOpen()
+    {
+        for(let [i, data] of this.data.entries())
+        {
+            if (i === 0 || data.waterLevel === null)
+                continue
+
+            let waterPrct = this.convertWaterHeightToPrct(data.waterLevel)
+            let humidPrct = this.convertHumidityValToPrct(data.humidityLevel)
+
+            if (waterPrct > 80 && humidPrct > 50) {
+                if (data.waterGateState === false) {
+                    // console.log('Open the gates for tank', i)
+                    data.waterGateState = true
+                    data.waterGateOpenedAt = Date.now()
+                } {
+                    // console.log(`Gate of tank ${i} is already open`)
+                }
+            } else {
+                if (data.waterGateOpenedAt !== null) {
+                    if (data.waterGateState === true) {
+                        // we can close gate again after some time
+                        if (Date.now() - data.waterGateOpenedAt > this.openTime) {
+                            // console.log('Close the gate for tank', i)
+                            data.waterGateState = false
+                        }
+                    } else {
+                        // console.log('Gate is already closed for tank', i)
+                    }
+                } else {
+                    // console.log('No need to open gate for tank', i)
+                }
+            }
         }
     }
 }

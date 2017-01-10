@@ -32,7 +32,7 @@ class WidgetStore extends EventEmitter
 
         axios.get(endpoint)
             .then(data => {
-                let level = data.data
+                let level = parseInt(data.data)
 
                 // no connection with serialport is found
                 if ( ! level || level === null) {

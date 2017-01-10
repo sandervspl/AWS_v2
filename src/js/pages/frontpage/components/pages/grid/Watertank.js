@@ -40,8 +40,7 @@ export default class Watertank extends React.Component
         )
 
         setTimeout(
-            () => { this.setState({ fillPrct: widgetStore.getWaterHeight(this.state.id) })
-            },
+            () => { this.setState({ fillPrct: widgetStore.getWaterHeight(this.state.id) }) },
             1000
         )
     }
