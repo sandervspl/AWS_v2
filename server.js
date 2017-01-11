@@ -11,12 +11,21 @@ class Server
 {
     constructor()
     {
-        this.data = []
+        this.stations = []
         this.openTime = 30000
+
+        // TODO: add support for multiple serialports
+        // this.serialPorts = []
 
         this.init()
         this.routes()
     }
+
+
+
+    /* ======================================= */
+    // SERVER INITIALIZATION
+    /* ======================================= */
 
     // initialize express server
     init()
@@ -29,29 +38,24 @@ class Server
         app.use(bodyParser.json())
         
         // open serialport
+        // console.log('opening serial port...')
         this.openSerialport()
 
         // start watergate check interval
+        // console.log('starting watergate interval...')
         setInterval(this.shouldWaterGateOpen.bind(this), 1000)
 
         // fill data with default stuff
-        this.fillData()
+        // console.log('setting points data...')
+        this.fillPointsData()
 
         // routes
+        // console.log('setting routes...')
         this.routes()
-        this.startServer()
-    }
 
-    fillData()
-    {
-        for (let i = 0; i < 10; i += 1) {
-            this.data.push({
-                humidityLevel: null,
-                waterLevel: null,
-                waterGateState: false,
-                waterGateOpenedAt: null
-            })
-        }
+        // start server!
+        // console.log('starting server...')
+        this.startServer()
     }
 
     openSerialport()
@@ -59,22 +63,49 @@ class Server
         // serialport
         let serialport = new SerialPort('/dev/cu.usbmodem1411', { parser: SerialPort.parsers.readline('\n') })
 
+        // SerialPort.list((err, ports) => {
+        //     ports.forEach(port => {
+        //         console.log(port.comName)
+        //     })
+        // })
+
         serialport
             .on('error', err => { console.log('Serial Port could not be opened:', err) })
             .on('open', () => { console.log('Serial Port Opened') })
-            .on('data', data =>
-            {
-                // TODO: receive id data from arduino
-                const id = 1
+            .on('data', data => {
+                // data looks something like this
+                // #UIDw45
 
-                // cut away first character from string
-                let val = data.slice(1, data.length)
+                // grab uid from char [0] to [3]
+                const uid = data.slice(0, 3) // grab uid
 
-                if (data[0] === 'w')
-                    this.data[id].waterLevel = val
+                for (let [id, point] of this.stations.entries())
+                {
+                    // we don't use index 0
+                    if (id === 0) continue
 
-                if (data[0] === 'h')
-                    this.data[id].humidityLevel = val
+                    const length = this.stations.length - 1
+
+                    if (point.uid !== uid) {
+                        // if we come this far we might have a new point that should be installed
+                        if (id === length) {
+                            this.initNewPoint(uid)
+                            break
+                        }
+
+                        continue
+                    }
+
+                    // value is placed after uid and its data mark (so we cut away 'UIDw' for example)
+                    const val = data.slice(4, data.length)
+
+                    // [3] is the data mark so we can identify what data we are receiving
+                    if (data[3] === 'w')
+                            this.stations[id].waterLevel = val
+
+                    if (data[3] === 'h')
+                        this.stations[id].humidityLevel = val
+                }
             })
     }
 
@@ -103,7 +134,46 @@ class Server
     startServer()
     {
         app.set('port', (process.env.PORT || 3000))
-        app.listen(app.get('port'), () => { console.log('Node Server is running on port', app.get('port')) })
+        app.listen(app.get('port'), () => { console.log(`Node Server is running on port ${app.get('port')}`) })
+    }
+
+
+
+
+    /* ======================================= */
+    // STATIONS
+    /* ======================================= */
+
+    fillPointsData()
+    {
+        for (let i = 0; i < 10; i += 1) {
+            this.stations.push({
+                uid: null,
+                humidityLevel: null,
+                waterLevel: null,
+                waterGateState: false,
+                waterGateOpenedAt: null
+            })
+        }
+    }
+
+    initNewPoint(uid)
+    {
+        for (let [i, point] of this.stations.entries()) {
+            // we don't use index 0
+            if (i === 0) continue
+
+            // if uid already exists then stop
+            if (uid === point.uid)
+                break
+
+            // try to insert new point to array
+            if ( ! point.uid || point.uid === null) {
+                point.uid = uid
+                console.log(`new point added with uid: ${point.uid} at index: ${i}`)
+                break
+            }
+        }
     }
 
     convertWaterHeightToPrct(val)
@@ -125,17 +195,9 @@ class Server
         return prct
     }
 
-    getWaterLevel(req, res, next)
-    {
-        let id = parseInt(req.params.id)
-
-        res.json(this.data[id].waterLevel)
-        // console.log(this.waterLevels[id])
-    }
-
     shouldWaterGateOpen()
     {
-        for(let [i, data] of this.data.entries())
+        for(let [i, data] of this.stations.entries())
         {
             if (i === 0 || data.waterLevel === null)
                 continue
@@ -167,6 +229,22 @@ class Server
                 }
             }
         }
+    }
+
+
+
+
+
+    /* ======================================= */
+    // @WidgetStore.getWaterLevel
+    /* ======================================= */
+
+    getWaterLevel(req, res, next)
+    {
+        let id = parseInt(req.params.id)
+
+        // console.log(`requested water level for T${id} : ${this.stations[id].waterLevel}`)
+        res.json(this.stations[id].waterLevel)
     }
 }
 

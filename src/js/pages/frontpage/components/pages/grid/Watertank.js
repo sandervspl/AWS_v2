@@ -18,7 +18,7 @@ export default class Watertank extends React.Component
     {
         super(props)
         this.state = {
-            id: -1,
+            id: -1,         // TODO: this.props.tankId
             active: false,
             capacity: 30,
             fillPrct: 0,
@@ -30,12 +30,14 @@ export default class Watertank extends React.Component
         this.setId(this.props.tankId)
 
         widgetStore.on('water_change', () => {
-            this.setState({ fillPrct: widgetStore.getWaterHeight(this.state.id)
+                this.setState({ fillPrct: widgetStore.getWaterHeight(this.state.id)
             })
         })
 
-        setInterval(
-            () => widgetActions.getWaterLevel(this.state.id),
+        setInterval(() => {
+                widgetActions.getWaterLevel(this.state.id)
+                // console.log('requesting water level...')
+            },
             1000
         )
 

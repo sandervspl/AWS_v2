@@ -6,7 +6,9 @@ const webpack = require('webpack')
 const path = require('path')
 
 // vars
-const host = '145.24.213.240'
+const host = 'localhost'
+// const host = '145.24.213.240'    // school
+// const host = '192.168.1.115'        // janet
 const port = 8080
 
 module.exports = {
@@ -28,8 +30,16 @@ module.exports = {
                 exclude: /(node_modules|bower_components)/,
                 loader: 'babel-loader',
                 query: {
-                    presets: ['react', 'es2015', 'stage-0'],
-                    plugins: ['react-html-attrs', 'transform-decorators-legacy', 'transform-class-properties'],
+                    presets: [
+                        'react',
+                        'es2015',
+                        'stage-0'
+                    ],
+                    plugins: [
+                        'react-html-attrs',
+                        'transform-decorators-legacy',
+                        'transform-class-properties'
+                    ]
                 }
             }
         ]
