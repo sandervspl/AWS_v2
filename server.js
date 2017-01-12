@@ -8,7 +8,6 @@ import Station from './Station'
 // server
 const app = new Express()
 
-
 class Server
 {
     constructor()

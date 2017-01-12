@@ -5,9 +5,6 @@ const debug = process.env.NODE_ENV !== 'production'
 const webpack = require('webpack')
 const path = require('path')
 
-// vars
-import * as connect from './src/js/secret/connect'
-
 
 module.exports = {
     context: path.join(__dirname, 'src'),
@@ -15,8 +12,8 @@ module.exports = {
     devtool: debug ? 'inline-sourcemap' : null,
 
     devServer: {
-        host: connect.host,
-        port: connect.port.server,
+        host: 'localhost',
+        port: 3000,
     },
 
     entry: './js/client.js',
