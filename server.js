@@ -13,9 +13,7 @@ class Server
     constructor()
     {
         this.stations = []
-
-        // TODO: add support for multiple serialports
-        // this.serialPorts = []
+        this.serialport = null
 
         this.init()
         this.routes()
@@ -56,25 +54,26 @@ class Server
         // start server!
         // console.log('starting server...')
         this.startServer()
+
+        // setInterval(() => {
+        //     this.writeToSerialPort('g1')
+        //     setTimeout(() => this.writeToSerialPort('g0'), 1000)
+        // }, 2000)
     }
 
     openSerialport()
     {
         // serialport
-        let serialport = new SerialPort('/dev/cu.usbmodem1411', { parser: SerialPort.parsers.readline('\n') })
+        this.serialport = new SerialPort('/dev/cu.usbmodem1411', { parser: SerialPort.parsers.readline('\n') })
 
-        // SerialPort.list((err, ports) => {
-        //     ports.forEach(port => {
-        //         console.log(port.comName)
-        //     })
-        // })
-
-        serialport
+        this.serialport
             .on('error', err => { console.log('Serial Port could not be opened:', err) })
             .on('open', () => { console.log('Serial Port Opened') })
-            .on('data', data => {
+            .on('data', data => {(data)
                 // data looks something like this
                 // UIDw45
+
+                console.log(data)
 
                 // grab uid from char [0] to [3]
                 const uid = data.slice(0, 3) // grab uid
@@ -104,6 +103,24 @@ class Server
                         this.stations[id].setHumidityLevel(val)
                 }
             })
+    }
+
+    writeToSerialPort = (str) =>
+    {
+
+        // Sending String character by character
+        for(let i = 0; i < str.length; i += 1){
+            this.serialport.write(new Buffer(str[i], 'ascii'), function(err, results) {
+                // console.log('Error: ' + err);
+                // console.log('Results ' + results);
+            });
+        }
+
+        // Sending the terminate character
+        this.serialport.write(new Buffer('#', 'ascii'), function(err, results) {
+            // console.log('err ' + err);
+            // console.log('results ' + results);
+        });
     }
 
     setOptions(req, res, next)
@@ -199,8 +216,13 @@ class Server
             if (waterPrct > 80 && humidPrct > 50) {
                 if (station.waterGateState === false) {
                     // console.log('Open the gates for tank', station.uid)
+
+                    // TODO: set this at event handler after g1
                     station.setWaterGateState(true)
                     station.setWaterGateOpenedAt(Date.now())
+
+                    // emit to arduino to open gate
+                    this.writeToSerialPort('g1')
                 } {
                     // console.log(`Gate of tank ${station.uid} is already open`)
                 }
@@ -211,7 +233,12 @@ class Server
                         // we can close gate again after some time
                         if (Date.now() - station.waterGateOpenedAt > station.openTime) {
                             // console.log('Close the gate for tank', station.uid)
+
+                            // TODO: set this at event handler after g0
                             station.setWaterGateState(false)
+
+                            // emit to arduino to open gate
+                            this.writeToSerialPort('g0')
                         }
                     } else {
                         // console.log('Gate is already closed for tank', station.uid)

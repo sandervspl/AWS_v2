@@ -10,7 +10,7 @@ class WidgetStore extends EventEmitter
     constructor(props)
     {
         super(props)
-        this.waterHeights = [null, 0, 0, 10, 50, 30, 16, 22, 15, 10]
+        this.waterHeights = [0, 0, 0, 0, 0, 0, 0, 0, 0]
     }
     
     getWaterHeight = (id) => this.waterHeights[id]

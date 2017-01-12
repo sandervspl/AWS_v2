@@ -1,5 +1,6 @@
 #define trigPin  13
 #define echoPin  12
+#define ledPin   11
 #define humidPin A0
 
 #define USONIC_DIV            58.0
@@ -8,6 +9,7 @@
 #define MEASURE_DELAY         250
 
 String uid;
+String inData;
 
 void setup()
 {
@@ -15,6 +17,7 @@ void setup()
   pinMode(trigPin, OUTPUT);
   pinMode(echoPin, INPUT);
   pinMode(humidPin, INPUT);
+  pinMode(ledPin, INPUT); 
 
   randomSeed(analogRead(0));
 
@@ -24,6 +27,7 @@ void setup()
 
 void loop()
 {
+  receiveWrites();
   distance();
   humidity();
   delay(1000);
@@ -42,6 +46,33 @@ String generateUid()
     return str;
 }
 
+
+void receiveWrites()
+{
+  while (Serial.available() > 0) {
+    char received = Serial.read();
+    inData.concat(received);
+
+    // Process message when new line character is received
+    if (received == '#') {
+//        Serial.println("!!!" + inData + "!!!");
+
+        // open gate
+        if (inData == "g1#") {
+          Serial.println(uid + "g1");
+          digitalWrite(ledPin, HIGH);
+        }
+
+        // close gate
+        if (inData == "g0#") {
+          Serial.println(uid + "g0");
+          digitalWrite(ledPin, LOW);
+        }
+
+        inData = "";
+    }
+  }
+}
 
 void distance()
 {
