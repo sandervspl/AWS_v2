@@ -55,7 +55,11 @@ class Server
     {
         // serialport
         this.serialport = new SerialPort('/dev/cu.usbmodem1411', { parser: SerialPort.parsers.readline('\n') })
+        this.handleSerialPortEvents()
+    }
 
+    handleSerialPortEvents()
+    {
         this.serialport
             .on('error', err => { console.log('Serial Port could not be opened:', err) })
             .on('open', () => { console.log('Serial Port Opened') })
@@ -85,7 +89,7 @@ class Server
 
                     // [3] is the data mark so we can identify what data we are receiving
                     if (data[3] === 'w')
-                            this.stations[id].setWaterLevel(val)
+                        this.stations[id].setWaterLevel(val)
 
                     if (data[3] === 'h')
                         this.stations[id].setHumidityLevel(val)
@@ -97,7 +101,7 @@ class Server
                             console.log('no station found')
                             return
                         }
-                        
+
                         // close gate
                         if (data[4] === '0') {
                             console.log('Close the gate for tank', station.uid)
@@ -142,6 +146,7 @@ class Server
         })
 
         app.get('/waterlevel/:id', [this.setOptions, this.getWaterLevel])
+        app.get('/gatestate/:id', [this.setOptions, this.getWaterGateState])
 
         // 404 page
         app.use((req, res) => { res.sendStatus(404) })
@@ -268,6 +273,19 @@ class Server
         let waterLevel = this.stations[id].waterLevel
 
         res.json(waterLevel)
+    }
+
+
+    /* ======================================= */
+    // @WidgetStore.getStationGateState
+    /* ======================================= */
+
+    getWaterGateState = (req, res, next) =>
+    {
+        let id = parseInt(req.params.id)
+        let gateState = this.stations[id].waterGateState
+
+        res.json(gateState)
     }
 }
 

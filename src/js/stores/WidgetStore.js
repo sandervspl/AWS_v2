@@ -11,9 +11,17 @@ class WidgetStore extends EventEmitter
     {
         super(props)
         this.waterHeights = [0, 0, 0, 0, 0, 0, 0, 0, 0]
+        this.gateStates = [false, false, false, false, false, false, false, false, false]
     }
-    
+
+
+    /// water height
     getWaterHeight = (id) => this.waterHeights[id]
+
+    getAverageHeight = () =>
+    {
+        return this.waterHeights.reduce((a, b) => { return a + b }) / this.waterHeights.length
+    }
 
     setWaterHeight = (id, prct) => 
     {
@@ -21,18 +29,13 @@ class WidgetStore extends EventEmitter
         this.emit('water_change')
     }
 
-    getAverageHeight = () =>
-    {
-        return this.waterHeights.reduce((a, b) => { return a + b }) / this.waterHeights.length
-    }
-
     getWaterLevel = (tankId) =>
     {
         const endpoint = `http://${connect.host}:${connect.port.server}/waterlevel/${tankId}`
 
         axios.get(endpoint)
-            .then(data => {
-                let level = parseInt(data.data)
+            .then(response => {
+                let level = parseInt(response.data)
 
                 // no connection with serialport is found
                 if ( ! level || level === null) {
@@ -57,12 +60,50 @@ class WidgetStore extends EventEmitter
             })
     }
 
+
+    /// water tank state
+    getGateState = (id) => this.gateStates[id]
+
+    setGateState = (id, state) =>
+    {
+        this.gateStates[id] = state
+        this.emit('gate_change')
+    }
+
+    getWatertankGateState = (tankId) =>
+    {
+        const endpoint = `http://${connect.host}:${connect.port.server}/gatestate/${tankId}`
+
+        axios.get(endpoint)
+            .then(response => {
+                let state = response.data
+
+                // no connection with serialport is found
+                if (state === null) {
+                    this.emit('fail')
+                    return
+                }
+
+                // save water height data
+                this.setGateState(tankId, state)
+            })
+            .catch(err => {
+                console.warn('could not fetch watertank gate state from server: ' + err)
+                this.emit('fail')
+            })
+    }
+
     handleActions = (action) =>
     {
         switch(action.type)
         {
             case 'FETCH_WATERLEVEL': {
                 this.getWaterLevel(action.tankId)
+                break
+            }
+
+            case 'FETCH_WATERTANK_GATE': {
+                this.getWatertankGateState(action.tankId)
                 break
             }
         }

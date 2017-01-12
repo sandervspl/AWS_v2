@@ -4,6 +4,7 @@ const Radium = require('radium')
 
 // actions
 import * as notificationActions from '../../../actions/NotificationActions'
+import * as widgetActions from '../../../actions/WidgetActions'
 
 
 @Radium
@@ -13,15 +14,19 @@ export default class BigButton extends React.Component
     {
         super(props)
         this.state = {
-            activated: false
+            active: false
         }
     }
 
-    handleClick = () =>
-    {
+    handleClick = () => this.toggleState()
+
+    toggleState = () => {
+        const active = !this.state.active
         const expiresTime = Date.now() + 5000
 
-        if ( ! this.state.activated) {
+        this.setState({ active })
+
+        if (active) {
             let kind = 'success'
             let msg = 'Alle watertanks worden geleegd.'
             notificationActions.createNotification(kind, msg, expiresTime)
@@ -30,11 +35,7 @@ export default class BigButton extends React.Component
             let msg = 'Watertanks zijn gestopt met legen.'
             notificationActions.createNotification(kind, msg, expiresTime)
         }
-
-        this.toggleState()
     }
-
-    toggleState = () => this.setState({ activated: !this.state.activated })
 
     render()
     {
@@ -42,7 +43,7 @@ export default class BigButton extends React.Component
             bucketStyle = styles.img,
             buttonStyle = styles.off
 
-        if (this.state.activated) {
+        if (this.state.active) {
             stateMsg = 'AAN'
             bucketStyle = [styles.img, styles.rotate]
             buttonStyle = styles.on

@@ -9,8 +9,6 @@ export default class Station
         this.waterGateState = false
         this.waterGateOpenedAt = null
         this.openTime = 30 * 1000
-
-        // setInterval(this.logData, 1000)
     }
 
     getUid() { return this.uid }

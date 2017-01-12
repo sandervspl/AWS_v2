@@ -7,3 +7,10 @@ export function getWaterLevel(tankId) {
         tankId
     })
 }
+
+export function getGateState(tankId) {
+    Dispatcher.dispatch({
+        type: 'FETCH_WATERTANK_GATE',
+        tankId
+    })
+}

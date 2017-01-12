@@ -18,52 +18,81 @@ export default class Watertank extends React.Component
     {
         super(props)
         this.state = {
-            id: -1,         // TODO: this.props.tankId
+            id: this.props.tankId,
             active: false,
-            capacity: 30,
+            activeForced: false, // this means the system can not close a water tank unless tank is less than 5% filled
+            capacity: 30,        // TODO: calculate ACTUAL Liter amount for our tanks
             fillPrct: 0,
         }
     }
 
     componentWillMount()
     {
-        this.setId(this.props.tankId)
-
         widgetStore.on('water_change', () => {
-                this.setState({ fillPrct: widgetStore.getWaterHeight(this.state.id)
-            })
+            const waterHeight = widgetStore.getWaterHeight(this.state.id)
+
+            // turn off valve if water height is low
+            if (waterHeight > 0 && waterHeight <= 5) {
+                this.setActiveState(false, false)
+            }
+
+            this.setState({ fillPrct: waterHeight })
+        })
+
+        widgetStore.on('gate_change', () => {
+            const active = widgetStore.getGateState(this.state.id)
+
+            if (! this.state.activeForced && active !== this.state.active) {
+                this.setActiveState(active, false)
+            }
+        })
+
+        widgetStore.on('gate_change_all', () => {
+            const active = widgetStore.getGateState(this.state.id)
+            this.setActiveState(active, active)
         })
 
         setInterval(() => {
                 widgetActions.getWaterLevel(this.state.id)
-                // console.log('requesting water level...')
+                widgetActions.getGateState(this.state.id)
             },
             1000
         )
 
-        setTimeout(
-            () => { this.setState({ fillPrct: widgetStore.getWaterHeight(this.state.id) }) },
-            1000
+        setTimeout(() => {
+                this.setState({ fillPrct: widgetStore.getWaterHeight(this.state.id) })
+            },
+            1500
         )
     }
 
-    setId = (id) => this.setState({ id })
+    toggleActive = () => {
+        // toggle active state
+        const active = !this.state.active
 
-    toggleActive = () =>
-    {
-        this.state.active = !this.state.active
-        this.notification()
+        // set new active state, and match forced active state to new state (true/false)
+        this.setActiveState(!this.state.active, active)
     }
 
-    notification = () =>
+    setActiveState = (active, activeForced) =>
+    {
+        this.setState({
+            active,
+            activeForced
+        })
+
+        this.notification(active)
+    }
+
+    notification = (state) =>
     {
         const expiresTime = Date.now() + 3000
 
-        if (this.state.active) {
-            const msg = `(Watertank ${this.state.id}) wordt geleegd.`
+        if (state) {
+            const msg = `(Watertank ${this.state.id + 1}) wordt geleegd.`
             notificationActions.createNotification('success', msg, expiresTime)
         } else {
-            const msg = `(Watertank ${this.state.id}) is gestopt met legen.`
+            const msg = `(Watertank ${this.state.id + 1}) is gestopt met legen.`
             notificationActions.createNotification('alert', msg, expiresTime)
         }
     }
