@@ -36,29 +36,19 @@ class Server
         app.use(bodyParser.json())
         
         // open serialport
-        // console.log('opening serial port...')
         this.openSerialport()
 
         // start watergate check interval
-        // console.log('starting watergate interval...')
         setInterval(this.shouldWaterGateOpen, 1000)
 
         // create some stations
-        // console.log('creating stations...')
         this.createStations(10)
 
         // routes
-        // console.log('setting routes...')
         this.routes()
 
         // start server!
-        // console.log('starting server...')
         this.startServer()
-
-        // setInterval(() => {
-        //     this.writeToSerialPort('g1')
-        //     setTimeout(() => this.writeToSerialPort('g0'), 1000)
-        // }, 2000)
     }
 
     openSerialport()
@@ -69,11 +59,9 @@ class Server
         this.serialport
             .on('error', err => { console.log('Serial Port could not be opened:', err) })
             .on('open', () => { console.log('Serial Port Opened') })
-            .on('data', data => {(data)
+            .on('data', data => {
                 // data looks something like this
                 // UIDw45
-
-                console.log(data)
 
                 // grab uid from char [0] to [3]
                 const uid = data.slice(0, 3) // grab uid
@@ -101,26 +89,41 @@ class Server
 
                     if (data[3] === 'h')
                         this.stations[id].setHumidityLevel(val)
+
+                    if (data[3] === 'g') {
+                        let station = this.getStationWithUid(uid)
+
+                        if (station === null) {
+                            console.log('no station found')
+                            return
+                        }
+                        
+                        // close gate
+                        if (data[4] === '0') {
+                            console.log('Close the gate for tank', station.uid)
+                            station.setWaterGateState(false)
+                        }
+
+                        // open state
+                        if (data[4] === '1') {
+                            console.log('Open the gates for tank', station.uid)
+                            station.setWaterGateOpenedAt(Date.now())
+                            station.setWaterGateState(true)
+                        }
+                    }
                 }
             })
     }
 
     writeToSerialPort = (str) =>
     {
-
         // Sending String character by character
-        for(let i = 0; i < str.length; i += 1){
-            this.serialport.write(new Buffer(str[i], 'ascii'), function(err, results) {
-                // console.log('Error: ' + err);
-                // console.log('Results ' + results);
-            });
+        for(let i = 0; i < str.length; i += 1) {
+            this.serialport.write(new Buffer(str[i], 'ascii'));
         }
 
         // Sending the terminate character
-        this.serialport.write(new Buffer('#', 'ascii'), function(err, results) {
-            // console.log('err ' + err);
-            // console.log('results ' + results);
-        });
+        this.serialport.write(new Buffer('#', 'ascii'));
     }
 
     setOptions(req, res, next)
@@ -184,6 +187,18 @@ class Server
         }
     }
 
+    getStationWithUid(uid)
+    {
+        let station = null
+
+        this.stations.forEach((s) => {
+            if (s.uid === uid)
+                station = s
+        })
+
+        return station
+    }
+
     convertWaterHeightToPrct(val)
     {
         let prct = 130 - 13 * val / 10
@@ -215,12 +230,6 @@ class Server
 
             if (waterPrct > 80 && humidPrct > 50) {
                 if (station.waterGateState === false) {
-                    // console.log('Open the gates for tank', station.uid)
-
-                    // TODO: set this at event handler after g1
-                    station.setWaterGateState(true)
-                    station.setWaterGateOpenedAt(Date.now())
-
                     // emit to arduino to open gate
                     this.writeToSerialPort('g1')
                 } {
@@ -232,11 +241,6 @@ class Server
 
                         // we can close gate again after some time
                         if (Date.now() - station.waterGateOpenedAt > station.openTime) {
-                            // console.log('Close the gate for tank', station.uid)
-
-                            // TODO: set this at event handler after g0
-                            station.setWaterGateState(false)
-
                             // emit to arduino to open gate
                             this.writeToSerialPort('g0')
                         }
@@ -263,9 +267,6 @@ class Server
         let id = parseInt(req.params.id)
         let waterLevel = this.stations[id].waterLevel
 
-        // console.log(`[${id}]: ${waterLevel}`)
-        
-        // console.log(`requested water level for T${id} : ${this.stations[id].waterLevel}`)
         res.json(waterLevel)
     }
 }
