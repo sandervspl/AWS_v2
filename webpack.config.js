@@ -6,10 +6,8 @@ const webpack = require('webpack')
 const path = require('path')
 
 // vars
-const host = 'localhost'
-// const host = '145.24.213.240'    // school
-// const host = '192.168.1.115'        // janet
-const port = 8080
+import * as connect from './src/js/secret/connect'
+
 
 module.exports = {
     context: path.join(__dirname, 'src'),
@@ -17,8 +15,8 @@ module.exports = {
     devtool: debug ? 'inline-sourcemap' : null,
 
     devServer: {
-        host: host,
-        port: port,
+        host: connect.host,
+        port: connect.port.server,
     },
 
     entry: './js/client.js',
