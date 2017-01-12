@@ -19,7 +19,7 @@ module.exports = {
         port: connect.port.server,
     },
 
-    entry: './js/client.js',
+    entry: ['babel-polyfill', './js/client.js'],
 
     module: {
         loaders: [
