@@ -31,12 +31,13 @@
     "webpack-dev-server": "^1.16.2"
   },
   "devDependencies": {
+    "babel-preset-env": "^1.1.8",
     "babel-preset-stage-0": "^6.16.0",
     "concurrently": "^3.1.0"
   },
   "scripts": {
     "dev": "webpack-dev-server --content-base src --inline --hot",
-    "server": "node server",
+    "server": "node dist/server",
     "all": "concurrently --kill-others \"npm run dev\" \"npm run server\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

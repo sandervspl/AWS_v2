@@ -26,7 +26,6 @@ export default class Grid extends React.Component
 
         for (let i = 0; i < 3; i += 1) {
             for (let j = 0; j < 3; j += 1) {
-                id += 1
                 let marginStyle = (j === 2) ? { marginRight: 0 } : { marginRight: '20px' }
 
                 this.tankGrid.push(
@@ -36,6 +35,8 @@ export default class Grid extends React.Component
                         marginStyle={marginStyle}
                     />
                 )
+
+                id += 1
             }
         }
     }

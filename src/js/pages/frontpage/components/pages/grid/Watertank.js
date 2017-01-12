@@ -93,7 +93,7 @@ export default class Watertank extends React.Component
         }
 
         let activeStyle = (this.state.active) ? styles.on : ''
-        let title = 'Tank ' + this.state.id
+        let title = 'Tank ' + (this.state.id + 1)
 
         return (
             <div style={ [styles.base, this.props.marginStyle, activeStyle] } onClick={this.toggleActive}>
