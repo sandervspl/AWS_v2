@@ -3,6 +3,8 @@ const Express = require('express')
 const SerialPort = require('serialport')
 const bodyParser = require('body-parser')
 
+import Station from './Station'
+
 // server
 const app = new Express()
 
@@ -12,7 +14,6 @@ class Server
     constructor()
     {
         this.stations = []
-        this.openTime = 30000
 
         // TODO: add support for multiple serialports
         // this.serialPorts = []
@@ -43,11 +44,11 @@ class Server
 
         // start watergate check interval
         // console.log('starting watergate interval...')
-        setInterval(this.shouldWaterGateOpen.bind(this), 1000)
+        setInterval(this.shouldWaterGateOpen, 1000)
 
-        // fill data with default stuff
-        // console.log('setting points data...')
-        this.fillPointsData()
+        // create some stations
+        // console.log('creating stations...')
+        this.createStations(10)
 
         // routes
         // console.log('setting routes...')
@@ -79,17 +80,14 @@ class Server
                 // grab uid from char [0] to [3]
                 const uid = data.slice(0, 3) // grab uid
 
-                for (let [id, point] of this.stations.entries())
+                for (let [id, station] of this.stations.entries())
                 {
-                    // we don't use index 0
-                    if (id === 0) continue
-
                     const length = this.stations.length - 1
 
-                    if (point.uid !== uid) {
-                        // if we come this far we might have a new point that should be installed
+                    if (station.uid !== uid) {
+                        // if we come this far we might have a new station that should be installed
                         if (id === length) {
-                            this.initNewPoint(uid)
+                            this.initNewStation(uid)
                             break
                         }
 
@@ -101,10 +99,10 @@ class Server
 
                     // [3] is the data mark so we can identify what data we are receiving
                     if (data[3] === 'w')
-                            this.stations[id].waterLevel = val
+                            this.stations[id].setWaterLevel(val)
 
                     if (data[3] === 'h')
-                        this.stations[id].humidityLevel = val
+                        this.stations[id].setHumidityLevel(val)
                 }
             })
     }
@@ -124,7 +122,7 @@ class Server
             next()
         })
 
-        app.get('/waterlevel/:id', [this.setOptions, this.getWaterLevel.bind(this)])
+        app.get('/waterlevel/:id', [this.setOptions, this.getWaterLevel])
 
         // 404 page
         app.use((req, res) => { res.sendStatus(404) })
@@ -144,33 +142,27 @@ class Server
     // STATIONS
     /* ======================================= */
 
-    fillPointsData()
+    createStations(amount)
     {
-        for (let i = 0; i < 10; i += 1) {
-            this.stations.push({
-                uid: null,
-                humidityLevel: null,
-                waterLevel: null,
-                waterGateState: false,
-                waterGateOpenedAt: null
-            })
+        for (let i = 1; i < amount; i += 1) {
+            const station = new Station(i)
+            this.stations.push(station)
         }
     }
 
-    initNewPoint(uid)
+    initNewStation(uid)
     {
-        for (let [i, point] of this.stations.entries()) {
-            // we don't use index 0
-            if (i === 0) continue
+        for (let [i, station] of this.stations.entries()) {
+            const sUid = station.uid
 
             // if uid already exists then stop
-            if (uid === point.uid)
+            if (uid === sUid)
                 break
 
-            // try to insert new point to array
-            if ( ! point.uid || point.uid === null) {
-                point.uid = uid
-                console.log(`new point added with uid: ${point.uid} at index: ${i}`)
+            // try to insert new station to array
+            if ( ! sUid || sUid === null) {
+                station.setUid(uid)
+                console.log(`new station added with uid: ${station.getUid()} at index: ${i}`)
                 break
             }
         }
@@ -195,37 +187,38 @@ class Server
         return prct
     }
 
-    shouldWaterGateOpen()
+    shouldWaterGateOpen = () =>
     {
-        for(let [i, data] of this.stations.entries())
+        for(let station of this.stations)
         {
-            if (i === 0 || data.waterLevel === null)
+            if (station.waterLevel === null || station.humidityLevel === null)
                 continue
 
-            let waterPrct = this.convertWaterHeightToPrct(data.waterLevel)
-            let humidPrct = this.convertHumidityValToPrct(data.humidityLevel)
+            let waterPrct = this.convertWaterHeightToPrct(station.waterLevel)
+            let humidPrct = this.convertHumidityValToPrct(station.humidityLevel)
 
             if (waterPrct > 80 && humidPrct > 50) {
-                if (data.waterGateState === false) {
-                    // console.log('Open the gates for tank', i)
-                    data.waterGateState = true
-                    data.waterGateOpenedAt = Date.now()
+                if (station.waterGateState === false) {
+                    // console.log('Open the gates for tank', station.uid)
+                    station.setWaterGateState(true)
+                    station.setWaterGateOpenedAt(Date.now())
                 } {
-                    // console.log(`Gate of tank ${i} is already open`)
+                    // console.log(`Gate of tank ${station.uid} is already open`)
                 }
             } else {
-                if (data.waterGateOpenedAt !== null) {
-                    if (data.waterGateState === true) {
+                if (station.getWaterGateOpenedAt() !== null) {
+                    if (station.getWaterGateState() === true) {
+
                         // we can close gate again after some time
-                        if (Date.now() - data.waterGateOpenedAt > this.openTime) {
-                            // console.log('Close the gate for tank', i)
-                            data.waterGateState = false
+                        if (Date.now() - station.waterGateOpenedAt > station.openTime) {
+                            // console.log('Close the gate for tank', station.uid)
+                            station.setWaterGateState(false)
                         }
                     } else {
-                        // console.log('Gate is already closed for tank', i)
+                        // console.log('Gate is already closed for tank', station.uid)
                     }
                 } else {
-                    // console.log('No need to open gate for tank', i)
+                    // console.log('No need to open gate for tank', station.uid)
                 }
             }
         }
@@ -239,12 +232,12 @@ class Server
     // @WidgetStore.getWaterLevel
     /* ======================================= */
 
-    getWaterLevel(req, res, next)
+    getWaterLevel = (req, res, next) =>
     {
         let id = parseInt(req.params.id)
 
         // console.log(`requested water level for T${id} : ${this.stations[id].waterLevel}`)
-        res.json(this.stations[id].waterLevel)
+        res.json(this.stations[id].getWaterLevel())
     }
 }
 
