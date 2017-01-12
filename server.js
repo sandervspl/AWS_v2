@@ -75,7 +75,7 @@ class Server
             .on('open', () => { console.log('Serial Port Opened') })
             .on('data', data => {
                 // data looks something like this
-                // #UIDw45
+                // UIDw45
 
                 // grab uid from char [0] to [3]
                 const uid = data.slice(0, 3) // grab uid
@@ -144,7 +144,7 @@ class Server
 
     createStations(amount)
     {
-        for (let i = 1; i < amount; i += 1) {
+        for (let i = 0; i < amount; i += 1) {
             const station = new Station(i)
             this.stations.push(station)
         }
@@ -235,9 +235,12 @@ class Server
     getWaterLevel = (req, res, next) =>
     {
         let id = parseInt(req.params.id)
+        let waterLevel = this.stations[id].waterLevel
 
+        // console.log(`[${id}]: ${waterLevel}`)
+        
         // console.log(`requested water level for T${id} : ${this.stations[id].waterLevel}`)
-        res.json(this.stations[id].getWaterLevel())
+        res.json(waterLevel)
     }
 }
 
