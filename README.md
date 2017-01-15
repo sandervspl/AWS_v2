@@ -11,7 +11,7 @@
 9. Open de Terminal in WebStorm
 10. Type in Terminal: 'npm install'
 11. Laat het eventjes allemaal downloaden en installeren
-12. Om de website aan te zetten schrijf je 'npm run dev'
+12. Om de website aan te zetten schrijf je 'npm run all'
 
 Dit zou alles moeten zijn.
 Als het niet werkt, check of je alles hebt geinstalleerd (doe stap 2 t/m 4 nog eens)
