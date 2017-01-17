@@ -62,22 +62,24 @@ const styles = {
         justifyContent: 'space-between',
         alignItems: 'center',
         margin: 'auto',
-        height: '35px',
+        height: '45px',
         width: '100%',
         background: '#EEE'
     },
 
     item: {
         display: 'flex',
-        flexGrow: 1,
+        flexGrow: 0,
+        width: 'calc(33.33333% - 20px)',
         color: 'black',
         textTransform: 'capitalize',
         fontWeight: 400
     },
 
     title: {
-        flexGrow: 2,
-        justifyContent: 'center'
+        flexGrow: 0,
+        justifyContent: 'center',
+        width: '33.33333%'
     },
 
     left: {
