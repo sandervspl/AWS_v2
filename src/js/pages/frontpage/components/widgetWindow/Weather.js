@@ -26,9 +26,10 @@ export default class Weather extends React.Component
                 <div className={loadStyle}></div>
 
                 <h3 style={styles.location} className="location"> {weatherData.posName} </h3>
+
                 <div style={styles.row}>
                     <WeatherItem kind="humidity" data={weatherData.humidity} />
-                    <WeatherItem kind="temperature" data={weatherData.temperature} />
+                    <WeatherItem kind="temperature" data={weatherData} />
                     <WeatherItem kind="wind" data={weatherData.wind} />
                 </div>
             </div>
