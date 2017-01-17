@@ -31,11 +31,15 @@ class WidgetStore extends EventEmitter
 
     getWaterLevel = (tankId) =>
     {
+        console.log(`getWaterLevel ${tankId}`)
+
         const endpoint = `http://${connect.host}:${connect.port.server}/waterlevel/${tankId}`
 
         axios.get(endpoint)
             .then(response => {
                 let level = parseInt(response.data)
+
+                console.log(response.data)
 
                 // no connection with serialport is found
                 if ( ! level || level === null) {
@@ -64,10 +68,25 @@ class WidgetStore extends EventEmitter
     /// water tank state
     getGateState = (id) => this.gateStates[id]
 
-    setGateState = (id, state) =>
+    setGateStateFromButton = (tankId, state) =>
     {
-        this.gateStates[id] = state
-        this.emit('gate_change')
+        let endpoint = ''
+
+        if (state === true) {
+            endpoint = `http://${connect.host}:${connect.port.server}/opengate/${tankId}`
+        } else {
+            endpoint = `http://${connect.host}:${connect.port.server}/closegate/${tankId}`
+        }
+
+        axios.get(endpoint)
+            .then(response => {
+                this.gateStates[tankId] = response.data
+                this.emit('gate_change')
+            })
+            .catch(err => {
+                console.warn(`could not set water gate state to ${state}: ${err}`)
+                this.emit('fail')
+            })
     }
 
     getWatertankGateState = (tankId) =>
@@ -81,10 +100,10 @@ class WidgetStore extends EventEmitter
                 // no connection with serialport is found
                 if (state === null) {
                     this.emit('fail')
-                    return
+                    // return
                 }
 
-                // save water height data
+                // save tank gate state
                 this.setGateState(tankId, state)
             })
             .catch(err => {
@@ -113,6 +132,11 @@ class WidgetStore extends EventEmitter
 
             case 'FETCH_WATERTANK_GATE': {
                 this.getWatertankGateState(action.tankId)
+                break
+            }
+
+            case 'SET_GATE_STATE_BUTTON': {
+                this.setGateStateFromButton(action.tankId, action.state)
                 break
             }
 

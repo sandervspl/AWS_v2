@@ -1,6 +1,7 @@
 #define trigPin  13
 #define echoPin  12
 #define ledPin   11
+#define gatePin   4
 #define humidPin A0
 
 #define USONIC_DIV            58.0
@@ -17,7 +18,10 @@ void setup()
   pinMode(trigPin, OUTPUT);
   pinMode(echoPin, INPUT);
   pinMode(humidPin, INPUT);
-  pinMode(ledPin, INPUT); 
+  pinMode(gatePin, INPUT);
+//  pinMode(ledPin, INPUT); 
+
+  digitalWrite(gatePin, LOW);
 
   randomSeed(analogRead(0));
 
@@ -60,13 +64,15 @@ void receiveWrites()
         // open gate
         if (inData == "g1#") {
           Serial.println(uid + "g1");
-          digitalWrite(ledPin, HIGH);
+          digitalWrite(gatePin, HIGH);
+//          digitalWrite(ledPin, HIGH);
         }
 
         // close gate
         if (inData == "g0#") {
           Serial.println(uid + "g0");
-          digitalWrite(ledPin, LOW);
+          digitalWrite(gatePin, LOW);
+//          digitalWrite(ledPin, LOW);
         }
 
         inData = "";

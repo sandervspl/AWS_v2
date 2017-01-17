@@ -20,7 +20,6 @@ export default class Watertank extends React.Component
         this.state = {
             id: this.props.tankId,
             active: false,
-            activeForced: false, // this means the system can not close a water tank unless tank is less than 5% filled
             capacity: 9,
             fillPrct: 0,
         }
@@ -32,9 +31,9 @@ export default class Watertank extends React.Component
             const waterHeight = widgetStore.getWaterHeight(this.state.id)
 
             // turn off valve if water height is low
-            if (waterHeight > 0 && waterHeight <= 5) {
-                this.setActiveState(false, false)
-            }
+            // if (waterHeight > 0 && waterHeight <= 5) {
+            //     this.setActiveState(false)
+            // }
 
             this.setState({ fillPrct: waterHeight })
         })
@@ -42,8 +41,9 @@ export default class Watertank extends React.Component
         widgetStore.on('gate_change', () => {
             const active = widgetStore.getGateState(this.state.id)
 
-            if (! this.state.activeForced && active !== this.state.active) {
-                this.setActiveState(active, false)
+            if (active !== this.state.active) {
+                this.setState({ active })
+                this.notification(active)
             }
         })
 
@@ -52,12 +52,7 @@ export default class Watertank extends React.Component
             this.setAllActiveState(active)
         })
 
-        setInterval(() => {
-                widgetActions.getWaterLevel(this.state.id)
-                widgetActions.getGateState(this.state.id)
-            },
-            1000
-        )
+        setInterval(widgetActions.getWaterLevel(this.state.id), 1000)
 
         setTimeout(() => {
                 this.setState({ fillPrct: widgetStore.getWaterHeight(this.state.id) })
@@ -71,26 +66,10 @@ export default class Watertank extends React.Component
         const active = !this.state.active
 
         // set new active state, and match forced active state to new state (true/false)
-        this.setActiveState(!this.state.active, active)
+        widgetActions.setGateStateButton(this.state.id, active)
     }
 
-    setActiveState = (active, activeForced) =>
-    {
-        this.setState({
-            active,
-            activeForced
-        })
-
-        this.notification(active)
-    }
-
-    setAllActiveState = (active) =>
-    {
-        this.setState({
-            active,
-            activeForced: true
-        })
-    }
+    setAllActiveState = (active) => this.setState({ active })
 
     notification = (state) =>
     {

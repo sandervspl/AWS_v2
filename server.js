@@ -54,7 +54,7 @@ class Server
     openSerialport()
     {
         // serialport
-        this.serialport = new SerialPort('/dev/cu.usbmodem1411', { parser: SerialPort.parsers.readline('\n') })
+        this.serialport = new SerialPort('/dev/cu.usbmodem1421', { parser: SerialPort.parsers.readline('\n') })
         this.handleSerialPortEvents()
     }
 
@@ -88,8 +88,10 @@ class Server
                     const val = data.slice(4, data.length)
 
                     // [3] is the data mark so we can identify what data we are receiving
-                    if (data[3] === 'w')
+                    if (data[3] === 'w') {
                         this.stations[id].setWaterLevel(val)
+                        console.log(`new waterlevel for tank ${id}:`, this.stations[id].waterLevel)
+                    }
 
                     if (data[3] === 'h')
                         this.stations[id].setHumidityLevel(val)
@@ -147,6 +149,8 @@ class Server
 
         app.get('/waterlevel/:id', [this.setOptions, this.getWaterLevel])
         app.get('/gatestate/:id', [this.setOptions, this.getWaterGateState])
+        app.get('/opengate/:id', this.setWaterGateStateOpen)
+        app.get('/closegate/:id', this.setWaterGateStateClosed)
 
         // 404 page
         app.use((req, res) => { res.sendStatus(404) })
@@ -237,7 +241,8 @@ class Server
                 if (station.waterGateState === false) {
                     // emit to arduino to open gate
                     this.writeToSerialPort('g1')
-                } {
+                    // console.log(`Open gate for tank ${station.uid}`)
+                } else {
                     // console.log(`Gate of tank ${station.uid} is already open`)
                 }
             } else {
@@ -248,6 +253,7 @@ class Server
                         if (Date.now() - station.waterGateOpenedAt > station.openTime) {
                             // emit to arduino to open gate
                             this.writeToSerialPort('g0')
+                            // console.log(`Close gate for tank ${station.uid}`)
                         }
                     } else {
                         // console.log('Gate is already closed for tank', station.uid)
@@ -272,6 +278,8 @@ class Server
         let id = parseInt(req.params.id)
         let waterLevel = this.stations[id].waterLevel
 
+        console.log(`Waterlevel fetch for tank ${id}: ${waterLevel}`)
+
         res.json(waterLevel)
     }
 
@@ -286,6 +294,30 @@ class Server
         let gateState = this.stations[id].waterGateState
 
         res.json(gateState)
+    }
+
+
+    /* ======================================= */
+    // @WidgetStore.setWaterGateState
+    /* ======================================= */
+    setWaterGateStateOpen = (req, res, next) =>
+    {
+        let id = parseInt(req.params.id)
+
+        this.writeToSerialPort('g1')
+        this.stations[id].waterGateState = true
+
+        res.json(this.stations[id].waterGateState)
+    }
+
+    setWaterGateStateClosed = (req, res, next) =>
+    {
+        let id = parseInt(req.params.id)
+
+        this.writeToSerialPort('g0')
+        this.stations[id].waterGateState = false
+
+        res.json(this.stations[id].waterGateState)
     }
 }
 
