@@ -72,7 +72,7 @@ const styles = {
     base: {
         boxSizing: 'border-box',
         position: 'fixed',
-        top: '35px',
+        top: '45px',
         left: 0,
         zIndex: 100,
         width: '100%',

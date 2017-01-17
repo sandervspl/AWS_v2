@@ -9,7 +9,7 @@ class NotificationStore extends EventEmitter
     {
         super()
         this.counter = 0
-        this.start = 35
+        this.start = 45
         this.height = 35
         this.notifications = []
     }
