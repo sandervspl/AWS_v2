@@ -20,7 +20,6 @@ export default class Watertank extends React.Component
         this.state = {
             id: this.props.tankId,
             active: false,
-            activeForced: false, // this means the system can not close a water tank unless tank is less than 5% filled
             capacity: 9,
             fillPrct: 0,
         }
@@ -30,20 +29,14 @@ export default class Watertank extends React.Component
     {
         widgetStore.on('water_change', () => {
             const waterHeight = widgetStore.getWaterHeight(this.state.id)
-
-            // turn off valve if water height is low
-            if (waterHeight > 0 && waterHeight <= 5) {
-                this.setActiveState(false, false)
-            }
-
             this.setState({ fillPrct: waterHeight })
         })
 
         widgetStore.on('gate_change', () => {
             const active = widgetStore.getGateState(this.state.id)
 
-            if (! this.state.activeForced && active !== this.state.active) {
-                this.setActiveState(active, false)
+            if (active !== this.state.active) {
+                this.setActiveState(active)
             }
         })
 
@@ -52,45 +45,32 @@ export default class Watertank extends React.Component
             this.setAllActiveState(active)
         })
 
-        setInterval(() => {
-                widgetActions.getWaterLevel(this.state.id)
-                widgetActions.getGateState(this.state.id)
-            },
-            1000
-        )
+        // fetch water level every second
+        setInterval(widgetActions.getWaterLevel(this.state.id), 1000)
 
-        setTimeout(() => {
+        // set water level after giving arduino some fetching time
+        setTimeout(
+            () => {
                 this.setState({ fillPrct: widgetStore.getWaterHeight(this.state.id) })
             },
             1500
         )
     }
-
-    toggleActive = () => {
-        // toggle active state
-        const active = !this.state.active
-
-        // set new active state, and match forced active state to new state (true/false)
-        this.setActiveState(!this.state.active, active)
+    
+    componentDidMount()
+    {
+        widgetActions.getStationGateState(this.state.id)
     }
 
-    setActiveState = (active, activeForced) =>
-    {
-        this.setState({
-            active,
-            activeForced
-        })
+    toggleActiveState = () => widgetActions.setStationGateState(this.state.id, ! this.state.active)
 
+    setActiveState = (active) =>
+    {
+        this.setState({ active })
         this.notification(active)
     }
 
-    setAllActiveState = (active) =>
-    {
-        this.setState({
-            active,
-            activeForced: true
-        })
-    }
+    setAllActiveState = (active) => this.setState({ active })
 
     notification = (state) =>
     {
@@ -133,7 +113,7 @@ export default class Watertank extends React.Component
         let title = 'Tank ' + (this.state.id + 1)
 
         return (
-            <div style={ [styles.base, this.props.marginStyle, activeStyle] } onClick={this.toggleActive}>
+            <div style={ [styles.base, this.props.marginStyle, activeStyle] } onClick={this.toggleActiveState}>
                 <div style={styles.title}> {title} </div>
 
                 <div style={warningStyle}> {warningMsg} </div>

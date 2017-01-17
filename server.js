@@ -54,7 +54,7 @@ class Server
     openSerialport()
     {
         // serialport
-        this.serialport = new SerialPort('/dev/cu.usbmodem1411', { parser: SerialPort.parsers.readline('\n') })
+        this.serialport = new SerialPort('/dev/cu.usbmodem1421', { parser: SerialPort.parsers.readline('\n') })
         this.handleSerialPortEvents()
     }
 
@@ -146,7 +146,9 @@ class Server
         })
 
         app.get('/waterlevel/:id', [this.setOptions, this.getWaterLevel])
-        app.get('/gatestate/:id', [this.setOptions, this.getWaterGateState])
+        app.get('/gatestate/:id', [this.setOptions, this.getStationGateState])
+        app.get('/opengate/:id', this.setStationGateStateOpen)
+        app.get('/closegate/:id', this.setStationGateStateClosed)
 
         // 404 page
         app.use((req, res) => { res.sendStatus(404) })
@@ -237,7 +239,7 @@ class Server
                 if (station.waterGateState === false) {
                     // emit to arduino to open gate
                     this.writeToSerialPort('g1')
-                } {
+                } else {
                     // console.log(`Gate of tank ${station.uid} is already open`)
                 }
             } else {
@@ -261,6 +263,39 @@ class Server
 
 
 
+    /* ======================================= */
+    // @WidgetStore.setStationGateState
+    /* ======================================= */
+
+    setStationGateStateOpen = (req, res, next) =>
+    {
+        const id = parseInt(req.params.id)
+        const state = true
+
+        // write state to arduino
+        // this.writeToSerialPort('g1')
+
+        // save state to station
+        this.stations[id].setWaterGateState(state)
+
+        // return state
+        res.json(state)
+    }
+
+    setStationGateStateClosed = (req, res, next) =>
+    {
+        const id = parseInt(req.params.id)
+        const state = false
+
+        // write state to arduino
+        // this.writeToSerialPort('g0')
+
+        // save state to station
+        this.stations[id].setWaterGateState(state)
+
+        // return state
+        res.json(state)
+    }
 
 
     /* ======================================= */
@@ -269,8 +304,8 @@ class Server
 
     getWaterLevel = (req, res, next) =>
     {
-        let id = parseInt(req.params.id)
-        let waterLevel = this.stations[id].waterLevel
+        const id = parseInt(req.params.id)
+        const waterLevel = this.stations[id].waterLevel
 
         res.json(waterLevel)
     }
@@ -280,10 +315,10 @@ class Server
     // @WidgetStore.getStationGateState
     /* ======================================= */
 
-    getWaterGateState = (req, res, next) =>
+    getStationGateState = (req, res, next) =>
     {
-        let id = parseInt(req.params.id)
-        let gateState = this.stations[id].waterGateState
+        const id = parseInt(req.params.id)
+        const gateState = this.stations[id].getWaterGateState()
 
         res.json(gateState)
     }

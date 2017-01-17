@@ -11,7 +11,7 @@ class WidgetStore extends EventEmitter
     {
         super(props)
         this.waterHeights = [0, 0, 0, 0, 0, 0, 0, 0, 0]
-        this.gateStates = [false, false, false, false, false, false, false, false, false]
+        this.stationGateStates = [false, false, false, false, false, false, false, false, false]
     }
 
 
@@ -62,15 +62,32 @@ class WidgetStore extends EventEmitter
 
 
     /// water tank state
-    getGateState = (id) => this.gateStates[id]
+    getGateState = (id) => this.stationGateStates[id]
 
     setGateState = (id, state) =>
     {
-        this.gateStates[id] = state
+        this.stationGateStates[id] = state
         this.emit('gate_change')
     }
 
-    getWatertankGateState = (tankId) =>
+    setStationGateState = (tankId, state) =>
+    {
+        const endpoint = state
+            ? `http://${connect.host}:${connect.port.server}/opengate/${tankId}`
+            : `http://${connect.host}:${connect.port.server}/closegate/${tankId}`
+
+        axios.get(endpoint)
+            .then(response => {
+                this.stationGateStates[tankId] = response.data
+                this.emit('gate_change')
+            })
+            .catch(err => {
+                console.warn('could not set watertank gate state on server: ' + err)
+                this.emit('fail')
+            })
+    }
+
+    getStationGateState = (tankId) =>
     {
         const endpoint = `http://${connect.host}:${connect.port.server}/gatestate/${tankId}`
 
@@ -93,10 +110,10 @@ class WidgetStore extends EventEmitter
             })
     }
 
-    setAllGateStates = (state) =>
+    setAllstationGateStates = (state) =>
     {
-        this.gateStates.forEach((gate, index) => {
-            this.gateStates[index] = state
+        this.stationGateStates.forEach((gate, index) => {
+            this.stationGateStates[index] = state
         })
 
         this.emit('gate_change_all')
@@ -111,13 +128,18 @@ class WidgetStore extends EventEmitter
                 break
             }
 
-            case 'FETCH_WATERTANK_GATE': {
-                this.getWatertankGateState(action.tankId)
+            case 'FETCH_WATERTANK_GATE_STATE': {
+                this.getStationGateState(action.tankId)
+                break
+            }
+
+            case 'SET_WATERTANK_GATE_STATE': {
+                this.setStationGateState(action.tankId, action.state)
                 break
             }
 
             case 'SET_ALL_GATE_STATES': {
-                this.setAllGateStates(action.state)
+                this.setAllstationGateStates(action.state)
                 break
             }
         }
