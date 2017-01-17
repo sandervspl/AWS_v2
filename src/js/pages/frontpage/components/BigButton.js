@@ -35,6 +35,8 @@ export default class BigButton extends React.Component
             let msg = 'Watertanks zijn gestopt met legen.'
             notificationActions.createNotification(kind, msg, expiresTime)
         }
+
+        widgetActions.setAllGateStates(active)
     }
 
     render()

@@ -14,3 +14,10 @@ export function getGateState(tankId) {
         tankId
     })
 }
+
+export function setAllGateStates(state) {
+    Dispatcher.dispatch({
+        type: 'SET_ALL_GATE_STATES',
+        state
+    })
+}

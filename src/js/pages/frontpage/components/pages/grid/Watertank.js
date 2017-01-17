@@ -21,7 +21,7 @@ export default class Watertank extends React.Component
             id: this.props.tankId,
             active: false,
             activeForced: false, // this means the system can not close a water tank unless tank is less than 5% filled
-            capacity: 30,        // TODO: calculate ACTUAL Liter amount for our tanks
+            capacity: 9,
             fillPrct: 0,
         }
     }
@@ -49,7 +49,7 @@ export default class Watertank extends React.Component
 
         widgetStore.on('gate_change_all', () => {
             const active = widgetStore.getGateState(this.state.id)
-            this.setActiveState(active, active)
+            this.setAllActiveState(active)
         })
 
         setInterval(() => {
@@ -82,6 +82,14 @@ export default class Watertank extends React.Component
         })
 
         this.notification(active)
+    }
+
+    setAllActiveState = (active) =>
+    {
+        this.setState({
+            active,
+            activeForced: true
+        })
     }
 
     notification = (state) =>

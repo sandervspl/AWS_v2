@@ -93,6 +93,15 @@ class WidgetStore extends EventEmitter
             })
     }
 
+    setAllGateStates = (state) =>
+    {
+        this.gateStates.forEach((gate, index) => {
+            this.gateStates[index] = state
+        })
+
+        this.emit('gate_change_all')
+    }
+
     handleActions = (action) =>
     {
         switch(action.type)
@@ -104,6 +113,11 @@ class WidgetStore extends EventEmitter
 
             case 'FETCH_WATERTANK_GATE': {
                 this.getWatertankGateState(action.tankId)
+                break
+            }
+
+            case 'SET_ALL_GATE_STATES': {
+                this.setAllGateStates(action.state)
                 break
             }
         }
