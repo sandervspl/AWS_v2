@@ -55,3 +55,8 @@ ul li {
     background: rgba(0, 0, 0, 0);
     pointer-events: none;
 }
+
+.meteocon:before {
+    font-family: 'MeteoconsRegular', sans-serif;
+    content: attr(data-icon);
+}

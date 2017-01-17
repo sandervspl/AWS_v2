@@ -2,6 +2,9 @@
 const React = require('react')
 const Radium = require('radium')
 
+// components
+import Icon from './Weather/Icon'
+
 
 @Radium
 export default class Weather extends React.Component
@@ -11,23 +14,16 @@ export default class Weather extends React.Component
         super(props)
     }
 
-    componentWillMount()
-    {
-        this.setState({ weatherData: this.props.weatherData })
-    }
-
     render()
     {
         let { weatherData } = this.props
         let loadStyle = (this.props.refreshing === false) ? 'loading loaded' : 'loading'
 
         return (
-            <div style={styles.base}>
+            <div>
                 <div className={loadStyle}></div>
-                <div style={styles.icon}>
-                    <img src="public/img/cloudy.png" alt="weather" style={styles.img}/>
-                </div>
-                <div style={styles.temp}> {(weatherData.temperature.temp).toFixed(0)}º </div>
+                <Icon weatherId={this.props.weatherData.id}/>
+                <div style={styles.temp}> {(weatherData.temp).toFixed(0)}º </div>
             </div>
         )
     }
@@ -35,18 +31,6 @@ export default class Weather extends React.Component
 
 
 const styles = {
-    base: {
-        marginTop: '5px'
-    },
-
-    icon: {
-        height: '22px'
-    },
-
-    img: {
-        height: '100%'
-    },
-
     temp: {
         color: '#000000',
         fontSize: '1.15em'

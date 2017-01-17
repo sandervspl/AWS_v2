@@ -22,19 +22,18 @@ export default class Menu extends React.Component
     {
         super(props)
         this.state = {
+
             viewName: 'menu',
             pos: {},                // lat and longitude
             refreshingWeather: true,
             weatherData: {
-                posName: 'Niet beschikbaar',        // name of current position
-                humidity: 0,        // humidity percentage
-                temperature: {
-                    temp: 0,        // temperature (celcius)
-                    id: 0           // weather ID of OpenWeather API
-                },
+                id: 0,                          // weather type
+                posName: 'Niet beschikbaar',    // name of current position
+                humidity: 0,                    // humidity percentage
+                temp: 0,                        // temperature (celcius)
                 wind: {
-                    speed: 0,       // wind speed in km/h
-                    angle: 0        // wind angle in degrees
+                    speed: 0,                   // wind speed in km/h
+                    angle: 0                    // wind angle in degrees
                 }
             }
         }

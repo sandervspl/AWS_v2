@@ -46,12 +46,10 @@ class MenuStore extends EventEmitter
     saveWeatherData(data)
     {
         this.weatherData = {
+            id: data.weather[0].id,
             posName: data.name,
             humidity: data.main.humidity,
-            temperature: {
-                temp: data.main.temp,
-                id: data.weather[0].id
-            },
+            temp: data.main.temp,
             wind: {
                 speed: data.wind.speed,
                 angle: data.wind.deg
