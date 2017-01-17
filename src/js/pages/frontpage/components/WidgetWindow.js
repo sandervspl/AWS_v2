@@ -4,6 +4,7 @@ const Radium = require('radium')
 
 // components
 import Weather from './widgetWindow/Weather'
+import WaterHistory from './widgetWindow/WaterHistory'
 
 // stores
 import widgetWindowStore from '../../../stores/WidgetWindowStore'
@@ -37,6 +38,10 @@ export default class WidgetWindow extends React.Component
     {
         switch (this.state.kind)
         {
+            case 'watertank': {
+                return <WaterHistory/>
+            }
+
             case 'weather': {
                 return <Weather
                     weatherData={this.props.weatherData}
