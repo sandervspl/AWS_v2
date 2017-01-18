@@ -42,7 +42,7 @@ export default class Watertank extends React.Component
 
         widgetStore.on('gate_change_all', () => {
             const active = widgetStore.getGateState(this.state.id)
-            this.setAllActiveState(active)
+            this.setActiveState(active, false)
         })
 
         // fetch water level every second
@@ -64,13 +64,11 @@ export default class Watertank extends React.Component
 
     toggleActiveState = () => widgetActions.setStationGateState(this.state.id, ! this.state.active)
 
-    setActiveState = (active) =>
+    setActiveState = (active, doNotif = true) =>
     {
         this.setState({ active })
-        this.notification(active)
+        if (doNotif) this.notification(active)
     }
-
-    setAllActiveState = (active) => this.setState({ active })
 
     notification = (state) =>
     {

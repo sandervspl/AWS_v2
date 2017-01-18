@@ -5,6 +5,7 @@ const axios = require('axios')
 
 // vars
 import * as vars from '../secret/vars'
+import * as connect from '../secret/connect'
 
 
 class MenuStore extends EventEmitter
@@ -14,6 +15,7 @@ class MenuStore extends EventEmitter
         super(props)
         this.weatherData = {}
         this.position = {}
+        this.bigButtonState = false
     }
 
     getPosition = () => this.position
@@ -82,6 +84,35 @@ class MenuStore extends EventEmitter
         )
     }
 
+    getBigButtonState = () => this.bigButtonState
+
+
+    fetchBigButtonState = () =>
+    {
+        axios.get(`http://${connect.host}:${connect.port.server}/getbigbutton`)
+            .then(response => {
+                this.bigButtonState = parseInt(response.data)
+                this.emit('bigbutton_state_change')
+            })
+            .catch(err => {
+                console.warn('could not fetch big button state on server: ' + err)
+                this.emit('fail')
+            })
+    }
+
+    setBigButtonState = (state) =>
+    {
+        axios.get(`http://${connect.host}:${connect.port.server}/setbigbutton/${state}`)
+            .then(response => {
+                this.bigButtonState = parseInt(response.data)
+                this.emit('bigbutton_state_change')
+            })
+            .catch(err => {
+                console.warn('could not set big button state on server: ' + err)
+                this.emit('fail')
+            })
+    }
+
     handleActions = (action) =>
     {
         switch(action.type)
@@ -103,6 +134,16 @@ class MenuStore extends EventEmitter
 
             case 'FETCH_POSITION_DATA': {
                 this.getPositionData()
+                break
+            }
+
+            case 'SET_BIGBUTTON_STATE': {
+                this.setBigButtonState(action.state)
+                break
+            }
+
+            case 'FETCH_BIGBUTTON_STATE': {
+                this.fetchBigButtonState()
                 break
             }
         }

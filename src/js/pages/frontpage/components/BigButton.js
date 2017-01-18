@@ -3,8 +3,12 @@ const React = require('react')
 const Radium = require('radium')
 
 // actions
-import * as notificationActions from '../../../actions/NotificationActions'
-import * as widgetActions from '../../../actions/WidgetActions'
+import { createNotification } from '../../../actions/NotificationActions'
+import { setBigButtonState, fetchBigButtonState } from '../../../actions/MenuActions'
+import { setAllGateStates } from '../../../actions/WidgetActions'
+
+// stores
+import menuStore from '../../../stores/MenuStore'
 
 
 @Radium
@@ -14,29 +18,44 @@ export default class BigButton extends React.Component
     {
         super(props)
         this.state = {
-            active: false
+            active: 0
         }
     }
 
-    handleClick = () => this.toggleState()
+    componentWillMount()
+    {
+        // if server completed our request we handle it
+        menuStore.on('bigbutton_state_change', () => {
+            const active = menuStore.getBigButtonState()
+            this.setState({ active })
+            // console.log('bigbutton state is changed to', active)
+            setTimeout(this.sendNotification, 100)
+        })
 
-    toggleState = () => {
-        const active = !this.state.active
+        // get state from server
+        fetchBigButtonState()
+    }
+
+    // send new state for gates to server
+    toggleActiveState = () => {
+        const state = this.state.active ? 0 : 1
+        setAllGateStates(state)
+        setBigButtonState(state)
+    }
+
+    sendNotification = () =>
+    {
         const expiresTime = Date.now() + 5000
 
-        this.setState({ active })
-
-        if (active) {
-            let kind = 'success'
-            let msg = 'Alle watertanks worden geleegd.'
-            notificationActions.createNotification(kind, msg, expiresTime)
+        if (this.state.active) {
+            const kind = 'success'
+            const msg = 'Alle watertanks worden geleegd.'
+            createNotification(kind, msg, expiresTime)
         } else {
-            let kind = 'alert'
-            let msg = 'Watertanks zijn gestopt met legen.'
-            notificationActions.createNotification(kind, msg, expiresTime)
+            const kind = 'alert'
+            const msg = 'Watertanks zijn gestopt met legen.'
+            createNotification(kind, msg, expiresTime)
         }
-
-        widgetActions.setAllGateStates(active)
     }
 
     render()
@@ -53,7 +72,7 @@ export default class BigButton extends React.Component
 
         return (
             <div style={styles.base}>
-                <div style={styles.btn} onClick={this.handleClick}>
+                <div style={styles.btn} onClick={this.toggleActiveState}>
                     <div style={ [styles.midCircle, buttonStyle] }>
                         <img src="public/img/bucket_icon_white.png" alt="Bucket" style={bucketStyle}/>
                     </div>
