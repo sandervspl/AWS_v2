@@ -173,12 +173,14 @@ const styles = {
 
     prct: {
         fontSize: '1.5em',
-        fontWeight: '500'
+        fontWeight: '500',
+        textShadow: 'rgba(0, 0, 0, 0.498039) 2px 1px 6px'
     },
 
     curCap: {
         fontSize: '.7em',
-        fontWeight: '300'
+        fontWeight: '300',
+        textShadow: 'rgba(0, 0, 0, 0.498039) 2px 1px 6px'
     },
 
     fillBg: {
@@ -186,7 +188,7 @@ const styles = {
         bottom: 0,
         width: '100%',
         height: '10px',
-        background: '#eee',
+        background: '#d9f5ff',
     },
 
     fill: {
@@ -196,7 +198,7 @@ const styles = {
         background: '#2689BA',
         height: '100%',
         maxWidth: '100%',
-        minWidth: '1%',
+        minWidth: '3%',
         transition: 'width .3s ease'
     }
 }

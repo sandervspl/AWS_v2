@@ -200,12 +200,12 @@ export default class WeatherItem extends React.Component
 
 const styles = {
     base: {
-        flex: '1 1 auto',
+        width: '33%',
         textAlign: 'center',
     },
 
     title: {
-        fontSize: '14px',
+        fontSize: '12px',
         fontWeight: '100',
         transform: 'translateY(-5px)'
     },

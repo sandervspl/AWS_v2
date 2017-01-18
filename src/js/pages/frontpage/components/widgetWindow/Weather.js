@@ -49,7 +49,7 @@ const styles = {
     location: {
         textAlign: 'center',
         fontSize: '18px',
-        fontWeight: '300'
+        fontWeight: '400'
     },
 
     row: {

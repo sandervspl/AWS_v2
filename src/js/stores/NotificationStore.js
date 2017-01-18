@@ -57,7 +57,7 @@ class NotificationStore extends EventEmitter
 
     handleActions = (action) =>
     {
-        if (Date.now() - this.timeMounted < 750)
+        if (Date.now() - this.timeMounted < 1000)
             return
 
         switch(action.type)

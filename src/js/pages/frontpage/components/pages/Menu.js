@@ -112,7 +112,7 @@ export default class Menu extends React.Component
 
 const styles = {
     base: {
-        padding: '60px 0 0',
+        padding: '70px 0 0',
         height: '100%',
         width: '100%',
     }

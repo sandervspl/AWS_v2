@@ -31,19 +31,14 @@ export default class WidgetButton extends React.Component
             // close widget window, if active, before going to new view
             if (widgetWindowStore.getWindow().active) {
                 widgetWindowActions.closeWidgetWindow()
-                time = 325
+                time = 325  // .325 seconds
             }
 
-            setTimeout(
-                () => navbarActions.navFromTo('menu', 'grid'),
-                time
-            )
+            setTimeout(() => navbarActions.navFromTo('menu', 'grid'), time)
         } else {
-            this.toggleActive()
+            this.activateWindow()
         }
     }
-
-    toggleActive = () => this.activateWindow()
 
     activateWindow = () => widgetWindowActions.toggleWidgetWindow(this.props.kind)
 
@@ -56,12 +51,12 @@ export default class WidgetButton extends React.Component
         {
             case 'watertank':
                 button = <Watertank/>
-                tag = ''
+                tag = 'Inhoud'
                 break
 
             case 'grid':
                 button = <Grid/>
-                tag = ''
+                tag = 'Overzicht'
                 break
 
             case 'weather':
@@ -69,17 +64,21 @@ export default class WidgetButton extends React.Component
                             weatherData={this.props.weatherData}
                             refreshing={this.props.refreshing}
                 />
-                tag = ''
+                tag = 'Weer'
                 break
         }
 
+        const spacing = this.props.kind === 'grid' ? styles.spacing : {}
+
         return (
-            <li
-                style={ [styles.base, styles[this.props.kind]] }
-                className="widget-btn"
-                onClick={this.handeClick}
-            >
-                {button}
+            <li style={ [styles.base, spacing] }>
+                <div
+                    style={ [styles.inner, styles[this.props.kind]] }
+                    className="widget-btn"
+                    onClick={this.handeClick}
+                >
+                    {button}
+                </div>
                 <span>{tag}</span>
             </li>
         )
@@ -95,7 +94,6 @@ const styles = {
         height: '70px',
         verticalAlign: 'top',
         lineHeight: '50px',
-        overflow: 'hidden',
         textAlign: 'center',
 
         ':hover': {
@@ -103,17 +101,23 @@ const styles = {
         },
     },
 
+    spacing: {
+        margin: '0 30px 20px',
+    },
+
+    inner: {
+        width: '100%',
+        height: '100%',
+        overflow: 'hidden',
+    },
+
     watertank: {
-        borderRadius: '50%',
+        borderRadius: '33%',
         background: '#eee'
     },
 
-    grid: {
-
-    },
-
     weather: {
-        borderRadius: '50%',
+        borderRadius: '33%',
         background: '#eee'
     }
 }

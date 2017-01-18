@@ -84,7 +84,8 @@ const styles = {
         height: '100%',
         width: '100%',
         overflow: 'hidden',
-        whiteSpace: 'nowrap'
+        whiteSpace: 'nowrap',
+        background: 'linear-gradient(-45deg, rgb(44, 53, 58) 0%, rgb(55, 67, 74) 36%, rgb(40, 52, 59) 100%)'
     },
 
     view: {

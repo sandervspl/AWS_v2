@@ -48,7 +48,7 @@ export default class Watertank extends React.Component
         let fill = { height: height }
 
         return (
-            <div>
+            <div style={styles.base}>
                 <div className={loadStyle}></div>
                 <div style={ [styles.fill, fill] } id="fillPrct" />
                 <div style={styles.prct}> {prct} </div>
@@ -59,12 +59,17 @@ export default class Watertank extends React.Component
 
 
 const styles = {
+    base: {
+        background: '#95D7F7'
+    },
+
     fill: {
         position: 'absolute',
         zIndex: 1,
         bottom: 0,
         background: '#2789BA',
         width: '100%',
+        transition: 'height .3s ease'
     },
 
     prct: {
@@ -73,6 +78,7 @@ const styles = {
         fontSize: '1.25em',
         fontWeight: '400',
         color: '#000000',
-        lineHeight: '70px'
+        lineHeight: '70px',
+        textShadow: '2px 1px 6px rgba(0,0,0,0.5)'
     }
 }

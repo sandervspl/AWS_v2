@@ -73,7 +73,7 @@ export default class BigButton extends React.Component
         return (
             <div style={styles.base}>
                 <div style={styles.btn} onClick={this.toggleActiveState}>
-                    <div style={ [styles.midCircle, buttonStyle] }>
+                    <div style={ [styles.midCircle, buttonStyle] } className="midCircle">
                         <img src="public/img/bucket_icon_white.png" alt="Bucket" style={bucketStyle}/>
                     </div>
                 </div>
@@ -102,6 +102,10 @@ const styles = {
 
         ':hover': {
             cursor: 'pointer'
+        },
+
+        ':active > .midCircle': {
+            transform: 'scale(0.9)'
         }
     },
 
@@ -111,14 +115,15 @@ const styles = {
         width: '60px',
         height: '60px',
         margin: 'auto',
-        borderRadius: '50%'
+        borderRadius: '50%',
+        transition: 'box-shadow .3s ease-out'
     },
 
     img: {
         position: 'relative',
         width: '27px',
         top: 'calc(50% - 13.5px)',
-        transition: 'transform .3s ease-in-out'
+        transition: 'transform .3s ease-in-out, background .3s ease-in-out'
     },
 
     rotate: {
@@ -130,10 +135,12 @@ const styles = {
     },
 
     on: {
-        background: '#5FE182'
+        background: '#5FE182',
+        boxShadow: 'rgba(95, 225, 130, 0.33) 0px 0px 25px 23px'
     },
 
     off: {
-        background: '#FF6262'
+        background: '#FF6262',
+        boxShadow: '0 0 0 0 rgba(0,0,0,0)'
     }
 }

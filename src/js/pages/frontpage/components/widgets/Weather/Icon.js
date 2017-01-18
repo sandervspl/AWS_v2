@@ -155,7 +155,8 @@ const styles = {
     icon: {
         position: 'relative',
         fontSize: '30px',
-        color: '#000'
+        color: '#000',
+        textShadow: '2px 1px 6px rgba(0,0,0,0.5)'
     },
 
     big: {
