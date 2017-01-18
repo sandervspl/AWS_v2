@@ -70,7 +70,7 @@ class WidgetStore extends EventEmitter
         this.emit('gate_change')
     }
 
-    setStationGateState = (tankId, state) =>
+    setStationGateState = (tankId, state, singleGate = true) =>
     {
         const endpoint = state
             ? `http://${connect.host}:${connect.port.server}/opengate/${tankId}`
@@ -79,7 +79,8 @@ class WidgetStore extends EventEmitter
         axios.get(endpoint)
             .then(response => {
                 this.stationGateStates[tankId] = response.data
-                this.emit('gate_change')
+
+                if (singleGate) this.emit('gate_change')
             })
             .catch(err => {
                 console.warn('could not set watertank gate state on server: ' + err)
@@ -110,13 +111,14 @@ class WidgetStore extends EventEmitter
             })
     }
 
-    setAllstationGateStates = (state) =>
+    setAllstationGateStates(state)
     {
         this.stationGateStates.forEach((gate, index) => {
-            this.stationGateStates[index] = state
-        })
+            this.setStationGateState(index, state, false)
 
-        this.emit('gate_change_all')
+            if (index === this.stationGateStates.length - 1)
+                setTimeout(() => { this.emit('gate_change_all') }, 100)
+        })
     }
 
     handleActions = (action) =>

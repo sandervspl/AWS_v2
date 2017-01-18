@@ -14,6 +14,7 @@ class Server
     {
         this.stations = []
         this.serialport = null
+        this.allTanksActive = 0
 
         this.init()
         this.routes()
@@ -147,8 +148,12 @@ class Server
 
         app.get('/waterlevel/:id', [this.setOptions, this.getWaterLevel])
         app.get('/gatestate/:id', [this.setOptions, this.getStationGateState])
+        app.get('/getbigbutton', this.getBigButton)
+
+        // TODO: change to post
         app.get('/opengate/:id', this.setStationGateStateOpen)
         app.get('/closegate/:id', this.setStationGateStateClosed)
+        app.get('/setbigbutton/:state', this.setBigButton)
 
         // 404 page
         app.use((req, res) => { res.sendStatus(404) })
@@ -272,6 +277,8 @@ class Server
         const id = parseInt(req.params.id)
         const state = true
 
+        // console.log('opening gate for tank ', id)
+
         // write state to arduino
         // this.writeToSerialPort('g1')
 
@@ -287,6 +294,8 @@ class Server
         const id = parseInt(req.params.id)
         const state = false
 
+        // console.log('closing gate for tank ', id)
+
         // write state to arduino
         // this.writeToSerialPort('g0')
 
@@ -296,6 +305,19 @@ class Server
         // return state
         res.json(state)
     }
+
+    setBigButton = (req, res, next) =>
+    {
+        const state = req.params.state
+        this.allTanksActive = state
+
+        console.log('setting big button state on server to', state)
+
+        res.json(state)
+    }
+
+    getBigButton = (req, res, next) => res.json(this.allTanksActive)
+
 
 
     /* ======================================= */
