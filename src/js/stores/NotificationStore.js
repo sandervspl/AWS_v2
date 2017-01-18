@@ -12,6 +12,7 @@ class NotificationStore extends EventEmitter
         this.start = 45
         this.height = 35
         this.notifications = []
+        this.timeMounted = Date.now()
     }
 
     getAll = () => this.notifications
@@ -56,6 +57,9 @@ class NotificationStore extends EventEmitter
 
     handleActions = (action) =>
     {
+        if (Date.now() - this.timeMounted < 750)
+            return
+
         switch(action.type)
         {
             case 'CREATE_NOTIFICATION': {
