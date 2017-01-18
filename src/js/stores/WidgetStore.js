@@ -72,20 +72,22 @@ class WidgetStore extends EventEmitter
 
     setStationGateState = (tankId, state, singleGate = true) =>
     {
-        const endpoint = state
-            ? `http://${connect.host}:${connect.port.server}/opengate/${tankId}`
-            : `http://${connect.host}:${connect.port.server}/closegate/${tankId}`
+        const endpoint = `http://${connect.host}:${connect.port.server}/setgate`
+        const options = {
+            tankId,
+            state
+        }
 
-        axios.get(endpoint)
-            .then(response => {
-                this.stationGateStates[tankId] = response.data
+        axios.post(endpoint, options)
+        .then(response => {
+            this.stationGateStates[tankId] = response.data
 
-                if (singleGate) this.emit('gate_change')
-            })
-            .catch(err => {
-                console.warn('could not set watertank gate state on server: ' + err)
-                this.emit('fail')
-            })
+            if (singleGate) this.emit('gate_change')
+        })
+        .catch(err => {
+            console.warn('could not set watertank gate state on server: ' + err)
+            this.emit('fail')
+        })
     }
 
     getStationGateState = (tankId) =>
