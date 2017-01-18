@@ -66,6 +66,10 @@ export default class WaterHistory extends Component
             options: {
                 scales: {
                     yAxes: [{
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Liter'
+                        },
                         ticks: {
                             beginAtZero: true
                         }
