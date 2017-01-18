@@ -27,7 +27,7 @@ class Server
     /* ======================================= */
 
     // initialize express server
-    init()
+    init = () =>
     {
         // block the header from containing information about the server
         app.disable('x-powered-by')
@@ -52,14 +52,13 @@ class Server
         this.startServer()
     }
 
-    openSerialport()
+    openSerialport = () =>
     {
-        // serialport
         this.serialport = new SerialPort('/dev/cu.usbmodem1421', { parser: SerialPort.parsers.readline('\n') })
         this.handleSerialPortEvents()
     }
 
-    handleSerialPortEvents()
+    handleSerialPortEvents = () =>
     {
         this.serialport
             .on('error', err => { console.log('Serial Port could not be opened:', err) })
@@ -122,6 +121,12 @@ class Server
 
     writeToSerialPort = (str) =>
     {
+        // TODO: test if domain is not null when arduino is connected
+        if (this.serialport.domain === null) {
+            return
+            // throw new Error('No Serialport connected')
+        }
+
         // Sending String character by character
         for(let i = 0; i < str.length; i += 1) {
             this.serialport.write(new Buffer(str[i], 'ascii'));
@@ -129,12 +134,6 @@ class Server
 
         // Sending the terminate character
         this.serialport.write(new Buffer('#', 'ascii'));
-    }
-
-    setOptions(req, res, next)
-    {
-        res.header('Access-Control-Allow-Methods', 'GET')
-        next()
     }
 
     // set routes
@@ -146,17 +145,22 @@ class Server
             next()
         })
 
-        app.get('/waterlevel/:id', [this.setOptions, this.getWaterLevel])
-        app.get('/gatestate/:id', [this.setOptions, this.getStationGateState])
+        app.use((req, res, next) => {
+            res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
+            next()
+        })
+
+        app.options('*', this.getOptions)
+
+        app.get('/waterlevel/:id', this.getWaterLevel)
+        app.get('/gatestate/:id', this.getStationGateState)
         app.get('/getbigbutton', this.getBigButton)
 
-        // TODO: change to post
-        app.get('/opengate/:id', this.setStationGateStateOpen)
-        app.get('/closegate/:id', this.setStationGateStateClosed)
-        app.get('/setbigbutton/:state', this.setBigButton)
+        app.post('/setgate', this.setStationGateState)
+        app.post('/setbigbutton', this.setBigButton)
 
         // 404 page
-        app.use((req, res) => { res.sendStatus(404) })
+        app.use((req, res) => res.sendStatus(404))
     }
 
     // get port and start server
@@ -267,37 +271,29 @@ class Server
     }
 
 
+    getOptions = (req, res, next) => res.json(res.get('Access-Control-Allow-Methods'))
 
     /* ======================================= */
     // @WidgetStore.setStationGateState
     /* ======================================= */
 
-    setStationGateStateOpen = (req, res, next) =>
+    setStationGateState = (req, res, next) =>
     {
-        const id = parseInt(req.params.id)
-        const state = true
+        if (typeof req.body.tankId === 'undefined' || req.body.tankId === null ||
+            typeof req.body.state === 'undefined' || req.body.state === null)
+        {
+            console.log(req.body)
+            throw new Error('Expected object with tankId and/or state')
+        }
+
+        const id = req.body.tankId
+        const state = req.body.state
 
         // console.log('opening gate for tank ', id)
 
         // write state to arduino
-        // this.writeToSerialPort('g1')
-
-        // save state to station
-        this.stations[id].setWaterGateState(state)
-
-        // return state
-        res.json(state)
-    }
-
-    setStationGateStateClosed = (req, res, next) =>
-    {
-        const id = parseInt(req.params.id)
-        const state = false
-
-        // console.log('closing gate for tank ', id)
-
-        // write state to arduino
-        // this.writeToSerialPort('g0')
+        let str = state ? 'g1' : 'g0'
+        this.writeToSerialPort(str)
 
         // save state to station
         this.stations[id].setWaterGateState(state)
@@ -308,10 +304,8 @@ class Server
 
     setBigButton = (req, res, next) =>
     {
-        const state = req.params.state
+        const state = req.body.state
         this.allTanksActive = state
-
-        console.log('setting big button state on server to', state)
 
         res.json(state)
     }

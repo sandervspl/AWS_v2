@@ -102,7 +102,10 @@ class MenuStore extends EventEmitter
 
     setBigButtonState = (state) =>
     {
-        axios.get(`http://${connect.host}:${connect.port.server}/setbigbutton/${state}`)
+        const endpoint = `http://${connect.host}:${connect.port.server}/setbigbutton`
+        const options = { state }
+
+        axios.post(endpoint, options)
             .then(response => {
                 this.bigButtonState = parseInt(response.data)
                 this.emit('bigbutton_state_change')
