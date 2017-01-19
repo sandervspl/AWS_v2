@@ -21,7 +21,7 @@ export default class Weather extends React.Component
         const tempBgStyle = weatherData.temp >= 10 ? styles.hot : styles.cold
 
         return (
-            <div style={tempBgStyle}>
+            <div style={ [styles.base, tempBgStyle] }>
                 <div className={loadStyle} style={styles.customLoader}></div>
                 <Icon weatherId={this.props.weatherData.id}/>
                 <div style={styles.temp}> {(weatherData.temp).toFixed(0)}º </div>
@@ -32,6 +32,10 @@ export default class Weather extends React.Component
 
 
 const styles = {
+    base: {
+        position: 'relative'
+    },
+
     hot: {
         background: 'radial-gradient(rgba(255, 255, 135, 0.75), rgba(255, 157, 24, 0.75))'
     },
@@ -44,9 +48,5 @@ const styles = {
         color: '#000000',
         fontSize: '1.15em',
         textShadow: '2px 1px 6px rgba(0,0,0,0.5)'
-    },
-
-    customLoader: {
-        borderRadius: '33%'
     }
 }

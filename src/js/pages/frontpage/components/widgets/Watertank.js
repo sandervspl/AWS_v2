@@ -60,7 +60,8 @@ export default class Watertank extends React.Component
 
 const styles = {
     base: {
-        background: '#95D7F7'
+        background: '#95D7F7',
+        position: 'relative'
     },
 
     fill: {

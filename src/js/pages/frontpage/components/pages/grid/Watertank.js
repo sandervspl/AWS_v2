@@ -46,7 +46,12 @@ export default class Watertank extends React.Component
         })
 
         // fetch water level every second
-        setInterval(widgetActions.getWaterLevel(this.state.id), 1000)
+        setInterval(
+            () => {
+                widgetActions.getWaterLevel(this.state.id)
+            },
+            1000
+        )
 
         // set water level after giving arduino some fetching time
         setTimeout(
