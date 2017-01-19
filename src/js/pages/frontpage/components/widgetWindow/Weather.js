@@ -4,7 +4,7 @@ const Radium = require('radium')
 const axios = require('axios')
 
 // component
-import WeatherItem from './WeatherItem'
+import WeatherItem from './Weather/WeatherItem'
 
 
 

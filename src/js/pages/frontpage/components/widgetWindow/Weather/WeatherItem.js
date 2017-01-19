@@ -3,7 +3,7 @@ const React = require('react')
 const Radium = require('radium')
 
 // components
-import Icon from '../widgets/Weather/Icon'
+import Icon from '../../widgets/Weather/Icon'
 
 
 @Radium
@@ -154,7 +154,7 @@ export default class WeatherItem extends React.Component
         return (
             <div>
                 <h3 style={styles.title}>Luchtvochtigheid</h3>
-                <img src="public/img/rain_medium.png" alt="Humidity" style={styles.icon}/>
+                <img src="public/img/humidity.png" alt="Humidity" style={styles.icon}/>
                 <p style={styles.data}> {this.props.data}% </p>
             </div>
         )
