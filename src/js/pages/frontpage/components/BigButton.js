@@ -62,12 +62,14 @@ export default class BigButton extends React.Component
     {
         let stateMsg = 'UIT',
             bucketStyle = styles.img,
-            buttonStyle = styles.off
+            buttonStyle = styles.off,
+            textStyle = styles.stateText.off
 
         if (this.state.active) {
             stateMsg = 'AAN'
             bucketStyle = [styles.img, styles.rotate]
             buttonStyle = styles.on
+            textStyle = styles.stateText.on
         }
 
         return (
@@ -78,8 +80,8 @@ export default class BigButton extends React.Component
                     </div>
                 </div>
                 <div style={styles.description}>
-                    <p>Drainage Systeem:</p>
-                    <p>{stateMsg}</p>
+                    <p style={styles.systemText}>Drainage Systeem</p>
+                    <p style={ [styles.stateText, textStyle] }>{stateMsg}</p>
                 </div>
             </div>
         )
@@ -142,5 +144,24 @@ const styles = {
     off: {
         background: '#FF6262',
         boxShadow: '0 0 0 0 rgba(0,0,0,0)'
+    },
+    
+    stateText: {
+        fontSize: '2em',
+        fontWeight: 900,
+        letterSpacing: '3px',
+        lineHeight: '1em',
+
+        on: {
+            color: '#5FE182'
+        },
+        
+        off: {
+            color: '#FF6262'
+        }
+    },
+
+    systemText: {
+        textTransform: 'uppercase'
     }
 }

@@ -76,7 +76,7 @@ const styles = {
         left: 0,
         width: '100%',
         height: '175px',
-        background: 'linear-gradient(-45deg, rgb(47, 54, 58) 0%, rgb(55, 67, 74) 36%, rgb(47, 54, 58) 100%)',
+        background: 'linear-gradient(-45deg, rgb(47, 54, 58) 0%, rgb(62, 77, 86) 36%, rgb(47, 54, 58) 100%)',
         borderTop: '1px solid rgb(141, 141, 141)',
         overflow: 'hidden',
         transform: 'translateY(176px)',

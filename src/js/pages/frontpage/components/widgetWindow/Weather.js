@@ -6,6 +6,8 @@ const axios = require('axios')
 // component
 import WeatherItem from './Weather/WeatherItem'
 
+// actions
+import { getPositionData } from '../../../../actions/MenuActions'
 
 
 @Radium
@@ -16,6 +18,8 @@ export default class Weather extends React.Component
         super(props)
     }
 
+    handleClick = () => getPositionData()
+
     render()
     {
         let { weatherData } = this.props
@@ -25,7 +29,10 @@ export default class Weather extends React.Component
             <div style={styles.base}>
                 <div className={loadStyle}></div>
 
-                <h3 style={styles.location} className="location"> {weatherData.posName} </h3>
+                <div style={styles.titleContainer}>
+                    <h3 style={styles.location} className="location"> {weatherData.posName} </h3>
+                    <span className="location-refresh" onClick={this.handleClick}/>
+                </div>
 
                 <div style={styles.row}>
                     <WeatherItem kind="humidity" data={weatherData.humidity} />
@@ -47,9 +54,11 @@ const styles = {
     },
 
     location: {
-        textAlign: 'center',
+        display: 'inline-block',
         fontSize: '18px',
-        fontWeight: '400'
+        fontWeight: '400',
+        verticalAlign: 'bottom',
+        marginRight: '10px'
     },
 
     row: {
@@ -58,5 +67,9 @@ const styles = {
         marginTop: '20px',
         height: '100px',
         boxSizing: 'border-box'
+    },
+
+    titleContainer: {
+        textAlign: 'center'
     }
 }

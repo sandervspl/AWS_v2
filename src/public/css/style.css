@@ -60,3 +60,10 @@ ul li {
     font-family: 'MeteoconsRegular', sans-serif;
     content: attr(data-icon);
 }
+
+.location-refresh {
+    background: url('../img/refresh.png') top left/100% no-repeat;
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+}
