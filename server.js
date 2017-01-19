@@ -40,7 +40,7 @@ class Server
         this.openSerialport()
 
         // start watergate check interval
-        setInterval(this.shouldWaterGateOpen, 1000)
+        // setInterval(this.shouldWaterGateOpen, 1000)
 
         // create some stations
         this.createStations(10)
@@ -64,6 +64,7 @@ class Server
             .on('error', err => { console.log('Serial Port could not be opened:', err) })
             .on('open', () => { console.log('Serial Port Opened') })
             .on('data', data => {
+                console.log(data)
                 // data looks something like this
                 // UIDw45
 
@@ -121,12 +122,6 @@ class Server
 
     writeToSerialPort = (str) =>
     {
-        // TODO: test if domain is not null when arduino is connected
-        if (this.serialport.domain === null) {
-            return
-            // throw new Error('No Serialport connected')
-        }
-
         // Sending String character by character
         for(let i = 0; i < str.length; i += 1) {
             this.serialport.write(new Buffer(str[i], 'ascii'));
