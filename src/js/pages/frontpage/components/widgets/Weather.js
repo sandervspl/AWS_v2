@@ -17,12 +17,12 @@ export default class Weather extends React.Component
     render()
     {
         const { weatherData } = this.props
-        const loadStyle = (this.props.refreshing === false) ? 'loading loaded' : 'loading'
+        const loadStyle =  ! this.props.refreshing ? 'loading loaded' : 'loading'
         const tempBgStyle = weatherData.temp >= 10 ? styles.hot : styles.cold
 
         return (
             <div style={tempBgStyle}>
-                <div className={loadStyle}></div>
+                <div className={loadStyle} style={styles.customLoader}></div>
                 <Icon weatherId={this.props.weatherData.id}/>
                 <div style={styles.temp}> {(weatherData.temp).toFixed(0)}º </div>
             </div>
@@ -44,5 +44,9 @@ const styles = {
         color: '#000000',
         fontSize: '1.15em',
         textShadow: '2px 1px 6px rgba(0,0,0,0.5)'
+    },
+
+    customLoader: {
+        borderRadius: '33%'
     }
 }

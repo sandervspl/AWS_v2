@@ -51,7 +51,7 @@ export default class WidgetButton extends React.Component
         {
             case 'watertank':
                 button = <Watertank/>
-                tag = 'Inhoud'
+                tag = 'Wateropslag'
                 break
 
             case 'grid':
@@ -79,7 +79,7 @@ export default class WidgetButton extends React.Component
                 >
                     {button}
                 </div>
-                <span>{tag}</span>
+                <span style={styles.tag}>{tag}</span>
             </li>
         )
     }
@@ -119,5 +119,11 @@ const styles = {
     weather: {
         borderRadius: '33%',
         background: '#eee'
+    },
+
+    tag: {
+        fontSize: '14px',
+        position: 'relative',
+        top: '-10px'
     }
 }
