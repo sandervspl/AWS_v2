@@ -2,6 +2,7 @@
 const Express = require('express');
 const SerialPort = require('serialport');
 const bodyParser = require('body-parser');
+const connect = require('./src/js/secret/connect');
 
 import Station from './Station';
 
@@ -155,10 +156,8 @@ class Server {
 
   // get port and start server
   startServer() {
-    app.set('port', (process.env.PORT || 3000));
-    app.listen(app.get('port'), () => {
-      console.log(`Node Server is running on port ${app.get('port')}`);
-    });
+    app.set('port', (process.env.PORT || connect.port.server || 3000));
+    app.listen(app.get('port'), () => console.log(`Node Server is running on port ${app.get('port')}`));
   }
 
 
