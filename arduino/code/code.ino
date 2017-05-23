@@ -1,6 +1,7 @@
 #define trigPin  13
 #define echoPin  12
-#define ledPin   11
+#define gatePin  11
+#define ledPin   10
 #define humidPin A0
 
 #define USONIC_DIV            58.0
@@ -11,12 +12,16 @@
 String uid;
 String inData;
 
+bool isBlinking = false;
+bool isLedOn = false;
+
 void setup()
 {
   Serial.begin(9600);
   pinMode(trigPin, OUTPUT);
   pinMode(echoPin, INPUT);
   pinMode(humidPin, INPUT);
+  pinMode(gatePin, OUTPUT); 
   pinMode(ledPin, OUTPUT); 
 
   randomSeed(analogRead(0));
@@ -30,6 +35,7 @@ void loop()
   receiveWrites();
   distance();
   humidity();
+  ledBlinking();
   delay(1000);
 }
 
@@ -60,13 +66,15 @@ void receiveWrites()
         // open gate
         if (inData == "g1#") {
           Serial.println(uid + "g1");
-          digitalWrite(ledPin, HIGH);
+          digitalWrite(gatePin, HIGH);
+          isBlinking = true;
         }
 
         // close gate
         if (inData == "g0#") {
           Serial.println(uid + "g0");
-          digitalWrite(ledPin, LOW);
+          digitalWrite(gatePin, LOW);
+          isBlinking = false;
         }
 
         inData = "";
@@ -79,6 +87,15 @@ void distance()
   delay(MEASURE_DELAY);
   
   long distance = measure();
+
+  // convert to prct
+  int prct = 130 - 13 * distance / 10;
+  if (prct > 100) prct = 100;
+  if (prct < 0) prct = 0;
+
+  if (prct >= 80) digitalWrite(ledPin, HIGH);
+  if (prct < 80) digitalWrite(ledPin, LOW);
+
   String val = String(uid) + "w" + String(distance);
   
   Serial.println(val);
@@ -117,6 +134,17 @@ void humidity()
   if (humidity > 100) {
     val = String(uid) + "h" + String(humidity);
     Serial.println(val);
+  }
+}
+
+void ledBlinking()
+{
+  if (isBlinking) {
+    if (isLedOn) {
+      digitalWrite(ledPin, LOW);
+    } else {
+      digitalWrite(ledPin, HIGH);
+    }
   }
 }
 
