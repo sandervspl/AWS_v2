@@ -35,8 +35,7 @@
   "scripts": {
     "dev": "webpack-dev-server --content-base src --inline --hot",
     "server": "node dist/server",
-    "all": "concurrently --kill-others \"yarn dev\" \"yarn server\"",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "all": "concurrently --kill-others \"yarn dev\" \"yarn server\""
   },
   "author": "",
   "license": "ISC"

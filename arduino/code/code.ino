@@ -142,8 +142,10 @@ void ledBlinking()
   if (isBlinking) {
     if (isLedOn) {
       digitalWrite(ledPin, LOW);
+      isLedOn = false;
     } else {
       digitalWrite(ledPin, HIGH);
+      isLedOn = true;
     }
   }
 }
