@@ -35,7 +35,8 @@
   "scripts": {
     "dev": "webpack-dev-server --content-base src --inline --hot",
     "server": "node dist/server",
-    "all": "concurrently --kill-others \"yarn dev\" \"yarn server\""
+    "all": "concurrently --kill-others \"yarn dev\" \"yarn server\"",
+    "build": "webpack --out-dir dist --source-maps --presets stage-0 --config webpack.config.js"
   },
   "author": "",
   "license": "ISC"
