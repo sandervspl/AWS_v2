@@ -3,7 +3,7 @@ import { createLogger } from 'redux-logger';
 import { createStore, applyMiddleware } from 'redux';
 
 // reducers
-import app from '../ducks';
+import app from 'ducks';
 
 // create store with middleware
 const logger = createLogger();

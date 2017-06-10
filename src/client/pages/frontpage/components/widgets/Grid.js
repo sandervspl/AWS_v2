@@ -2,7 +2,7 @@
 const React = require('react');
 const Radium = require('radium');
 
-const gridImg = require('../../../../../../static/assets/img/grid.png');
+const gridImg = require('assets/img/grid.png');
 
 @Radium
 export default class Grid extends React.Component {

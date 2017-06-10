@@ -6,7 +6,7 @@ import Radium from 'radium';
 import Watertank from './grid/Watertank';
 
 // assets
-const iconImg = require('../../../../../../static/assets/img/info_icon_white.png');
+const iconImg = require('assets/img/info_icon_white.png');
 
 @Radium
 export default class Grid extends React.Component {

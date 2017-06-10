@@ -2,7 +2,7 @@
 const React = require('react');
 const Radium = require('radium');
 
-const bucketImg = require('../../../../../static/assets/img/bucket_icon_white.png');
+const bucketImg = require('assets/img/bucket_icon_white.png');
 
 // actions
 import { createNotification } from '../../../actions/NotificationActions';

@@ -2,8 +2,8 @@
 import React from 'react';
 import Radium from 'radium';
 
-const humidityImg = require('../../../../../../../static/assets/img/humidity.png');
-const windImg = require('../../../../../../../static/assets/img/arrow_icon.png');
+const humidityImg = require('assets/img/humidity.png');
+const windImg = require('assets/img/arrow_icon.png');
 
 // components
 import Icon from '../../widgets/Weather/Icon';

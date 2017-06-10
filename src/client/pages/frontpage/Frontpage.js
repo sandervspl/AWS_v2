@@ -16,8 +16,8 @@ import notificationStore from '../../stores/NotificationStore';
 import navbarStore from '../../stores/NavbarStore';
 
 // actions
-import * as locationActions from '../../ducks/modules/location';
-import * as weatherActions from '../../ducks/modules/weather';
+import * as locationActions from 'ducks/modules/location';
+import * as weatherActions from 'ducks/modules/weather';
 
 @Radium
 class Frontpage extends React.Component {

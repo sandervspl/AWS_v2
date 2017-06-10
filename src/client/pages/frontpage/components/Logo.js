@@ -2,7 +2,7 @@
 const React = require('react')
 const Radium = require('radium')
 
-const logoImg = require('../../../../../static/assets/img/logo_white.png');
+const logoImg = require('assets/img/logo_white.png');
 
 @Radium
 export default class Logo extends React.Component
