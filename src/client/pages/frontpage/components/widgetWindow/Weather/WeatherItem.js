@@ -1,6 +1,6 @@
 // dependencies
-const React = require('react');
-const Radium = require('radium');
+import React from 'react';
+import Radium from 'radium';
 
 const humidityImg = require('../../../../../../../static/assets/img/humidity.png');
 const windImg = require('../../../../../../../static/assets/img/arrow_icon.png');
@@ -8,13 +8,8 @@ const windImg = require('../../../../../../../static/assets/img/arrow_icon.png')
 // components
 import Icon from '../../widgets/Weather/Icon';
 
-
 @Radium
 export default class WeatherItem extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   getWeatherTextFromId(id) {
     switch (id) {
         // thunderstorms
@@ -149,9 +144,9 @@ export default class WeatherItem extends React.Component {
   humidityItem() {
     return (
         <div>
-          <h3 style={styles.title}>Luchtvochtigheid</h3>
+          <h3 style={styles.title}> Luchtvochtigheid </h3>
           <img src={humidityImg} alt="Humidity" style={styles.icon} />
-          <p style={styles.data}> {this.props.data}% </p>
+          <p style={styles.data}> {this.props.humidity}% </p>
         </div>
     );
   }
@@ -159,37 +154,35 @@ export default class WeatherItem extends React.Component {
   temperatureItem() {
     return (
         <div>
-          <h3 style={styles.title}> {this.getWeatherTextFromId(this.props.data.id)} </h3>
-          <Icon weatherId={this.props.data.id} size="big" />
-          <p style={ [styles.data, styles.temp] }> {(this.props.data.temp).toFixed(0)}º </p>
+          <h3 style={styles.title}> {this.getWeatherTextFromId(this.props.id)} </h3>
+          <Icon weatherId={this.props.id} size="big" />
+          <p style={ [styles.data, styles.temp] }> {(this.props.temp).toFixed(0)}º </p>
         </div>
     );
   }
 
   windItem() {
-    let direction = { transform: `rotateZ(${this.props.data.angle}deg)` };
+    let direction = { transform: `rotateZ(${this.props.wind.angle}deg)` };
 
     return (
         <div>
-          <h3 style={styles.title}>Windsnelheid</h3>
+          <h3 style={styles.title}> Windsnelheid </h3>
           <img src={windImg} alt="Wind" style={ [styles.icon, direction] } />
-          <p style={styles.data}>{this.props.data.speed} km/u</p>
+          <p style={styles.data}> {this.props.wind.speed} km/u </p>
         </div>
     );
   }
 
   render() {
     let style = (this.props.kind !== 'wind') ? { borderRight: '1px solid #8D8D8D' } : {};
-    let data = this.initItem();
 
     return (
         <div style={ [styles.base, style] }>
-          {data}
+          { this.initItem() }
         </div>
     );
   }
 }
-
 
 const styles = {
   base: {

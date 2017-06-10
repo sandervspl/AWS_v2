@@ -1,6 +1,8 @@
 // dependencies
 import React from 'react';
 import Radium from 'radium';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
 // components
 import Watertank from './widgets/Watertank';
@@ -8,17 +10,17 @@ import Grid from './widgets/Grid';
 import Weather from './widgets/Weather';
 
 // actions
-import * as widgetWindowActions from '../../../actions/WidgetWindowActions';
-import * as navbarActions from '../../../actions/NavbarActions';
+// import * as widgetWindowActions from '../../../actions/WidgetWindowActions';
+// import * as navbarActions from '../../../actions/NavbarActions';
+import * as widgetWindowActions from 'ducks/modules/widgetWindow';
 
 @Radium
-export default class WidgetButton extends React.Component {
-  constructor(props) {
-    super(props);
-  }
+class WidgetButton extends React.Component {
+  handleClick = () => {
+    const { kind, widgetWindowActions } = this.props;
+    const { openWindow } = widgetWindowActions;
 
-  handeClick = () => {
-    if (this.props.kind === 'grid') {
+    if (kind === 'grid') {
       let time = 0;
 
       // close widget window, if active, before going to new view
@@ -29,11 +31,9 @@ export default class WidgetButton extends React.Component {
 
       setTimeout(() => navbarActions.navFromTo('menu', 'grid'), time);
     } else {
-      this.activateWindow();
+      openWindow(kind);
     }
   };
-
-  activateWindow = () => widgetWindowActions.toggleWidgetWindow(this.props.kind);
 
   render() {
     let button = null;
@@ -63,11 +63,11 @@ export default class WidgetButton extends React.Component {
           <div
               style={ [styles.inner, styles[this.props.kind]] }
               className="widget-btn"
-              onClick={this.handeClick}
+              onClick={this.handleClick}
           >
             {button}
           </div>
-          <span style={styles.tag}>{tag}</span>
+          <span style={styles.tag}> {tag} </span>
         </li>
     );
   }
@@ -115,3 +115,17 @@ const styles = {
     top: '-10px',
   },
 };
+
+function mapStateToProps(state) {
+  return {
+    widgetWindow: state.widgetWindow,
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    widgetWindowActions: bindActionCreators(widgetWindowActions, dispatch),
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(WidgetButton);
