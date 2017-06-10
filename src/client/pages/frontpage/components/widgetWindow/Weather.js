@@ -8,11 +8,11 @@ import { bindActionCreators } from 'redux';
 import WeatherItem from './Weather/WeatherItem';
 
 // actions
-import locationActions from 'ducks/modules/location';
+import * as locationActions from 'ducks/modules/location';
 
 @Radium
 class Weather extends React.Component {
-  handleClick = () => this.props.locationActions.getLocationData();
+  handleClick = () => this.props.locationActions.fetchLocationData();
 
   render() {
     const { loading: locationLoading } = this.props.location;
