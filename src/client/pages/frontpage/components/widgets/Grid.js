@@ -2,6 +2,8 @@
 const React = require('react')
 const Radium = require('radium')
 
+const gridImg = require('../../../../../../static/assets/img/grid.png');
+
 @Radium
 export default class Grid extends React.Component
 {
@@ -14,7 +16,7 @@ export default class Grid extends React.Component
     {
         return (
             <div style={styles.base}>
-                <img src="public/img/grid.png" alt="grid" style={styles.img}/>
+                <img src={gridImg} alt="grid" style={styles.img}/>
             </div>
         )
     }

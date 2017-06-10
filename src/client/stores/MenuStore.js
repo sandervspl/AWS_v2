@@ -4,8 +4,8 @@ import Dispatcher from '../dispatcher'
 const axios = require('axios')
 
 // vars
-import * as vars from '../secret/vars'
-import * as connect from '../secret/connect'
+import * as vars from '../../secret/vars'
+import * as connect from '../../secret/connect'
 
 
 class MenuStore extends EventEmitter

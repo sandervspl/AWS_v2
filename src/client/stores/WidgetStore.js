@@ -2,7 +2,7 @@
 import { EventEmitter } from 'events'
 import Dispatcher from '../dispatcher'
 const axios = require('axios')
-import * as connect from '../secret/connect'
+import * as connect from '../../secret/connect'
 
 
 class WidgetStore extends EventEmitter

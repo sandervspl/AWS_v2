@@ -2,7 +2,7 @@
 const React = require('react')
 
 // components
-import { Router, Route, IndexRoute } from 'react-router'
+import { Route, IndexRoute } from 'react-router'
 import Layout from './pages/layout/Layout'
 import Frontpage from './pages/frontpage/Frontpage'
 import Error404 from './pages/error/404'

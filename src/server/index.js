@@ -2,7 +2,7 @@
 const Express = require('express');
 const SerialPort = require('serialport');
 const bodyParser = require('body-parser');
-const connect = require('./src/js/secret/connect');
+const connect = require('../secret/connect');
 
 import Station from './Station';
 
@@ -17,6 +17,8 @@ class Server {
 
     this.init();
     this.routes();
+
+    console.log('Server started!');
   }
 
 

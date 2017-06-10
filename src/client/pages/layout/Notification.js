@@ -2,6 +2,8 @@
 const React = require('react')
 const Radium = require('radium')
 
+const alertImg = require('../../../../static/assets/img/alert_icon_white.png');
+
 // actions
 import * as notificationActions from '../../actions/NotificationActions'
 
@@ -105,7 +107,7 @@ const styles = {
     },
 
     alertIcon: {
-        background: '#F2AC66 url(public/img/alert_icon_white.png) center center / 70% no-repeat'
+        background: `#F2AC66 url(${alertImg}) center center / 70% no-repeat`
     },
 
     success: {
@@ -114,6 +116,6 @@ const styles = {
     },
 
     successIcon: {
-        background: '#7AD98A url(public/img/alert_icon_white.png) center center / 70% no-repeat'
+        background: `#7AD98A url(${alertImg}) center center / 70% no-repeat`
     }
 }
