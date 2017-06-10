@@ -18,6 +18,10 @@ module.exports = [
 
     resolve: {
       extensions: ['.js', '.jsx'],
+      alias: {
+        assets: path.resolve(__dirname, '../static/assets'),
+        ducks: path.resolve(__dirname, '../src/client/ducks'),
+      },
     },
 
     devtool: 'source-map',
