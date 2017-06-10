@@ -12,7 +12,22 @@ export const initialState = {
   error: false,
   loaded: false,
   errorMessage: '',
-  weatherData: {},
+  weatherData: {
+    weather: [
+      {
+        id: 0,                      // weather type
+      },
+    ],
+    name: 'Niet beschikbaar',       // name of current position
+    main: {
+      humidity: 0,                  // humidity percentage
+      temp: 0,                      // temperature (celcius)
+    },
+    wind: {
+      speed: 0,                     // wind speed in km/h
+      angle: 0                      // wind angle in degrees
+    },
+  },
 };
 
 // reducer
