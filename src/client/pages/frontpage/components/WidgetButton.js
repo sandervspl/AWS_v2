@@ -10,15 +10,14 @@ import Grid from './widgets/Grid';
 import Weather from './widgets/Weather';
 
 // actions
-// import * as widgetWindowActions from '../../../actions/WidgetWindowActions';
-// import * as navbarActions from '../../../actions/NavbarActions';
 import * as widgetWindowActions from 'ducks/modules/widgetWindow';
 
 @Radium
 class WidgetButton extends React.Component {
   handleClick = () => {
-    const { kind, widgetWindowActions } = this.props;
-    const { openWindow } = widgetWindowActions;
+    const { kind, widgetWindow, widgetWindowActions } = this.props;
+    const { openWindow, closeWindow } = widgetWindowActions;
+    const { active, kind: activeKind } = widgetWindow;
 
     if (kind === 'grid') {
       let time = 0;
@@ -31,7 +30,11 @@ class WidgetButton extends React.Component {
 
       setTimeout(() => navbarActions.navFromTo('menu', 'grid'), time);
     } else {
-      openWindow(kind);
+      if (active && kind === activeKind) {
+        closeWindow();
+      } else {
+        openWindow(kind);
+      }
     }
   };
 
@@ -72,7 +75,6 @@ class WidgetButton extends React.Component {
     );
   }
 }
-
 
 const styles = {
   base: {

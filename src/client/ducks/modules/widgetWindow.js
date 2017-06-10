@@ -12,7 +12,6 @@ export const initialState = {
 export default (state = initialState, action = {}) => {
   switch (action.type) {
     case OPEN:
-      console.log('open window');
       return {
         active: true,
         kind: action.kind,
@@ -20,6 +19,7 @@ export default (state = initialState, action = {}) => {
 
     case CLOSE:
       return {
+        ...state,
         active: false,
       }
 
