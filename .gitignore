@@ -14,3 +14,7 @@ Interface.sketch
 npm-debug.log
 /src/js/secret/
 src/client.min.js
+
+/static
+!/static/*.html
+!/static/*.css
