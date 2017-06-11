@@ -18,3 +18,4 @@ src/client.min.js
 /static
 !/static/*.html
 !/static/*.css
+!/static/assets
