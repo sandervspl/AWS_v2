@@ -1,4 +1,11 @@
 # AWS
+Advanced Water System voor CMGT Jaar 2 - project 1 (TLE1).
+
+Gebruikt onder andere:
+- React
+- React-redux / flux
+- Serialport
+- Arduino
 
 ## Installeren
 1. Open je terminal
@@ -19,10 +26,10 @@ Om de dev server te starten voor de **client** `npm run dev:client` of `yarn dev
 **SERVER STARTEN? CHECK HIERONDER HOE JE MOET COMPILEN EN SERVER MOET STARTEN**
 
 # Compiling
-Type in Terminal of `npm run build` of `yarn build`
+Type in Terminal of `npm run build` of `yarn build` **Dit compiled client EN server!**
 
-1. Server starten:  `npm run server` of `yarn server`
-2. Client starten: Navigeer naar de project root folder en open de `static` folder
+- Server starten:  `npm run server` of `yarn server`
+- Client starten: Navigeer naar de project root folder en open de `static` folder
 
 
 Dit zou alles moeten zijn.
