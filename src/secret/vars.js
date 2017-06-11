@@ -1,1 +1,1 @@
-export const WeatherApiKey = 'a16ebee24012358ee9007cc5e4f2ed93&id=2747890';
+export const weatherApiKey = 'a16ebee24012358ee9007cc5e4f2ed93&id=2747890';

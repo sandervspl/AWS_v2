@@ -2,7 +2,7 @@
 const React = require('react')
 const Radium = require('radium')
 
-const alertImg = require('../../../../static/assets/img/alert_icon_white.png');
+const alertImg = require('assets/img/alert_icon_white.png');
 
 // actions
 import * as notificationActions from '../../actions/NotificationActions'

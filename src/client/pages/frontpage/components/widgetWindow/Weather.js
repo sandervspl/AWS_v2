@@ -1,75 +1,88 @@
 // dependencies
-const React = require('react')
-const Radium = require('radium')
-const axios = require('axios')
+import React from 'react';
+import Radium from 'radium';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
 // component
-import WeatherItem from './Weather/WeatherItem'
+import WeatherItem from './Weather/WeatherItem';
 
 // actions
-import { getPositionData } from '../../../../actions/MenuActions'
-
+import * as locationActions from 'ducks/modules/location';
 
 @Radium
-export default class Weather extends React.Component
-{
-    constructor(props)
-    {
-        super(props)
-    }
+class Weather extends React.Component {
+  handleClick = () => this.props.locationActions.fetchLocationData();
 
-    handleClick = () => getPositionData()
+  render() {
+    const { loading: locationLoading } = this.props.location;
+    const { weatherData, loading: weatherLoading } = this.props.weather;
+    const { name, wind } = weatherData;
+    const { humidity, temp } = weatherData.main;
+    const { id } = weatherData.weather[0];
 
-    render()
-    {
-        let { weatherData } = this.props
-        let loadStyle = (this.props.refreshing === false) ? 'loading loaded' : 'loading'
+    const loadStyle = (locationLoading || weatherLoading) ? 'loading' : 'loading loaded';
 
-        return (
-            <div style={styles.base}>
-                <div className={loadStyle}></div>
+    return (
+        <div style={styles.base}>
+          <div className={loadStyle} />
 
-                <div style={styles.titleContainer}>
-                    <h3 style={styles.location} className="location"> {weatherData.posName} </h3>
-                    <span className="location-refresh" onClick={this.handleClick}/>
-                </div>
+          <div style={styles.titleContainer}>
+            <h3 style={styles.location} className="location"> {name} </h3>
+            <span className="location-refresh" onClick={this.handleClick} />
+          </div>
 
-                <div style={styles.row}>
-                    <WeatherItem kind="humidity" data={weatherData.humidity} />
-                    <WeatherItem kind="temperature" data={weatherData} />
-                    <WeatherItem kind="wind" data={weatherData.wind} />
-                </div>
-            </div>
-        )
-    }
+          <div style={styles.row}>
+            <WeatherItem kind="humidity" humidity={humidity} />
+            <WeatherItem kind="temperature" temp={temp} id={id} />
+            <WeatherItem kind="wind" wind={wind} />
+          </div>
+        </div>
+    );
+  }
 }
 
 
 const styles = {
-    base: {
-        width: '100%',
-        height: '100%',
-        padding: '10px 0',
-        boxSizing: 'border-box'
-    },
+  base: {
+    width: '100%',
+    height: '100%',
+    padding: '10px 0',
+    boxSizing: 'border-box',
+  },
 
-    location: {
-        display: 'inline-block',
-        fontSize: '18px',
-        fontWeight: '400',
-        verticalAlign: 'bottom',
-        marginRight: '10px'
-    },
+  location: {
+    display: 'inline-block',
+    fontSize: '18px',
+    fontWeight: '400',
+    verticalAlign: 'bottom',
+    marginRight: '10px',
+  },
 
-    row: {
-        display: 'flex',
-        flexFlow: 'row',
-        marginTop: '20px',
-        height: '100px',
-        boxSizing: 'border-box'
-    },
+  row: {
+    display: 'flex',
+    flexFlow: 'row',
+    marginTop: '20px',
+    height: '100px',
+    boxSizing: 'border-box',
+  },
 
-    titleContainer: {
-        textAlign: 'center'
-    }
+  titleContainer: {
+    textAlign: 'center',
+  },
+};
+
+function mapStateToProps(state) {
+  return {
+    location: state.location,
+    weather: state.weather,
+  };
 }
+
+function mapDispatchToProps(dispatch) {
+  return {
+    locationActions: bindActionCreators(locationActions, dispatch),
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Weather);
