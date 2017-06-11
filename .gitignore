@@ -19,4 +19,6 @@ src/client.min.js
 !/static/*.html
 !/static/*.css
 !/static/assets
-/src/secret/
+
+/src/secret/*
+!/src/secret/connect.js
