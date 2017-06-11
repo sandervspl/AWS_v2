@@ -1,103 +1,75 @@
 // dependencies
-const React = require('react')
-const Radium = require('radium')
-
-// actions
-import * as NavbarActions from '../../../actions/NavbarActions'
-
-// stores
-import navbarStore from '../../../stores/NavbarStore'
-
+import React from 'react';
+import Radium from 'radium';
 
 @Radium
-export default class Topbar extends React.Component
-{
-    constructor(props)
-    {
-        super(props)
-        this.state = {
-            viewName: 'grid',
-            leftText: '<'
-        }
-    }
+export default class Topbar extends React.Component {
+  handleBackBtnClick = () => this.props.setActiveView('menu');
 
-    componentWillMount()
-    {
-        navbarStore.on('view_change', () => {
-            this.setState({
-                leftText: `< ${navbarStore.getBackBtn().title}`
-            })
-        })
-    }
+  render() {
+    let backBtn = this.props.title !== 'menu'
+        ? <span style={styles.btnActive} onClick={this.handleBackBtnClick}> {`< menu`} </span>
+        : <span style={styles.btnInactive}> {`<`} </span>;
 
-    handleBackBtnClick = () => NavbarActions.navFromTo(this.state.viewName, 'menu')
-
-    render()
-    {
-        let backBtn = navbarStore.getBackBtn().active
-            ? <span style={styles.btnActive} onClick={this.handleBackBtnClick}>{this.state.leftText}</span>
-            : <span style={styles.btnInactive}>{this.state.leftText}</span>
-
-        return (
-            <div style={styles.base}>
-                <div style={ [styles.item, styles.left] }>
-                    {backBtn}
-                </div>
-                <div style={ [styles.item, styles.title] }>
-                    <span>{this.props.title}</span>
-                </div>
-                <div style={ [styles.item, styles.right] }/>
-            </div>
-        )
-    }
+    return (
+        <div style={styles.base}>
+          <div style={ [styles.item, styles.left] }>
+            {backBtn}
+          </div>
+          <div style={ [styles.item, styles.title] }>
+            <span> {this.props.title} </span>
+          </div>
+          <div style={ [styles.item, styles.right] } />
+        </div>
+    );
+  }
 }
-
 
 const styles = {
-    base: {
-        position: 'fixed',
-        zIndex: 101,
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        margin: 'auto',
-        height: '45px',
-        width: '100%',
-        background: '#EEE'
-    },
+  base: {
+    position: 'fixed',
+    zIndex: 101,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    margin: 'auto',
+    height: '45px',
+    width: '100%',
+    background: '#EEE',
+  },
 
-    item: {
-        display: 'flex',
-        flexGrow: 0,
-        width: 'calc(33.33333% - 20px)',
-        color: 'black',
-        textTransform: 'capitalize',
-        fontWeight: 400
-    },
+  item: {
+    display: 'flex',
+    flexGrow: 0,
+    width: 'calc(33.33333% - 20px)',
+    color: 'black',
+    textTransform: 'capitalize',
+    fontWeight: 400,
+  },
 
-    title: {
-        flexGrow: 0,
-        justifyContent: 'center',
-        width: '33.33333%'
-    },
+  title: {
+    flexGrow: 0,
+    justifyContent: 'center',
+    width: '33.33333%',
+  },
 
-    left: {
-        paddingLeft: '20px',
-        justifyContent: 'flex-start'
-    },
+  left: {
+    paddingLeft: '20px',
+    justifyContent: 'flex-start',
+  },
 
-    right: {
-        paddingRight: '20px',
-        justifyContent: 'flex-end'
-    },
+  right: {
+    paddingRight: '20px',
+    justifyContent: 'flex-end',
+  },
 
-    btnActive: {
-        cursor: 'pointer'
-    },
+  btnActive: {
+    cursor: 'pointer',
+  },
 
-    btnInactive: {
-        cursor: 'default',
-        color: 'lightgrey'
-    }
-}
+  btnInactive: {
+    cursor: 'default',
+    color: 'lightgrey',
+  },
+};

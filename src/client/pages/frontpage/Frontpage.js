@@ -25,10 +25,8 @@ class Frontpage extends React.Component {
     super(props);
 
     this.state = {
-      widgetActive: false,
-      widgetKind: null,
       notifications: notificationStore.getAll(),
-      view: 'menu',
+      activeView: 'menu',
     };
   }
 
@@ -37,10 +35,6 @@ class Frontpage extends React.Component {
       this.setState({
         notifications: notificationStore.getAll(),
       });
-    });
-
-    navbarStore.on('view_change', () => {
-      this.setState({ view: navbarStore.getView() });
     });
   }
 
@@ -56,11 +50,15 @@ class Frontpage extends React.Component {
     }
   }
 
+  setActiveView = (activeView) => {
+    this.setState({ activeView });
+  }
+
   render() {
     let menuX = null;
     let gridX = null;
 
-    if (this.state.view === 'menu') {
+    if (this.state.activeView === 'menu') {
       menuX = { transform: 'translateX(0)' };
       gridX = { transform: 'translateX(100%)' };
     } else {
@@ -68,20 +66,20 @@ class Frontpage extends React.Component {
       gridX = { transform: 'translateX(-100%)' };
     }
 
-    const notifications = this.state.notifications.map((notification) => {
-      return <Notification key={notification.id} {...notification} />;
-    });
+    const notifications = this.state.notifications.map((notification) => (
+        <Notification key={notification.id} {...notification} />
+    ));
 
     return (
         <div id="view-wrapper" style={styles.base}>
-          <Navbar title={this.state.view} />
+          <Navbar title={this.state.activeView} setActiveView={this.setActiveView} />
 
           {notifications}
 
           {/*<Login/>*/}
 
           <div id="menu-wrapper" style={ [styles.view, menuX] }>
-            <Menu />
+            <Menu setActiveView={this.setActiveView} />
           </div>
 
           <div id="grid-wrapper" style={ [styles.view, styles.grid, gridX] }>

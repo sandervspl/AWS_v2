@@ -1,15 +1,11 @@
 // dependencies
-const React = require('react');
-const Radium = require('radium');
+import React from 'react';
+import Radium from 'radium';
 
 const gridImg = require('assets/img/grid.png');
 
 @Radium
 export default class Grid extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     return (
         <div style={styles.base}>
@@ -18,7 +14,6 @@ export default class Grid extends React.Component {
     );
   }
 }
-
 
 const styles = {
   base: {

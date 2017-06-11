@@ -12,7 +12,7 @@ export default class WidgetMenu extends React.Component {
         <div style={styles.base}>
           <ul>
             <WidgetButton kind="watertank" />
-            <WidgetButton kind="grid" />
+            <WidgetButton setActiveView={this.props.setActiveView} kind="grid" />
             <WidgetButton kind="weather" />
           </ul>
         </div>

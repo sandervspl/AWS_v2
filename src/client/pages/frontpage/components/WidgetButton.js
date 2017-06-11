@@ -1,5 +1,5 @@
 // dependencies
-import React from 'react';
+import React, { PropTypes } from 'react';
 import Radium from 'radium';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -14,23 +14,27 @@ import * as widgetWindowActions from 'ducks/modules/widgetWindow';
 
 @Radium
 class WidgetButton extends React.Component {
+  static propTypes = {
+    setActiveView: PropTypes.func,
+  };
+
   handleClick = () => {
-    const { kind, widgetWindow, widgetWindowActions } = this.props;
+    const { kind, widgetWindow, widgetWindowActions, setActiveView } = this.props;
     const { openWindow, closeWindow } = widgetWindowActions;
-    const { active, kind: activeKind } = widgetWindow;
+    const { kind: activeKind } = widgetWindow;
 
     if (kind === 'grid') {
       let time = 0;
 
       // close widget window, if active, before going to new view
-      if (widgetWindowStore.getWindow().active) {
-        widgetWindowActions.closeWidgetWindow();
+      if (widgetWindow.active) {
+        closeWindow();
         time = 325;  // .325 seconds
       }
 
-      setTimeout(() => navbarActions.navFromTo('menu', 'grid'), time);
+      setTimeout(() => setActiveView('grid'), time);
     } else {
-      if (active && kind === activeKind) {
+      if (widgetWindow.active && kind === activeKind) {
         closeWindow();
       } else {
         openWindow(kind);
