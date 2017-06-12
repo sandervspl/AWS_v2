@@ -20,6 +20,7 @@ module.exports = [
       extensions: ['.js', '.jsx'],
       alias: {
         assets: path.resolve(__dirname, '../static/assets'),
+        components: path.resolve(__dirname, '../src/client/components'),
         ducks: path.resolve(__dirname, '../src/client/ducks'),
       },
     },

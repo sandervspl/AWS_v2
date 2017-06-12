@@ -67,3 +67,7 @@ ul li {
     width: 15px;
     height: 15px;
 }
+
+#helpmenu li:not(:first-child) {
+    margin-top: 15px;
+}
