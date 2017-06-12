@@ -30,6 +30,7 @@ body {
 
 a {
     text-decoration: none;
+    color: #fff;
 }
 
 ul li {
@@ -70,4 +71,10 @@ ul li {
 
 #helpmenu li:not(:first-child) {
     margin-top: 15px;
+}
+
+.nav-help__back-button:active,
+.nav-help__back-button:focus,
+.nav-help__back-button:hover {
+    background-color: #475760;
 }

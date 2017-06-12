@@ -1,13 +1,16 @@
 // dependencies
 import React, {} from 'react';
+import { Link } from 'react-router';
 
 // components
 import Icon from 'components/Icon';
 
 const BackButton = () => (
-  <div style={style.base}>
-    <Icon name='chevron-left' />
-  </div>
+  <Link to="/">
+    <div style={style.base} className="nav-help__back-button">
+      <Icon name='chevron-left' />
+    </div>
+  </Link>
 );
 
 BackButton.propTypes = {};
@@ -21,6 +24,7 @@ const style = {
     width: '50px',
     verticalAlign: 'top',
     float: 'left',
+    cursor: 'pointer',
   },
 };
 
