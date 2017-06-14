@@ -73,8 +73,10 @@ ul li {
     margin-top: 15px;
 }
 
-.nav-help__back-button:active,
-.nav-help__back-button:focus,
-.nav-help__back-button:hover {
+.nav-help__back-button:active {
     background-color: #475760;
+}
+
+.help__paragraph {
+    margin-bottom: 10px;
 }

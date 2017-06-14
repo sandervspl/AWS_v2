@@ -1,17 +1,14 @@
 // dependencies
-import React, {} from 'react';
+import React from 'react';
 
 // components
 import BackButton from './BackButton';
 
-const Navbar = () => (
+const Navbar = () =>
   <div style={style.base}>
     <BackButton />
     <h1 style={style.title}>Advanced Water Systems</h1>
-  </div>
-);
-
-Navbar.propTypes = {};
+  </div>;
 
 const style = {
   base: {
@@ -22,6 +19,7 @@ const style = {
     height: '50px',
     backgroundColor: '#364249',
     textAlign: 'center',
+    color: '#fff',
   },
 
   title: {
@@ -29,7 +27,7 @@ const style = {
     marginLeft: '-50px',
     fontSize: '18px',
     lineHeight: '50px',
-  }
+  },
 };
 
 export default Navbar;

@@ -1,11 +1,9 @@
 // dependencies
-import React, { PropTypes } from 'react';
+import React from 'react';
 
 const Title = ({ children }) => (
   <h1 style={style.base}>{ children }</h1>
 );
-
-Title.propTypes = {};
 
 const style = {
   base: {
