@@ -1,19 +1,21 @@
 // dependencies
-import React, {} from 'react';
-import { Link } from 'react-router';
+import React from 'react';
+import { Link, withRouter } from 'react-router';
 
 // components
 import Icon from 'components/Icon';
 
-const BackButton = () => (
-  <Link to="/">
-    <div style={style.base} className="nav-help__back-button">
-      <Icon name='chevron-left' />
-    </div>
-  </Link>
-);
+const BackButton = ({ location }) => {
+  const url = location.pathname === '/help' ? '/' : '/help';
 
-BackButton.propTypes = {};
+  return (
+    <Link to={url}>
+      <div style={style.base} className="nav-help__back-button">
+        <Icon name="chevron-left" />
+      </div>
+    </Link>
+  );
+};
 
 const style = {
   base: {
@@ -28,4 +30,4 @@ const style = {
   },
 };
 
-export default BackButton;
+export default withRouter(BackButton);
