@@ -21,7 +21,8 @@ const Startscherm = () =>
     </InShortBlock>
     <p className="help__paragraph">
       Op het startscherm zijn 4 knoppen te zien. Deze zullen hieronder per knop
-      worden omschreven.
+      kort worden beschreven. Voor meer informatie over de knop, klik op de
+      'meer informatie' knop.
     </p>
 
     <TextBlockWithImage image={btn_wateropslag} title="Wateropslag">

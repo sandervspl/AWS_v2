@@ -10,7 +10,6 @@ import * as widgetActions from '../../../../../actions/WidgetActions';
 // stores
 import widgetStore from '../../../../../stores/WidgetStore';
 
-
 @Radium
 export default class Watertank extends React.Component {
   constructor(props) {
@@ -44,20 +43,14 @@ export default class Watertank extends React.Component {
     });
 
     // fetch water level every second
-    this.interval = setInterval(
-        () => {
-          widgetActions.getWaterLevel(this.state.id);
-        },
-        1000,
-    );
+    this.interval = setInterval(() => {
+      widgetActions.getWaterLevel(this.state.id);
+    }, 1000);
 
     // set water level after giving arduino some fetching time
-    setTimeout(
-        () => {
-          this.setState({ fillPrct: widgetStore.getWaterHeight(this.state.id) });
-        },
-        1500,
-    );
+    setTimeout(() => {
+      this.setState({ fillPrct: widgetStore.getWaterHeight(this.state.id) });
+    }, 1500);
   }
 
   componentWillUnmount() {
@@ -69,14 +62,15 @@ export default class Watertank extends React.Component {
     widgetActions.getStationGateState(this.state.id);
   }
 
-  toggleActiveState = () => widgetActions.setStationGateState(this.state.id, !this.state.active);
+  toggleActiveState = () =>
+    widgetActions.setStationGateState(this.state.id, !this.state.active);
 
   setActiveState = (active, doNotif = true) => {
     this.setState({ active });
     if (doNotif) this.notification(active);
   };
 
-  notification = (state) => {
+  notification = state => {
     const expiresTime = Date.now() + 3000;
 
     if (state) {
@@ -98,7 +92,7 @@ export default class Watertank extends React.Component {
     let warningMsg = '';
 
     if (Number.isFinite(fillPrct)) {
-      current = Math.ceil((fillPrct / 100) * capacity);
+      current = Math.ceil(fillPrct / 100 * capacity);
       fillWidth = { width: `${fillPrct}%` };
 
       if (fillPrct >= 80) {
@@ -111,28 +105,30 @@ export default class Watertank extends React.Component {
       }
     }
 
-    let activeStyle = (this.state.active) ? styles.on : '';
+    let activeStyle = this.state.active ? styles.on : '';
     let title = 'Tank ' + (this.state.id + 1);
 
     return (
-        <div style={ [styles.base, this.props.marginStyle, activeStyle] } onClick={this.toggleActiveState}>
-          <div style={styles.title}> {title} </div>
+      <div
+        style={[styles.base, this.props.marginStyle, activeStyle]}
+        onClick={this.toggleActiveState}
+      >
+        <div style={styles.title}> {title} </div>
 
-          <div style={warningStyle}> {warningMsg} </div>
+        <div style={warningStyle}> {warningMsg} </div>
 
-          <div style={styles.data}>
-            <div style={styles.prct}> {fillPrct}%</div>
-            <div style={styles.curCap}> {current}L / {capacity}L</div>
-          </div>
-
-          <div style={styles.fillBg}>
-            <div style={ [styles.fill, fillWidth] }></div>
-          </div>
+        <div style={styles.data}>
+          <div style={styles.prct}> {fillPrct}%</div>
+          <div style={styles.curCap}> {current}L / {capacity}L</div>
         </div>
+
+        <div style={styles.fillBg}>
+          <div style={[styles.fill, fillWidth]} />
+        </div>
+      </div>
     );
   }
 }
-
 
 const styles = {
   base: {

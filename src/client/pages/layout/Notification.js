@@ -7,7 +7,6 @@ const alertImg = require('assets/img/alert_icon_white.png');
 // actions
 import * as notificationActions from '../../actions/NotificationActions';
 
-
 @Radium
 export default class Notification extends React.Component {
   constructor(props) {
@@ -40,8 +39,8 @@ export default class Notification extends React.Component {
 
     // remove notification from DOM after it's out of screen (.3s animation time)
     setTimeout(
-        () => notificationActions.deleteNotification(this.props.id),
-        300,
+      () => notificationActions.deleteNotification(this.props.id),
+      300
     );
   };
 
@@ -58,18 +57,17 @@ export default class Notification extends React.Component {
   render() {
     let kindStyle = styles[this.props.kind];
     let iconStyle = styles[this.props.kind + 'Icon'];
-    let show = (this.state.show) ? styles.show : {};
+    let show = this.state.show ? styles.show : {};
     let offset = { top: this.props.offset + 'px' };
 
     return (
-        <div id="notification-bar" style={ [styles.base, kindStyle, show, offset] }>
-          <div style={ [styles.icon, iconStyle] }></div>
-          <span style={styles.msg}>{this.props.text}</span>
-        </div>
+      <div id="notification-bar" style={[styles.base, kindStyle, show, offset]}>
+        <div style={[styles.icon, iconStyle]} />
+        <span style={styles.msg}>{this.props.text}</span>
+      </div>
     );
   }
 }
-
 
 const styles = {
   base: {

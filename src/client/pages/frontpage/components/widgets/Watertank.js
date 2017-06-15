@@ -9,7 +9,6 @@ import * as widgetActions from '../../../../actions/WidgetActions';
 // stores
 import widgetStore from '../../../../stores/WidgetStore';
 
-
 @Radium
 export default class Watertank extends React.Component {
   constructor(props) {
@@ -30,10 +29,7 @@ export default class Watertank extends React.Component {
 
     widgetStore.on('fail', this.stopRefreshSpinner);
 
-    this.interval = setInterval(
-        () => widgetActions.getWaterLevel(0),
-        1000,
-    );
+    this.interval = setInterval(() => widgetActions.getWaterLevel(0), 1000);
   }
 
   componentWillUnmount() {
@@ -51,15 +47,14 @@ export default class Watertank extends React.Component {
     let fill = { height: height };
 
     return (
-        <div style={styles.base}>
-          <div className={loadStyle}></div>
-          <div style={ [styles.fill, fill] } id="fillPrct" />
-          <div style={styles.prct}> {prct} </div>
-        </div>
+      <div style={styles.base}>
+        <div className={loadStyle} />
+        <div style={[styles.fill, fill]} id="fillPrct" />
+        <div style={styles.prct}> {prct} </div>
+      </div>
     );
   }
 }
-
 
 const styles = {
   base: {

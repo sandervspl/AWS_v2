@@ -38,8 +38,8 @@ module.exports = {
       {
         test: /\.js?$/,
         include: [
-            path.join(__dirname, '../src/client'),
-            path.join(__dirname, '../src/secret')
+          path.join(__dirname, '../src/client'),
+          path.join(__dirname, '../src/secret'),
         ],
         exclude: /node_modules/,
         loader: 'babel-loader',
@@ -54,7 +54,7 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        loader: 'style-loader!css-loader?importLoaders=1!postcss'
+        loader: 'style-loader!css-loader?importLoaders=1!postcss',
       },
       {
         test: /\.json$/,
@@ -70,5 +70,5 @@ module.exports = {
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoEmitOnErrorsPlugin(),
-  ]
+  ],
 };

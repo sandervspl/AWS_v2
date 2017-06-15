@@ -1,14 +1,13 @@
 // dependencies
-import React, {} from 'react';
+import React from 'react';
 
-const Suggestions = () => (
+const Suggestions = () =>
   <div style={style.base}>
     <ul>
       <li>1</li>
       <li>2</li>
     </ul>
-  </div>
-);
+  </div>;
 
 Suggestions.propTypes = {};
 
@@ -22,7 +21,7 @@ const style = {
     width: '100%',
     background: '#eee',
     color: '#000',
-    border: '1px solid #BABABA'
+    border: '1px solid #BABABA',
   },
 };
 

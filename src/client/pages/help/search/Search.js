@@ -2,11 +2,10 @@
 import React from 'react';
 import Searchbar from './Searchbar';
 
-const Search = () => (
+const Search = () =>
   <div style={style.base}>
     <Searchbar />
-  </div>
-);
+  </div>;
 
 const style = {
   base: {

@@ -2,12 +2,11 @@
 import React from 'react';
 // import Suggestions from './Suggestions';
 
-const Searchbar = () => (
-    <div style={style.base}>
-      <input style={style.searchbar} type="text" placeholder="Zoeken..." />
-      {/*<Suggestions />*/}
-    </div>
-);
+const Searchbar = () =>
+  <div style={style.base}>
+    <input style={style.searchbar} type="text" placeholder="Zoeken..." />
+    {/*<Suggestions />*/}
+  </div>;
 
 const style = {
   base: {

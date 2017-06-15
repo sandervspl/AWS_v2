@@ -1,9 +1,7 @@
 // dependencies
 import React from 'react';
 
-const Title = ({ children }) => (
-  <h1 style={style.base}>{ children }</h1>
-);
+const Title = ({ children }) => <h1 style={style.base}>{children}</h1>;
 
 const style = {
   base: {

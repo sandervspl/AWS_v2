@@ -2,8 +2,8 @@
 import React, { PropTypes } from 'react';
 import TitleSmall from 'components/TitleSmall';
 
-const TextBlockWithImage = ({ children, image, title }) =>
-  <div style={style.base}>
+const TextBlockWithImage = ({ children, image, title, justify }) =>
+  <div style={style.base} className={justify ? 'text-justify' : ''}>
     {title && <TitleSmall>{title}</TitleSmall>}
     <div style={style.content}>
       <div style={style.imageContainer}>
@@ -16,6 +16,7 @@ const TextBlockWithImage = ({ children, image, title }) =>
 TextBlockWithImage.propTypes = {
   image: PropTypes.string.isRequired,
   title: PropTypes.string,
+  justify: PropTypes.bool,
 };
 
 const style = {
