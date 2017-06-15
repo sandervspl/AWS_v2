@@ -10,6 +10,7 @@ import HelpMenu from './pages/help/HelpMenu/HelpMenu';
 import Start from './pages/help/Start/Start';
 import Startscherm from './pages/help/Startscherm/Startscherm';
 import Wateropslag from './pages/help/Wateropslag/Wateropslag';
+import Overzicht from './pages/help/Overzicht/Overzicht';
 import Error404 from './pages/error/404';
 
 const routes = (
@@ -20,6 +21,7 @@ const routes = (
       <Route path="/help/start" component={Start} />
       <Route path="/help/startscherm" component={Startscherm} />
       <Route path="/help/wateropslag" component={Wateropslag} />
+      <Route path="/help/overzicht" component={Overzicht} />
     </Route>
     <Route path="*" component={Error404} />
   </Route>
