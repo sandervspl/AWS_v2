@@ -8,6 +8,7 @@ import Frontpage from './pages/frontpage/Frontpage';
 import Help from './pages/help/Help';
 import HelpMenu from './pages/help/HelpMenu/HelpMenu';
 import Start from './pages/help/Start/Start';
+import Startscherm from './pages/help/Startscherm/Startscherm';
 import Error404 from './pages/error/404';
 
 const routes = (
@@ -16,6 +17,7 @@ const routes = (
     <Route exact path="/help" component={Help}>
       <IndexRoute component={HelpMenu} />
       <Route path="/help/start" component={Start} />
+      <Route path="/help/startscherm" component={Startscherm} />
     </Route>
     <Route path="*" component={Error404} />
   </Route>

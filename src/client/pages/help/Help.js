@@ -17,7 +17,7 @@ const Help = ({ children }) =>
 const style = {
   base: {
     padding: '50px 0',
-    height: '100%',
+    minHeight: 'calc(100% - 100px)',
     backgroundColor: '#eee',
     color: '#000',
   },
