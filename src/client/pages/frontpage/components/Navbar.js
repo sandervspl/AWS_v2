@@ -1,6 +1,10 @@
 // dependencies
 import React from 'react';
 import Radium from 'radium';
+import { Link } from 'react-router';
+
+// components
+import Icon from 'components/Icon';
 
 @Radium
 export default class Topbar extends React.Component {
@@ -8,19 +12,28 @@ export default class Topbar extends React.Component {
 
   render() {
     let backBtn = this.props.title !== 'menu'
-        ? <span style={styles.btnActive} onClick={this.handleBackBtnClick}> {`< menu`} </span>
-        : <span style={styles.btnInactive}> {`<`} </span>;
+      ? <span style={styles.btnActive} onClick={this.handleBackBtnClick}>
+          <Icon name="chevron-left" smallSpacing />
+          Menu
+        </span>
+      : <span style={styles.btnInactive}>
+          <Icon name="chevron-left" />
+        </span>;
 
     return (
-        <div style={styles.base}>
-          <div style={ [styles.item, styles.left] }>
-            {backBtn}
-          </div>
-          <div style={ [styles.item, styles.title] }>
-            <span> {this.props.title} </span>
-          </div>
-          <div style={ [styles.item, styles.right] } />
+      <div style={styles.base}>
+        <div style={[styles.item, styles.left]}>
+          {backBtn}
         </div>
+        <div style={[styles.item, styles.title]}>
+          <span>{this.props.title}</span>
+        </div>
+        <div style={[styles.item, styles.right]}>
+          <Link to="/help" style={styles.link}>
+            <Icon name="question-circle-o" originalWidth />
+          </Link>
+        </div>
+      </div>
     );
   }
 }
@@ -62,6 +75,7 @@ const styles = {
   right: {
     paddingRight: '20px',
     justifyContent: 'flex-end',
+    fontSize: '1.2rem',
   },
 
   btnActive: {
@@ -71,5 +85,9 @@ const styles = {
   btnInactive: {
     cursor: 'default',
     color: 'lightgrey',
+  },
+
+  link: {
+    color: '#000',
   },
 };
