@@ -5,7 +5,7 @@ import Radium from 'radium';
 const Icon = ({ name, originalWidth, smallSpacing }) => {
   let styles = style.base;
 
-  if (originalWidth) styles = { ...styles, ...style.spacing };
+  if (!originalWidth) styles = { ...styles, ...style.spacing };
   if (smallSpacing) styles = { ...styles, ...style.smallSpacing };
 
   return (

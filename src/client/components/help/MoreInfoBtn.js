@@ -24,6 +24,7 @@ const style = {
     marginTop: '10px',
     padding: '5px',
     backgroundColor: '#364249',
+    fontSize: '1rem',
   },
 
   icon: {

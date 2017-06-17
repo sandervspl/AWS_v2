@@ -2,6 +2,7 @@
 import React from 'react';
 import Title from 'components/help/Title';
 import InShortBlock from 'components/help/InShortBlock';
+import Paragraph from 'components/help/Paragraph';
 
 const Start = () =>
   <div>
@@ -11,13 +12,13 @@ const Start = () =>
       Deze handleiding zal elk deel van de app in detail voor u uitleggen, zodat
       u het meeste uit uw AWS systeem kunt halen.
     </InShortBlock>
-    <p className="help__paragraph">Welkom bij de app van AWS.</p>
-    <p className="help__paragraph">
+    <Paragraph>Welkom bij de app van AWS.</Paragraph>
+    <Paragraph>
       In deze gebruikershandleiding vind u alles wat u moet weten over uw
       nieuwe AWS systeem, zodat u snel aan de slag kan gaan met uw nieuwe AWS
       systeem.
-    </p>
-    <p className="help__paragraph">Veel plezier met uw nieuwe AWS systeem!</p>
+    </Paragraph>
+    <Paragraph>Veel plezier met uw nieuwe AWS systeem!</Paragraph>
   </div>;
 
 export default Start;

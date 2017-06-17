@@ -6,7 +6,7 @@ const Paragraph = ({ children, marginTop }) => {
     ...style.base,
     marginTop,
   };
-  return <p style={styles}> {children} </p>;
+  return <div style={styles}> {children} </div>;
 };
 
 Paragraph.propTypes = {

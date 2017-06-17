@@ -4,6 +4,7 @@ import Title from 'components/help/Title';
 import InShortBlock from 'components/help/InShortBlock';
 import TextBlockWithImage from 'components/help/TextBlockWithImage';
 import MoreInfoBtn from 'components/help/MoreInfoBtn';
+import Paragraph from 'components/help/Paragraph';
 
 // images
 import btn_wateropslag from 'assets/img/help/btn_wateropslag.png';
@@ -19,11 +20,12 @@ const Startscherm = () =>
       Hier leggen we uit wat de verschillende onderdelen betekenen en wat u
       ermee kan doen.
     </InShortBlock>
-    <p className="help__paragraph">
+
+    <Paragraph>
       Op het startscherm zijn 4 knoppen te zien. Deze zullen hieronder per knop
       kort worden beschreven. Voor meer informatie over de knop, klik op de
       'meer informatie' knop.
-    </p>
+    </Paragraph>
 
     <TextBlockWithImage image={btn_wateropslag} title="Wateropslag">
       Hier kunt u zien hoeveel procent van uw totale wateropslag wordt gebruikt.

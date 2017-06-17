@@ -12,6 +12,7 @@ const HelpMenu = () =>
       <Item url="/help/overzicht">Overzicht</Item>
       <Item url="/help/weer">Weer</Item>
       <Item url="/help/drainage">Drainage</Item>
+      <Item url="/help/faq">Veelgestelde vragen & e-mail</Item>
     </ul>
   </div>;
 
