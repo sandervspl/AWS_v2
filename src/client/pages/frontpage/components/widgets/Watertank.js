@@ -22,12 +22,8 @@ export default class Watertank extends React.Component {
   }
 
   componentWillMount() {
-    widgetStore.on('water_change', () => {
-      this.setState({ height: parseInt(widgetStore.getAverageHeight()) });
-      this.stopRefreshSpinner();
-    });
-
-    widgetStore.on('fail', this.stopRefreshSpinner);
+    widgetStore.addListener('water_change', this.onWaterChange);
+    widgetStore.addListener('fail', this.stopRefreshSpinner);
 
     this.interval = setInterval(() => widgetActions.getWaterLevel(0), 1000);
   }
@@ -35,7 +31,18 @@ export default class Watertank extends React.Component {
   componentWillUnmount() {
     clearInterval(this.interval);
     this.interval = null;
+
+    widgetStore.removeListener('water_change', this.onWaterChange);
+    widgetStore.removeListener('fail', this.stopRefreshSpinner);
   }
+
+  onWaterChange = () => {
+    this.setState({
+      height: parseInt(widgetStore.getAverageHeight()),
+    });
+
+    this.stopRefreshSpinner();
+  };
 
   // stop refreshing state
   stopRefreshSpinner = () => this.setState({ refreshing: true });

@@ -23,24 +23,10 @@ export default class Watertank extends React.Component {
     this.interval = null;
   }
 
-  componentWillMount() {
-    widgetStore.on('water_change', () => {
-      const waterHeight = widgetStore.getWaterHeight(this.state.id);
-      this.setState({ fillPrct: waterHeight });
-    });
-
-    widgetStore.on('gate_change', () => {
-      const active = widgetStore.getGateState(this.state.id);
-
-      if (active !== this.state.active) {
-        this.setActiveState(active);
-      }
-    });
-
-    widgetStore.on('gate_change_all', () => {
-      const active = widgetStore.getGateState(this.state.id);
-      this.setActiveState(active, false);
-    });
+  componentDidMount() {
+    widgetStore.addListener('water_change', this.onWaterChange);
+    widgetStore.addListener('gate_change', this.onGateChange);
+    widgetStore.addListener('gate_change_all', this.onAllGateChange);
 
     // fetch water level every second
     this.interval = setInterval(() => {
@@ -49,18 +35,43 @@ export default class Watertank extends React.Component {
 
     // set water level after giving arduino some fetching time
     setTimeout(() => {
-      this.setState({ fillPrct: widgetStore.getWaterHeight(this.state.id) });
+      this.setState({
+        fillPrct: widgetStore.getWaterHeight(this.state.id),
+      });
     }, 1500);
+
+    widgetActions.getStationGateState(this.state.id);
   }
 
   componentWillUnmount() {
     clearInterval(this.interval);
     this.interval = null;
+
+    widgetStore.removeListener('water_change', this.onWaterChange);
+    widgetStore.removeListener('gate_change', this.onGateChange);
+    widgetStore.removeListener('gate_change_all', this.onAllGateChange);
   }
 
-  componentDidMount() {
-    widgetActions.getStationGateState(this.state.id);
-  }
+  onWaterChange = () => {
+    const waterHeight = widgetStore.getWaterHeight(this.state.id);
+
+    this.setState({
+      fillPrct: waterHeight,
+    });
+  };
+
+  onGateChange = () => {
+    const active = widgetStore.getGateState(this.state.id);
+
+    if (active !== this.state.active) {
+      this.setActiveState(active);
+    }
+  };
+
+  onAllGateChange = () => {
+    const active = widgetStore.getGateState(this.state.id);
+    this.setActiveState(active, false);
+  };
 
   toggleActiveState = () =>
     widgetActions.setStationGateState(this.state.id, !this.state.active);

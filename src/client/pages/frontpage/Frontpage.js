@@ -31,15 +31,15 @@ class Frontpage extends React.Component {
   }
 
   componentWillMount() {
-    notificationStore.on('change', () => {
-      this.setState({
-        notifications: notificationStore.getAll(),
-      });
-    });
+    notificationStore.addListener('change', this.getAllNotifications);
   }
 
   componentDidMount() {
     this.props.locationActions.fetchLocationData();
+  }
+
+  componentWillUnmount() {
+    notificationStore.removeListener('change', this.getAllNotifications);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -50,9 +50,15 @@ class Frontpage extends React.Component {
     }
   }
 
-  setActiveView = (activeView) => {
+  getAllNotifications = () => {
+    this.setState({
+      notifications: notificationStore.getAll(),
+    });
+  };
+
+  setActiveView = activeView => {
     this.setState({ activeView });
-  }
+  };
 
   render() {
     let menuX = null;
@@ -66,26 +72,29 @@ class Frontpage extends React.Component {
       gridX = { transform: 'translateX(-100%)' };
     }
 
-    const notifications = this.state.notifications.map((notification) => (
-        <Notification key={notification.id} {...notification} />
-    ));
+    const notifications = this.state.notifications.map(notification =>
+      <Notification key={notification.id} {...notification} />
+    );
 
     return (
-        <div id="view-wrapper" style={styles.base}>
-          <Navbar title={this.state.activeView} setActiveView={this.setActiveView} />
+      <div id="view-wrapper" style={styles.base}>
+        <Navbar
+          title={this.state.activeView}
+          setActiveView={this.setActiveView}
+        />
 
-          {notifications}
+        {notifications}
 
-          {/*<Login/>*/}
+        {/*<Login/>*/}
 
-          <div id="menu-wrapper" style={ [styles.view, menuX] }>
-            <Menu setActiveView={this.setActiveView} />
-          </div>
-
-          <div id="grid-wrapper" style={ [styles.view, styles.grid, gridX] }>
-            <Grid />
-          </div>
+        <div id="menu-wrapper" style={[styles.view, menuX]}>
+          <Menu setActiveView={this.setActiveView} />
         </div>
+
+        <div id="grid-wrapper" style={[styles.view, styles.grid, gridX]}>
+          <Grid />
+        </div>
+      </div>
     );
   }
 }
@@ -96,7 +105,8 @@ const styles = {
     width: '100%',
     overflow: 'hidden',
     whiteSpace: 'nowrap',
-    background: 'linear-gradient(-45deg, rgb(44, 53, 58) 0%, rgb(55, 67, 74) 36%, rgb(40, 52, 59) 100%)',
+    background:
+      'linear-gradient(-45deg, rgb(44, 53, 58) 0%, rgb(55, 67, 74) 36%, rgb(40, 52, 59) 100%)',
   },
 
   view: {

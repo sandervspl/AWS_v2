@@ -6,34 +6,43 @@ const bucketImg = require('assets/img/bucket_icon_white.png');
 
 // actions
 import { createNotification } from '../../../actions/NotificationActions';
-import { setBigButtonState, fetchBigButtonState } from '../../../actions/MenuActions';
+import {
+  setBigButtonState,
+  fetchBigButtonState,
+} from '../../../actions/MenuActions';
 import { setAllGateStates } from '../../../actions/WidgetActions';
 
 // stores
 import menuStore from '../../../stores/MenuStore';
 
-
 @Radium
 export default class BigButton extends React.Component {
   constructor(props) {
     super(props);
+
     this.state = {
       active: 0,
     };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     // if server completed our request we handle it
-    menuStore.on('bigbutton_state_change', () => {
-      const active = menuStore.getBigButtonState();
-      this.setState({ active });
-      // console.log('bigbutton state is changed to', active)
-      setTimeout(this.sendNotification, 100);
-    });
+    menuStore.addListener('bigbutton_state_change', this.stateChange);
 
     // get state from server
     fetchBigButtonState();
   }
+
+  componentWillUnmount() {
+    menuStore.removeListener('bigbutton_state_change', this.stateChange);
+  }
+
+  stateChange = () => {
+    const active = menuStore.getBigButtonState();
+    this.setState({ active });
+    // console.log('bigbutton state is changed to', active)
+    setTimeout(this.sendNotification, 100);
+  };
 
   // send new state for gates to server
   toggleActiveState = () => {
@@ -58,9 +67,9 @@ export default class BigButton extends React.Component {
 
   render() {
     let stateMsg = 'UIT',
-        bucketStyle = styles.img,
-        buttonStyle = styles.off,
-        textStyle = styles.stateText.off;
+      bucketStyle = styles.img,
+      buttonStyle = styles.off,
+      textStyle = styles.stateText.off;
 
     if (this.state.active) {
       stateMsg = 'AAN';
@@ -70,21 +79,20 @@ export default class BigButton extends React.Component {
     }
 
     return (
-        <div style={styles.base}>
-          <div style={styles.btn} onClick={this.toggleActiveState}>
-            <div style={ [styles.midCircle, buttonStyle] } className="midCircle">
-              <img src={bucketImg} alt="Bucket" style={bucketStyle} />
-            </div>
-          </div>
-          <div style={styles.description}>
-            <p style={styles.systemText}>Drainage Systeem</p>
-            <p style={ [styles.stateText, textStyle] }>{stateMsg}</p>
+      <div style={styles.base}>
+        <div style={styles.btn} onClick={this.toggleActiveState}>
+          <div style={[styles.midCircle, buttonStyle]} className="midCircle">
+            <img src={bucketImg} alt="Bucket" style={bucketStyle} />
           </div>
         </div>
+        <div style={styles.description}>
+          <p style={styles.systemText}>Drainage Systeem</p>
+          <p style={[styles.stateText, textStyle]}>{stateMsg}</p>
+        </div>
+      </div>
     );
   }
 }
-
 
 const styles = {
   base: {
