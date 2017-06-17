@@ -1,10 +1,12 @@
 // dependencies
 import React from 'react';
 import Item from './Item';
+import Title from 'components/help/Title';
 
 const HelpMenu = () =>
   <div>
-    <h1 style={style.title}>Help menu</h1>
+    {/*<h1 style={style.title}>Help menu</h1>*/}
+    <Title>Help menu</Title>
     <ul id="helpmenu">
       <Item url="/help/start">Aan de slag met AWS</Item>
       <Item url="/help/startscherm">Startscherm</Item>

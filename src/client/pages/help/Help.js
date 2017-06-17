@@ -3,12 +3,10 @@ import React from 'react';
 
 // components
 import Navbar from './Navbar/Navbar';
-import Search from './search/Search';
 
 const Help = ({ children }) =>
   <div style={style.base}>
     <Navbar />
-    <Search />
     <div style={style.content}>
       {children}
     </div>
@@ -23,7 +21,7 @@ const style = {
   },
 
   content: {
-    padding: '10px 20px',
+    padding: '0 20px 10px',
     fontSize: '.9rem',
   },
 };
