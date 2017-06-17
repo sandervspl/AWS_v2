@@ -29,7 +29,7 @@ Om de dev server te starten voor de **client** `npm run dev:client` of `yarn dev
 Type in Terminal of `npm run build` of `yarn build` **Dit compiled client EN server!**
 
 - Server starten:  `npm run server` of `yarn server`
-- Client starten: Navigeer naar de project root folder en open de `static` folder
+- Client starten: Navigeer naar de project root folder (via je browser `localhost`) en open de `static` folder
 
 
 Dit zou alles moeten zijn.
