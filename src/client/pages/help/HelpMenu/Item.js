@@ -8,7 +8,7 @@ import Icon from 'components/Icon';
 const Item = ({ children, url }) =>
   <li>
     <Link to={url}>
-      <div style={style.base}>
+      <div style={style.base} className="help__item">
         {children}
         <div style={style.icon}>
           <Icon name="chevron-right" smallSpacing />

@@ -15,10 +15,5 @@ npm-debug.log
 /src/js/secret/
 src/client.min.js
 
-/static
-!/static/*.html
-!/static/*.css
-!/static/assets
-
-/src/secret/*
-!/src/secret/connect.js
+/static/*.js
+/static/*.js.map

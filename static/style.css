@@ -73,6 +73,7 @@ ul li {
     margin-top: 15px;
 }
 
-.nav-help__back-button:active {
+.nav-help__back-button:active,
+.help__item:active {
     background-color: #475760;
 }
